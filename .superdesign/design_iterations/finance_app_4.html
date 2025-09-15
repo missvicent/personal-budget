@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bold Minimalist Finance - Sign In</title>
+    <link rel="stylesheet" href="finance_theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-sans);
+        }
+        
+        body {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            font-size: 16px;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        @media (min-width: 768px) {
+            body {
+                font-size: 18px;
+            }
+        }
+        
+        .signin-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background-color: var(--accent);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        
+        .app-name {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .app-tagline {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: var(--radius);
+            color: var(--primary-foreground);
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .password-input-wrapper {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--primary-foreground);
+            opacity: 0.7;
+            cursor: pointer;
+        }
+        
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-right: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .checkbox.checked {
+            background-color: var(--accent);
+        }
+        
+        .forgot-password {
+            color: var(--primary-foreground);
+            opacity: 0.8;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        
+        .forgot-password:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+        
+        .signin-button {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--accent);
+            color: var(--accent-foreground);
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            margin-bottom: 1.5rem;
+        }
+        
+        .signin-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .signin-button:active {
+            transform: translateY(0);
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 2rem 0;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .divider::before {
+            margin-right: 1rem;
+        }
+        
+        .divider::after {
+            margin-left: 1rem;
+        }
+        
+        .social-signin {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .social-button {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            transition: background-color 0.2s;
+        }
+        
+        .social-button:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .signup-prompt {
+            text-align: center;
+            font-size: 0.875rem;
+        }
+        
+        .signup-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        
+        .signup-link:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+        
+        /* Animation classes */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-in {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        
+        /* Desktop styles */
+        @media (min-width: 768px) {
+            .signin-container {
+                padding: 3rem 2rem;
+                box-shadow: var(--shadow-lg);
+                border-radius: var(--radius-lg);
+                background-color: rgba(255, 255, 255, 0.03);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                margin-top: 2rem;
+                margin-bottom: 2rem;
+            }
+            
+            body {
+                background: linear-gradient(135deg, var(--primary) 0%, #000000 100%);
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signin-container">
+        <!-- Logo and App Name -->
+        <div class="logo-container animate-in">
+            <div class="logo">
+                <i data-lucide="wallet" width="40" height="40"></i>
+            </div>
+            <h1 class="app-name">Finance</h1>
+            <p class="app-tagline">Manage your money with confidence</p>
+        </div>
+        
+        <!-- Sign In Form -->
+        <form class="signin-form">
+            <div class="form-group animate-in delay-100">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" class="form-input" placeholder="your@email.com" required>
+            </div>
+            
+            <div class="form-group animate-in delay-200">
+                <label for="password" class="form-label">Password</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                    <button type="button" class="password-toggle">
+                        <i data-lucide="eye" width="20" height="20"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="remember-forgot animate-in delay-300">
+                <div class="remember-me">
+                    <div class="checkbox" id="remember-checkbox">
+                        <i data-lucide="check" width="14" height="14" style="display: none;"></i>
+                    </div>
+                    <label for="remember-checkbox">Remember me</label>
+                </div>
+                <a href="#" class="forgot-password">Forgot password?</a>
+            </div>
+            
+            <button type="submit" class="signin-button animate-in delay-300">
+                Sign In
+            </button>
+            
+            <div class="divider animate-in delay-300">or continue with</div>
+            
+            <div class="social-signin animate-in delay-400">
+                <button type="button" class="social-button">
+                    <i data-lucide="github" width="20" height="20"></i>
+                </button>
+                <button type="button" class="social-button">
+                    <i data-lucide="twitter" width="20" height="20"></i>
+                </button>
+                <button type="button" class="social-button">
+                    <i data-lucide="facebook" width="20" height="20"></i>
+                </button>
+            </div>
+            
+            <p class="signup-prompt animate-in delay-400">
+                Don't have an account? <a href="#" class="signup-link">Sign up</a>
+            </p>
+        </form>
+    </div>
+    
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Toggle password visibility
+        const passwordToggle = document.querySelector('.password-toggle');
+        const passwordInput = document.getElementById('password');
+        
+        passwordToggle.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Toggle icon
+            const icon = this.querySelector('i');
+            if (type === 'password') {
+                icon.setAttribute('data-lucide', 'eye');
+            } else {
+                icon.setAttribute('data-lucide', 'eye-off');
+            }
+            lucide.createIcons();
+        });
+        
+        // Toggle remember me checkbox
+        const rememberCheckbox = document.getElementById('remember-checkbox');
+        const checkIcon = rememberCheckbox.querySelector('i');
+        
+        rememberCheckbox.addEventListener('click', function() {
+            this.classList.toggle('checked');
+            if (this.classList.contains('checked')) {
+                checkIcon.style.display = 'block';
+            } else {
+                checkIcon.style.display = 'none';
+            }
+        });
+        
+        // Form submission (prevent default for demo)
+        const form = document.querySelector('.signin-form');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add sign-in logic here
+            console.log('Sign in attempted');
+        });
+        
+        // Animation for elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const animatedElements = document.querySelectorAll('.animate-in');
+            animatedElements.forEach(element => {
+                element.style.opacity = '0';
+            });
+            
+            setTimeout(() => {
+                animatedElements.forEach(element => {
+                    element.style.opacity = '1';
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>
