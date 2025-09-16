@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 This is a personal budget management application built with:
+
 - React 19 with TypeScript
 - TanStack Router for file-based routing
 - Vite as build tool with Tailwind CSS v4
@@ -34,6 +35,7 @@ npm run check        # Fix all issues (prettier --write . && eslint --fix)
 ## Architecture & Structure
 
 ### Routing System
+
 - File-based routing using TanStack Router with auto code-splitting enabled
 - Routes defined in `src/routes/` directory
 - `__root.tsx` provides the layout wrapper with Header component and dev tools
@@ -44,16 +46,19 @@ npm run check        # Fix all issues (prettier --write . && eslint --fix)
   - Structural sharing for optimal performance
 
 ### Component Structure
+
 - Layout components: `src/routes/__root.tsx` wraps all routes
 - Shared components in `src/components/` (Header, Login, etc.)
 - Route-specific components in their respective route files
 
 ### Styling
+
 - Tailwind CSS v4 configured via Vite plugin
 - Global styles in `src/styles.css`
 - Path alias `@/` maps to `./src/` directory
 
 ### Type Safety
+
 - Strict TypeScript configuration with no emit
 - TanStack Router provides full type safety for routes
 - Router instance registered for type inference
@@ -61,19 +66,23 @@ npm run check        # Fix all issues (prettier --write . && eslint --fix)
 ## Development Guidelines
 
 ### Route Creation
+
 - Add new `.tsx` files to `src/routes/` for automatic route generation
 - Use `createRoute` or `createFileRoute` from TanStack Router
 - Nested routes use directory structure (e.g., `auth/sign-in.tsx`)
 
 ### State Management
+
 - Consider TanStack Store or React Query for state management (see README for setup)
 - Router context available for sharing data across routes
 
 ### Data Fetching
+
 - Use route loaders for prefetching data before rendering
 - TanStack Query integration available for complex data requirements
 
 ### Testing
+
 - Vitest configured with jsdom environment
 - Global test utilities available
 - Place tests alongside components or in dedicated test files
@@ -86,5 +95,6 @@ npm run check        # Fix all issues (prettier --write . && eslint --fix)
 - `package.json`: Scripts and dependencies
 
 ## Authentication
+
 - Google OAuth integration via `@react-oauth/google`
 - Auth routes under `src/routes/auth/`

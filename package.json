@@ -8,9 +8,10 @@
     "build": "vite build && tsc",
     "serve": "vite preview",
     "test": "vitest run",
-    "lint": "eslint",
-    "format": "prettier",
-    "check": "prettier --write . && eslint --fix"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "prettier --check .",
+    "check": "prettier --write . && eslint --fix",
+    "prepare": "husky"
   },
   "dependencies": {
     "@react-oauth/google": "^0.12.2",
@@ -30,11 +31,25 @@
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "husky": "^9.1.7",
     "jsdom": "^26.0.0",
+    "lint-staged": "^16.1.6",
     "prettier": "^3.5.3",
     "typescript": "^5.7.2",
     "vite": "^6.3.5",
     "vitest": "^3.0.5",
     "web-vitals": "^4.2.4"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,md,html,css}": [
+      "prettier --write"
+    ]
   }
 }

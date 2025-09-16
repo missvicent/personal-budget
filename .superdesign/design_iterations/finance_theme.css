@@ -6,7 +6,7 @@
   --card-foreground: #ffffff;
   --popover: #2a2a2a;
   --popover-foreground: #ffffff;
-  
+
   /* Brand colors */
   --primary: #1a1a1a;
   --primary-foreground: #ffffff;
@@ -16,7 +16,7 @@
   --muted-foreground: #6c757d;
   --accent: #1db954;
   --accent-foreground: #ffffff;
-  
+
   /* Functional colors */
   --destructive: #dc3545;
   --destructive-foreground: #ffffff;
@@ -26,20 +26,20 @@
   --border: #dee2e6;
   --input: #e9ecef;
   --ring: #1db954;
-  
+
   /* Transaction brand colors */
   --spotify: #1db954;
   --paypal: #0070ba;
   --stripe: #635bff;
   --wise: #9fcc34;
-  
+
   /* Chart colors */
   --chart-1: #1db954;
   --chart-2: #0070ba;
   --chart-3: #635bff;
   --chart-4: #ffc107;
   --chart-5: #dc3545;
-  
+
   /* Sidebar */
   --sidebar: #1a1a1a;
   --sidebar-foreground: #ffffff;
@@ -49,29 +49,32 @@
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #2a2a2a;
   --sidebar-ring: #1db954;
-  
+
   /* Typography */
   --font-sans: 'DM Sans', sans-serif;
   --font-serif: 'DM Sans', sans-serif;
   --font-mono: 'DM Sans', monospace;
-  
+
   /* Border radius */
   --radius: 0.75rem;
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
   --radius-xl: 1.25rem;
-  
+
   /* Shadows */
   --shadow-2xs: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-md:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   --shadow-2xl: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
-  
+
   /* Spacing */
   --spacing: 0.25rem;
   --tracking-normal: 0em;

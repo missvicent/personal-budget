@@ -1,578 +1,699 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bold Minimalist Finance - Transactions</title>
-    <link rel="stylesheet" href="finance_theme.css">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="finance_theme.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: var(--font-sans);
-        }
-        
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: var(--font-sans);
+      }
+
+      body {
+        background-color: var(--background);
+        color: var(--foreground);
+        font-size: 16px;
+        line-height: 1.5;
+      }
+
+      @media (min-width: 768px) {
         body {
-            background-color: var(--background);
-            color: var(--foreground);
-            font-size: 16px;
-            line-height: 1.5;
+          font-size: 18px;
         }
-        
-        @media (min-width: 768px) {
-            body {
-                font-size: 18px;
-            }
-        }
-        
+      }
+
+      .app-container {
+        max-width: 100%;
+        margin: 0 auto;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+        padding: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .main-content {
+        flex: 1;
+        padding: 1rem;
+        padding-bottom: 5rem; /* Space for bottom nav */
+      }
+
+      .card {
+        background-color: var(--card);
+        color: var(--card-foreground);
+        border-radius: var(--radius);
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .section-title {
+        font-weight: 700;
+        margin-bottom: 1rem;
+        font-size: 1.25rem;
+      }
+
+      .filter-bar {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .filter-button {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--card-foreground);
+        border-radius: var(--radius-sm);
+        padding: 0.5rem 1rem;
+        white-space: nowrap;
+        transition: background-color 0.2s;
+      }
+
+      .filter-button.active {
+        background-color: var(--accent);
+      }
+
+      .filter-button:hover:not(.active) {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .search-bar {
+        display: flex;
+        margin-bottom: 1.5rem;
+      }
+
+      .search-input {
+        flex: 1;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: none;
+        border-radius: var(--radius-sm);
+        padding: 0.75rem 1rem;
+        color: var(--card-foreground);
+      }
+
+      .search-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .transaction-date {
+        font-weight: 700;
+        margin: 1.5rem 0 0.75rem;
+        opacity: 0.8;
+      }
+
+      .transaction-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border-radius: var(--radius-sm);
+        background-color: rgba(255, 255, 255, 0.05);
+        margin-bottom: 0.75rem;
+        transition: background-color 0.2s;
+      }
+
+      .transaction-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .transaction-info {
+        display: flex;
+        align-items: center;
+      }
+
+      .transaction-icon {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0.75rem;
+        flex-shrink: 0;
+      }
+
+      .transaction-details {
+        flex: 1;
+      }
+
+      .transaction-name {
+        font-weight: 500;
+        font-size: 1rem;
+      }
+
+      .transaction-category {
+        font-size: 0.75rem;
+        opacity: 0.7;
+      }
+
+      .transaction-time {
+        font-size: 0.75rem;
+        opacity: 0.7;
+        margin-top: 0.25rem;
+      }
+
+      .transaction-amount {
+        font-weight: 700;
+        font-size: 1.125rem;
+      }
+
+      .amount-negative {
+        color: var(--destructive);
+      }
+
+      .amount-positive {
+        color: var(--success);
+      }
+
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--primary);
+        display: flex;
+        justify-content: space-around;
+        padding: 0.75rem 0;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+      }
+
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: var(--primary-foreground);
+        opacity: 0.7;
+        transition: opacity 0.2s;
+      }
+
+      .nav-item.active {
+        opacity: 1;
+        color: var(--accent);
+      }
+
+      .nav-icon {
+        margin-bottom: 0.25rem;
+      }
+
+      .nav-label {
+        font-size: 0.75rem;
+      }
+
+      .add-button {
+        background-color: var(--accent);
+        color: var(--accent-foreground);
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-md);
+        transform: translateY(-1rem);
+        transition: transform 0.2s;
+      }
+
+      .add-button:hover {
+        transform: translateY(-1.25rem);
+      }
+
+      /* Sidebar for desktop */
+      .sidebar {
+        display: none;
+        background-color: var(--sidebar);
+        color: var(--sidebar-foreground);
+        width: 250px;
+        padding: 1.5rem;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+      }
+
+      .sidebar-nav {
+        margin-top: 2rem;
+      }
+
+      .sidebar-nav-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius);
+        margin-bottom: 0.5rem;
+        transition: background-color 0.2s;
+      }
+
+      .sidebar-nav-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .sidebar-nav-item.active {
+        background-color: var(--sidebar-primary);
+        color: var(--sidebar-primary-foreground);
+      }
+
+      .sidebar-icon {
+        margin-right: 0.75rem;
+      }
+
+      .load-more {
+        width: 100%;
+        padding: 0.75rem;
+        border-radius: var(--radius);
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--card-foreground);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s;
+        margin-top: 1rem;
+      }
+
+      .load-more:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      /* Desktop styles */
+      @media (min-width: 1024px) {
         .app-container {
-            max-width: 100%;
-            margin: 0 auto;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+          flex-direction: row;
+          max-width: 1440px;
         }
-        
-        .header {
-            background-color: var(--primary);
-            color: var(--primary-foreground);
-            padding: 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        
-        .main-content {
-            flex: 1;
-            padding: 1rem;
-            padding-bottom: 5rem; /* Space for bottom nav */
-        }
-        
-        .card {
-            background-color: var(--card);
-            color: var(--card-foreground);
-            border-radius: var(--radius);
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            box-shadow: var(--shadow);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .section-title {
-            font-weight: 700;
-            margin-bottom: 1rem;
-            font-size: 1.25rem;
-        }
-        
-        .filter-bar {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            overflow-x: auto;
-            padding-bottom: 0.5rem;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .filter-button {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--card-foreground);
-            border-radius: var(--radius-sm);
-            padding: 0.5rem 1rem;
-            white-space: nowrap;
-            transition: background-color 0.2s;
-        }
-        
-        .filter-button.active {
-            background-color: var(--accent);
-        }
-        
-        .filter-button:hover:not(.active) {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        .search-bar {
-            display: flex;
-            margin-bottom: 1.5rem;
-        }
-        
-        .search-input {
-            flex: 1;
-            background-color: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: var(--radius-sm);
-            padding: 0.75rem 1rem;
-            color: var(--card-foreground);
-        }
-        
-        .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        
-        .transaction-date {
-            font-weight: 700;
-            margin: 1.5rem 0 0.75rem;
-            opacity: 0.8;
-        }
-        
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border-radius: var(--radius-sm);
-            background-color: rgba(255, 255, 255, 0.05);
-            margin-bottom: 0.75rem;
-            transition: background-color 0.2s;
-        }
-        
-        .transaction-item:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .transaction-info {
-            display: flex;
-            align-items: center;
-        }
-        
-        .transaction-icon {
-            width: 3rem;
-            height: 3rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 0.75rem;
-            flex-shrink: 0;
-        }
-        
-        .transaction-details {
-            flex: 1;
-        }
-        
-        .transaction-name {
-            font-weight: 500;
-            font-size: 1rem;
-        }
-        
-        .transaction-category {
-            font-size: 0.75rem;
-            opacity: 0.7;
-        }
-        
-        .transaction-time {
-            font-size: 0.75rem;
-            opacity: 0.7;
-            margin-top: 0.25rem;
-        }
-        
-        .transaction-amount {
-            font-weight: 700;
-            font-size: 1.125rem;
-        }
-        
-        .amount-negative {
-            color: var(--destructive);
-        }
-        
-        .amount-positive {
-            color: var(--success);
-        }
-        
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: var(--primary);
-            display: flex;
-            justify-content: space-around;
-            padding: 0.75rem 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-        }
-        
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--primary-foreground);
-            opacity: 0.7;
-            transition: opacity 0.2s;
-        }
-        
-        .nav-item.active {
-            opacity: 1;
-            color: var(--accent);
-        }
-        
-        .nav-icon {
-            margin-bottom: 0.25rem;
-        }
-        
-        .nav-label {
-            font-size: 0.75rem;
-        }
-        
-        .add-button {
-            background-color: var(--accent);
-            color: var(--accent-foreground);
-            width: 3rem;
-            height: 3rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow-md);
-            transform: translateY(-1rem);
-            transition: transform 0.2s;
-        }
-        
-        .add-button:hover {
-            transform: translateY(-1.25rem);
-        }
-        
-        /* Sidebar for desktop */
+
         .sidebar {
-            display: none;
-            background-color: var(--sidebar);
-            color: var(--sidebar-foreground);
-            width: 250px;
-            padding: 1.5rem;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
+          display: block;
         }
-        
-        .sidebar-nav {
-            margin-top: 2rem;
+
+        .main-wrapper {
+          flex: 1;
+          margin-left: 250px;
         }
-        
-        .sidebar-nav-item {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            border-radius: var(--radius);
-            margin-bottom: 0.5rem;
-            transition: background-color 0.2s;
+
+        .main-content {
+          padding: 2rem;
+          padding-bottom: 2rem;
         }
-        
-        .sidebar-nav-item:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+
+        .bottom-nav {
+          display: none;
         }
-        
-        .sidebar-nav-item.active {
-            background-color: var(--sidebar-primary);
-            color: var(--sidebar-primary-foreground);
+
+        .transaction-list {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1rem;
         }
-        
-        .sidebar-icon {
-            margin-right: 0.75rem;
+
+        .transaction-date {
+          grid-column: span 2;
         }
-        
-        .load-more {
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: var(--radius);
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--card-foreground);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.2s;
-            margin-top: 1rem;
+      }
+
+      /* Animation classes */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
         }
-        
-        .load-more:hover {
-            background-color: rgba(255, 255, 255, 0.2);
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        
-        /* Desktop styles */
-        @media (min-width: 1024px) {
-            .app-container {
-                flex-direction: row;
-                max-width: 1440px;
-            }
-            
-            .sidebar {
-                display: block;
-            }
-            
-            .main-wrapper {
-                flex: 1;
-                margin-left: 250px;
-            }
-            
-            .main-content {
-                padding: 2rem;
-                padding-bottom: 2rem;
-            }
-            
-            .bottom-nav {
-                display: none;
-            }
-            
-            .transaction-list {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
-            
-            .transaction-date {
-                grid-column: span 2;
-            }
-        }
-        
-        /* Animation classes */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .animate-in {
-            animation: fadeIn 0.3s ease-out forwards;
-        }
-        
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
-        .delay-400 { animation-delay: 0.4s; }
+      }
+
+      .animate-in {
+        animation: fadeIn 0.3s ease-out forwards;
+      }
+
+      .delay-100 {
+        animation-delay: 0.1s;
+      }
+      .delay-200 {
+        animation-delay: 0.2s;
+      }
+      .delay-300 {
+        animation-delay: 0.3s;
+      }
+      .delay-400 {
+        animation-delay: 0.4s;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="app-container">
-        <!-- Sidebar (desktop only) -->
-        <div class="sidebar">
-            <div class="logo">
-                <h1 class="text-xl font-bold">Finance</h1>
-            </div>
-            <div class="sidebar-nav">
-                <a href="#" class="sidebar-nav-item">
-                    <i data-lucide="home" class="sidebar-icon" width="20" height="20"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="#" class="sidebar-nav-item">
-                    <i data-lucide="pie-chart" class="sidebar-icon" width="20" height="20"></i>
-                    <span>Budget</span>
-                </a>
-                <a href="#" class="sidebar-nav-item active">
-                    <i data-lucide="credit-card" class="sidebar-icon" width="20" height="20"></i>
-                    <span>Transactions</span>
-                </a>
-                <a href="#" class="sidebar-nav-item">
-                    <i data-lucide="bar-chart" class="sidebar-icon" width="20" height="20"></i>
-                    <span>Reports</span>
-                </a>
-                <a href="#" class="sidebar-nav-item">
-                    <i data-lucide="settings" class="sidebar-icon" width="20" height="20"></i>
-                    <span>Settings</span>
-                </a>
-            </div>
+      <!-- Sidebar (desktop only) -->
+      <div class="sidebar">
+        <div class="logo">
+          <h1 class="text-xl font-bold">Finance</h1>
         </div>
-        
-        <!-- Main content wrapper -->
-        <div class="main-wrapper">
-            <!-- Header -->
-            <header class="header">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-xl font-bold">Transactions</h1>
-                    <div class="flex items-center">
-                        <button class="p-2">
-                            <i data-lucide="bell" width="20" height="20"></i>
-                        </button>
-                        <button class="p-2 ml-2">
-                            <i data-lucide="user" width="20" height="20"></i>
-                        </button>
-                    </div>
-                </div>
-            </header>
-            
-            <!-- Main content -->
-            <main class="main-content">
-                <!-- Search bar -->
-                <div class="search-bar animate-in">
-                    <input type="text" class="search-input" placeholder="Search transactions...">
-                </div>
-                
-                <!-- Filter bar -->
-                <div class="filter-bar animate-in delay-100">
-                    <button class="filter-button active">All</button>
-                    <button class="filter-button">Income</button>
-                    <button class="filter-button">Expenses</button>
-                    <button class="filter-button">Food</button>
-                    <button class="filter-button">Shopping</button>
-                    <button class="filter-button">Entertainment</button>
-                    <button class="filter-button">Bills</button>
-                </div>
-                
-                <!-- Transaction list -->
-                <div class="card animate-in delay-200">
-                    <div class="transaction-list">
-                        <h2 class="transaction-date">Today, March 15</h2>
-                        
-                        <div class="transaction-item">
-                            <div class="transaction-info">
-                                <div class="transaction-icon" style="background-color: rgba(29, 185, 84, 0.2);">
-                                    <i data-lucide="music" width="24" height="24" style="color: var(--spotify);"></i>
-                                </div>
-                                <div class="transaction-details">
-                                    <div class="transaction-name">Spotify Premium</div>
-                                    <div class="transaction-category">Entertainment</div>
-                                    <div class="transaction-time">10:30 AM</div>
-                                </div>
-                            </div>
-                            <div class="transaction-amount amount-negative">-$9.99</div>
-                        </div>
-                        
-                        <h2 class="transaction-date">Yesterday, March 14</h2>
-                        
-                        <div class="transaction-item">
-                            <div class="transaction-info">
-                                <div class="transaction-icon" style="background-color: rgba(0, 112, 186, 0.2);">
-                                    <i data-lucide="shopping-bag" width="24" height="24" style="color: var(--paypal);"></i>
-                                </div>
-                                <div class="transaction-details">
-                                    <div class="transaction-name">PayPal - eBay Purchase</div>
-                                    <div class="transaction-category">Shopping</div>
-                                    <div class="transaction-time">3:45 PM</div>
-                                </div>
-                            </div>
-                            <div class="transaction-amount amount-negative">-$24.50</div>
-                        </div>
-                        
-                        <div class="transaction-item">
-                            <div class="transaction-info">
-                                <div class="transaction-icon" style="background-color: rgba(99, 91, 255, 0.2);">
-                                    <i data-lucide="briefcase" width="24" height="24" style="color: var(--stripe);"></i>
-                                </div>
-                                <div class="transaction-details">
-                                    <div class="transaction-name">Stripe - Freelance Payment</div>
-                                    <div class="transaction-category">Income</div>
-                                    <div class="transaction-time">11:20 AM</div>
-                                </div>
-                            </div>
-                            <div class="transaction-amount amount-positive">+$350.00</div>
-                        </div>
-                        
-                        <h2 class="transaction-date">March 13</h2>
-                        
-                        <div class="transaction-item">
-                            <div class="transaction-info">
-                                <div class="transaction-icon" style="background-color: rgba(255, 193, 7, 0.2);">
-                                    <i data-lucide="utensils" width="24" height="24" style="color: var(--warning);"></i>
-                                </div>
-                                <div class="transaction-details">
-                                    <div class="transaction-name">Burger King</div>
-                                    <div class="transaction-category">Food & Dining</div>
-                                    <div class="transaction-time">7:30 PM</div>
-                                </div>
-                            </div>
-                            <div class="transaction-amount amount-negative">-$12.75</div>
-                        </div>
-                        
-                        <div class="transaction-item">
-                            <div class="transaction-info">
-                                <div class="transaction-icon" style="background-color: rgba(220, 53, 69, 0.2);">
-                                    <i data-lucide="shopping-cart" width="24" height="24" style="color: var(--destructive);"></i>
-                                </div>
-                                <div class="transaction-details">
-                                    <div class="transaction-name">Whole Foods Market</div>
-                                    <div class="transaction-category">Groceries</div>
-                                    <div class="transaction-time">2:15 PM</div>
-                                </div>
-                            </div>
-                            <div class="transaction-amount amount-negative">-$87.32</div>
-                        </div>
-                        
-                        <h2 class="transaction-date">March 12</h2>
-                        
-                        <div class="transaction-item">
-                            <div class="transaction-info">
-                                <div class="transaction-icon" style="background-color: rgba(23, 162, 184, 0.2);">
-                                    <i data-lucide="wifi" width="24" height="24" style="color: var(--info);"></i>
-                                </div>
-                                <div class="transaction-details">
-                                    <div class="transaction-name">Comcast Internet</div>
-                                    <div class="transaction-category">Bills & Utilities</div>
-                                    <div class="transaction-time">9:00 AM</div>
-                                </div>
-                            </div>
-                            <div class="transaction-amount amount-negative">-$79.99</div>
-                        </div>
-                        
-                        <div class="transaction-item">
-                            <div class="transaction-info">
-                                <div class="transaction-icon" style="background-color: rgba(159, 204, 52, 0.2);">
-                                    <i data-lucide="coffee" width="24" height="24" style="color: var(--wise);"></i>
-                                </div>
-                                <div class="transaction-details">
-                                    <div class="transaction-name">Starbucks</div>
-                                    <div class="transaction-category">Food & Dining</div>
-                                    <div class="transaction-time">8:15 AM</div>
-                                </div>
-                            </div>
-                            <div class="transaction-amount amount-negative">-$5.45</div>
-                        </div>
-                    </div>
-                    
-                    <button class="load-more">
-                        <i data-lucide="chevrons-down" width="20" height="20" class="mr-2"></i>
-                        <span>Load More</span>
-                    </button>
-                </div>
-            </main>
-            
-            <!-- Bottom navigation (mobile only) -->
-            <nav class="bottom-nav">
-                <a href="#" class="nav-item">
-                    <i data-lucide="home" class="nav-icon" width="20" height="20"></i>
-                    <span class="nav-label">Home</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i data-lucide="pie-chart" class="nav-icon" width="20" height="20"></i>
-                    <span class="nav-label">Budget</span>
-                </a>
-                <div class="add-button">
-                    <i data-lucide="plus" width="24" height="24"></i>
-                </div>
-                <a href="#" class="nav-item active">
-                    <i data-lucide="credit-card" class="nav-icon" width="20" height="20"></i>
-                    <span class="nav-label">Trans</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i data-lucide="user" class="nav-icon" width="20" height="20"></i>
-                    <span class="nav-label">Profile</span>
-                </a>
-            </nav>
+        <div class="sidebar-nav">
+          <a href="#" class="sidebar-nav-item">
+            <i
+              data-lucide="home"
+              class="sidebar-icon"
+              width="20"
+              height="20"
+            ></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="sidebar-nav-item">
+            <i
+              data-lucide="pie-chart"
+              class="sidebar-icon"
+              width="20"
+              height="20"
+            ></i>
+            <span>Budget</span>
+          </a>
+          <a href="#" class="sidebar-nav-item active">
+            <i
+              data-lucide="credit-card"
+              class="sidebar-icon"
+              width="20"
+              height="20"
+            ></i>
+            <span>Transactions</span>
+          </a>
+          <a href="#" class="sidebar-nav-item">
+            <i
+              data-lucide="bar-chart"
+              class="sidebar-icon"
+              width="20"
+              height="20"
+            ></i>
+            <span>Reports</span>
+          </a>
+          <a href="#" class="sidebar-nav-item">
+            <i
+              data-lucide="settings"
+              class="sidebar-icon"
+              width="20"
+              height="20"
+            ></i>
+            <span>Settings</span>
+          </a>
         </div>
+      </div>
+
+      <!-- Main content wrapper -->
+      <div class="main-wrapper">
+        <!-- Header -->
+        <header class="header">
+          <div class="flex justify-between items-center">
+            <h1 class="text-xl font-bold">Transactions</h1>
+            <div class="flex items-center">
+              <button class="p-2">
+                <i data-lucide="bell" width="20" height="20"></i>
+              </button>
+              <button class="p-2 ml-2">
+                <i data-lucide="user" width="20" height="20"></i>
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <!-- Main content -->
+        <main class="main-content">
+          <!-- Search bar -->
+          <div class="search-bar animate-in">
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Search transactions..."
+            />
+          </div>
+
+          <!-- Filter bar -->
+          <div class="filter-bar animate-in delay-100">
+            <button class="filter-button active">All</button>
+            <button class="filter-button">Income</button>
+            <button class="filter-button">Expenses</button>
+            <button class="filter-button">Food</button>
+            <button class="filter-button">Shopping</button>
+            <button class="filter-button">Entertainment</button>
+            <button class="filter-button">Bills</button>
+          </div>
+
+          <!-- Transaction list -->
+          <div class="card animate-in delay-200">
+            <div class="transaction-list">
+              <h2 class="transaction-date">Today, March 15</h2>
+
+              <div class="transaction-item">
+                <div class="transaction-info">
+                  <div
+                    class="transaction-icon"
+                    style="background-color: rgba(29, 185, 84, 0.2)"
+                  >
+                    <i
+                      data-lucide="music"
+                      width="24"
+                      height="24"
+                      style="color: var(--spotify)"
+                    ></i>
+                  </div>
+                  <div class="transaction-details">
+                    <div class="transaction-name">Spotify Premium</div>
+                    <div class="transaction-category">Entertainment</div>
+                    <div class="transaction-time">10:30 AM</div>
+                  </div>
+                </div>
+                <div class="transaction-amount amount-negative">-$9.99</div>
+              </div>
+
+              <h2 class="transaction-date">Yesterday, March 14</h2>
+
+              <div class="transaction-item">
+                <div class="transaction-info">
+                  <div
+                    class="transaction-icon"
+                    style="background-color: rgba(0, 112, 186, 0.2)"
+                  >
+                    <i
+                      data-lucide="shopping-bag"
+                      width="24"
+                      height="24"
+                      style="color: var(--paypal)"
+                    ></i>
+                  </div>
+                  <div class="transaction-details">
+                    <div class="transaction-name">PayPal - eBay Purchase</div>
+                    <div class="transaction-category">Shopping</div>
+                    <div class="transaction-time">3:45 PM</div>
+                  </div>
+                </div>
+                <div class="transaction-amount amount-negative">-$24.50</div>
+              </div>
+
+              <div class="transaction-item">
+                <div class="transaction-info">
+                  <div
+                    class="transaction-icon"
+                    style="background-color: rgba(99, 91, 255, 0.2)"
+                  >
+                    <i
+                      data-lucide="briefcase"
+                      width="24"
+                      height="24"
+                      style="color: var(--stripe)"
+                    ></i>
+                  </div>
+                  <div class="transaction-details">
+                    <div class="transaction-name">
+                      Stripe - Freelance Payment
+                    </div>
+                    <div class="transaction-category">Income</div>
+                    <div class="transaction-time">11:20 AM</div>
+                  </div>
+                </div>
+                <div class="transaction-amount amount-positive">+$350.00</div>
+              </div>
+
+              <h2 class="transaction-date">March 13</h2>
+
+              <div class="transaction-item">
+                <div class="transaction-info">
+                  <div
+                    class="transaction-icon"
+                    style="background-color: rgba(255, 193, 7, 0.2)"
+                  >
+                    <i
+                      data-lucide="utensils"
+                      width="24"
+                      height="24"
+                      style="color: var(--warning)"
+                    ></i>
+                  </div>
+                  <div class="transaction-details">
+                    <div class="transaction-name">Burger King</div>
+                    <div class="transaction-category">Food & Dining</div>
+                    <div class="transaction-time">7:30 PM</div>
+                  </div>
+                </div>
+                <div class="transaction-amount amount-negative">-$12.75</div>
+              </div>
+
+              <div class="transaction-item">
+                <div class="transaction-info">
+                  <div
+                    class="transaction-icon"
+                    style="background-color: rgba(220, 53, 69, 0.2)"
+                  >
+                    <i
+                      data-lucide="shopping-cart"
+                      width="24"
+                      height="24"
+                      style="color: var(--destructive)"
+                    ></i>
+                  </div>
+                  <div class="transaction-details">
+                    <div class="transaction-name">Whole Foods Market</div>
+                    <div class="transaction-category">Groceries</div>
+                    <div class="transaction-time">2:15 PM</div>
+                  </div>
+                </div>
+                <div class="transaction-amount amount-negative">-$87.32</div>
+              </div>
+
+              <h2 class="transaction-date">March 12</h2>
+
+              <div class="transaction-item">
+                <div class="transaction-info">
+                  <div
+                    class="transaction-icon"
+                    style="background-color: rgba(23, 162, 184, 0.2)"
+                  >
+                    <i
+                      data-lucide="wifi"
+                      width="24"
+                      height="24"
+                      style="color: var(--info)"
+                    ></i>
+                  </div>
+                  <div class="transaction-details">
+                    <div class="transaction-name">Comcast Internet</div>
+                    <div class="transaction-category">Bills & Utilities</div>
+                    <div class="transaction-time">9:00 AM</div>
+                  </div>
+                </div>
+                <div class="transaction-amount amount-negative">-$79.99</div>
+              </div>
+
+              <div class="transaction-item">
+                <div class="transaction-info">
+                  <div
+                    class="transaction-icon"
+                    style="background-color: rgba(159, 204, 52, 0.2)"
+                  >
+                    <i
+                      data-lucide="coffee"
+                      width="24"
+                      height="24"
+                      style="color: var(--wise)"
+                    ></i>
+                  </div>
+                  <div class="transaction-details">
+                    <div class="transaction-name">Starbucks</div>
+                    <div class="transaction-category">Food & Dining</div>
+                    <div class="transaction-time">8:15 AM</div>
+                  </div>
+                </div>
+                <div class="transaction-amount amount-negative">-$5.45</div>
+              </div>
+            </div>
+
+            <button class="load-more">
+              <i
+                data-lucide="chevrons-down"
+                width="20"
+                height="20"
+                class="mr-2"
+              ></i>
+              <span>Load More</span>
+            </button>
+          </div>
+        </main>
+
+        <!-- Bottom navigation (mobile only) -->
+        <nav class="bottom-nav">
+          <a href="#" class="nav-item">
+            <i data-lucide="home" class="nav-icon" width="20" height="20"></i>
+            <span class="nav-label">Home</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i
+              data-lucide="pie-chart"
+              class="nav-icon"
+              width="20"
+              height="20"
+            ></i>
+            <span class="nav-label">Budget</span>
+          </a>
+          <div class="add-button">
+            <i data-lucide="plus" width="24" height="24"></i>
+          </div>
+          <a href="#" class="nav-item active">
+            <i
+              data-lucide="credit-card"
+              class="nav-icon"
+              width="20"
+              height="20"
+            ></i>
+            <span class="nav-label">Trans</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i data-lucide="user" class="nav-icon" width="20" height="20"></i>
+            <span class="nav-label">Profile</span>
+          </a>
+        </nav>
+      </div>
     </div>
-    
+
     <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
-        
-        // Animation for cards
-        document.addEventListener('DOMContentLoaded', function() {
-            const animatedElements = document.querySelectorAll('.animate-in');
-            animatedElements.forEach(element => {
-                element.style.opacity = '0';
-            });
-            
-            setTimeout(() => {
-                animatedElements.forEach(element => {
-                    element.style.opacity = '1';
-                });
-            }, 100);
-        });
+      // Initialize Lucide icons
+      lucide.createIcons()
+
+      // Animation for cards
+      document.addEventListener('DOMContentLoaded', function () {
+        const animatedElements = document.querySelectorAll('.animate-in')
+        animatedElements.forEach((element) => {
+          element.style.opacity = '0'
+        })
+
+        setTimeout(() => {
+          animatedElements.forEach((element) => {
+            element.style.opacity = '1'
+          })
+        }, 100)
+      })
     </script>
-</body>
+  </body>
 </html>
