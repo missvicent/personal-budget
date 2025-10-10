@@ -22,13 +22,21 @@ declare module '@tanstack/react-router' {
 export function AppRouter() {
   const auth = useAuth()
 
+  if (!auth.isLoaded) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">Loading authentication...</div>
+      </div>
+    )
+  }
+
   return (
     <RouterProvider
       router={router}
       context={{
         auth: {
           isLoaded: auth.isLoaded,
-          isSignedIn: auth.isSignedIn ?? false,
+          isSignedIn: !!auth.isSignedIn,
           userId: auth.userId,
         },
       }}

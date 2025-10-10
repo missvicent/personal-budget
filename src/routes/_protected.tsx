@@ -6,9 +6,12 @@ function ProtectedComponent() {
 
 export const Route = createFileRoute('/_protected')({
   beforeLoad: ({ context, location }) => {
-    if (!context.auth.isLoaded) return
-    if (!context.auth.isSignedIn)
-      throw redirect({ to: '/auth/sign-in', search: location.search })
+    if (!context.auth.isSignedIn) {
+      throw redirect({
+        to: '/auth/sign-in',
+        search: { redirect: location.href },
+      })
+    }
   },
   component: ProtectedComponent,
 })
