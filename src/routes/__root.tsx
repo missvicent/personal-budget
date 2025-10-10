@@ -2,6 +2,7 @@ import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanstackDevtools } from '@tanstack/react-devtools'
 import Header from '@/components/ui/layout/Header'
+import Footer from '@/components/ui/layout/Footer'
 
 interface RouterContext {
   auth: {
@@ -18,6 +19,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       <main className="flex-1">
         <Outlet />
       </main>
+      <Footer />
       <TanstackDevtools
         config={{
           position: 'bottom-left',
