@@ -7,31 +7,47 @@ import {
 import { Link } from '@tanstack/react-router'
 
 export default function Header() {
-  const classes = 'hover:text-gray-300 active:text-gray-300'
-
+  const linkClasses =
+    'py-1 hover:text-purple-300 transition-colors [&.active]:border-b-2 [&.active]:border-purple-500'
   return (
-    <header className="p-4 flex w-full text-white items-center justify-between">
-      <div className="flex items-center gap-2">
-        <Link to="/">
-          <img src="/logo.svg" alt="BudgetApp" className="w-8 h-8" />
-        </Link>
-      </div>
+    <header className="relative w-full bg-purple-950/30 backdrop-blur-sm px-6 py-5 flex text-white items-center justify-between shadow-lg">
+      <Link to="/" className="flex items-center gap-4 shrink-0 z-10">
+        <img src="/logo.svg" alt="BudgetApp" className="w-14 h-14 rounded-xl" />
+        <div className="hidden sm:flex flex-col justify-center">
+          <h1 className="text-xl font-boldleading-tight">Personal Budget</h1>
+          <p className="text-sm text-purple-300/70 leading-tight">
+            Budget friendly, life ready
+          </p>
+        </div>
+      </Link>
 
-      <nav className="hidden md:flex flex-1 justify-center">
-        <ul className="flex gap-6 lg:gap-12 font-bold list-none">
+      <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center">
+        <ul className="flex gap-8 lg:gap-12 font-medium list-none items-center">
           <SignedIn>
-            <li>
-              <Link className={classes} to="/dashboard">
+            <li className="flex items-center">
+              <Link
+                to="/dashboard"
+                className={linkClasses}
+                activeProps={{ className: 'active' }}
+              >
                 Dashboard
               </Link>
             </li>
-            <li>
-              <Link className={classes} to="/budget">
+            <li className="flex items-center">
+              <Link
+                to="/budget"
+                className={linkClasses}
+                activeProps={{ className: 'active' }}
+              >
                 Budget
               </Link>
             </li>
-            <li>
-              <Link className={classes} to="/profile">
+            <li className="flex items-center">
+              <Link
+                to="/profile"
+                className={linkClasses}
+                activeProps={{ className: 'active' }}
+              >
                 Profile
               </Link>
             </li>
@@ -39,7 +55,7 @@ export default function Header() {
         </ul>
       </nav>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 shrink-0 z-10">
         <SignedIn>
           <UserButton />
         </SignedIn>
