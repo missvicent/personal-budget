@@ -1,10 +1,22 @@
-import { Outlet, createRootRoute } from '@tanstack/react-router'
+import {
+  Outlet,
+  createRootRoute,
+  createRootRouteWithContext,
+} from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanstackDevtools } from '@tanstack/react-devtools'
 
-import Header from '../components/ui/Header'
+import Header from '../components/ui/layout/Header'
 
-export const Route = createRootRoute({
+interface RouterContext {
+  auth: {
+    isLoaded: boolean
+    isSignedIn: boolean
+    userId: string | null | undefined
+  }
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: () => (
     <>
       <Header />

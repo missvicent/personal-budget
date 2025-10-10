@@ -8,5 +8,5 @@ count.txt
 .env.local
 .nitro
 .tanstack
-claude
+.claude/
 .cursor

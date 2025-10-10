@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { GoogleOAuthProvider } from '@react-oauth/google'
+
 import { supabase } from '../lib/supabaseClient'
 
 export const Route = createFileRoute('/')({
@@ -8,8 +8,6 @@ export const Route = createFileRoute('/')({
 })
 
 function App() {
-  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
-
   useEffect(() => {
     async function testConnection() {
       const { data: profiles, error } = await supabase
@@ -26,11 +24,5 @@ function App() {
     testConnection()
   }, [])
 
-  return (
-    <GoogleOAuthProvider clientId={clientId}>
-      <main>
-        <h1>Hello World</h1>
-      </main>
-    </GoogleOAuthProvider>
-  )
+  return <div>Personal Budget</div>
 }
