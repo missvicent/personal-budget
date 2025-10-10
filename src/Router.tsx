@@ -28,7 +28,7 @@ export function AppRouter() {
       context={{
         auth: {
           isLoaded: auth.isLoaded,
-          isSignedIn: auth.isSignedIn,
+          isSignedIn: auth.isSignedIn ?? false,
           userId: auth.userId,
         },
       }}
