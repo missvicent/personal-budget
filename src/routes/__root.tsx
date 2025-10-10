@@ -2,8 +2,6 @@ import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanstackDevtools } from '@tanstack/react-devtools'
 
-import Header from '../components/ui/layout/Header'
-
 interface RouterContext {
   auth: {
     isLoaded: boolean
@@ -15,7 +13,6 @@ interface RouterContext {
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: () => (
     <>
-      <Header />
       <Outlet />
       <TanstackDevtools
         config={{

@@ -1,9 +1,26 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { SignUp } from '@clerk/clerk-react'
+import { createFileRoute, useSearch } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/auth/sign-up')({
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      redirect: (search.redirect as string) || '/',
+    }
+  },
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  return <div>Hello &quot;/auth/register&quot;!</div>
+  const { redirect } = useSearch({ from: '/auth/sign-up' })
+
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <SignUp
+        routing="path"
+        path="/auth/sign-up"
+        signInUrl="/auth/sign-in"
+        fallbackRedirectUrl={redirect}
+      />
+    </div>
+  )
 }

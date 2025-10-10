@@ -1,28 +1,19 @@
-import { useEffect } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-
-import { supabase } from '../lib/supabaseClient'
+import Header from '@/components/ui/layout/Header'
 
 export const Route = createFileRoute('/')({
   component: App,
 })
 
 function App() {
-  useEffect(() => {
-    async function testConnection() {
-      const { data: profiles, error } = await supabase
-        .from('profiles')
-        .select('*')
-
-      if (error) {
-        console.error('Error:', error)
-      } else {
-        console.log('Profiles:', profiles)
-      }
-    }
-
-    testConnection()
-  }, [])
-
-  return <div>Personal Budget</div>
+  return (
+    <>
+      <div className="bg-gradient-to-br from-black via-purple-950 to-purple-925">
+        <Header />
+        <div className="flex flex-col items-center justify-center h-screen">
+          <h1 className="text-4xl font-bold text-white">Personal Budget</h1>
+        </div>
+      </div>
+    </>
+  )
 }

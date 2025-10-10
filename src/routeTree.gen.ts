@@ -14,6 +14,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/auth/sign-in'
 import { Route as ProtectedProfileIndexRouteImport } from './routes/_protected/profile/index'
+import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
+import { Route as ProtectedBudgetIndexRouteImport } from './routes/_protected/budget/index'
 
 const ProtectedRoute = ProtectedRouteImport.update({
   id: '/_protected',
@@ -39,17 +41,31 @@ const ProtectedProfileIndexRoute = ProtectedProfileIndexRouteImport.update({
   path: '/profile/',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedDashboardIndexRoute = ProtectedDashboardIndexRouteImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedBudgetIndexRoute = ProtectedBudgetIndexRouteImport.update({
+  id: '/budget/',
+  path: '/budget/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
+  '/budget': typeof ProtectedBudgetIndexRoute
+  '/dashboard': typeof ProtectedDashboardIndexRoute
   '/profile': typeof ProtectedProfileIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
+  '/budget': typeof ProtectedBudgetIndexRoute
+  '/dashboard': typeof ProtectedDashboardIndexRoute
   '/profile': typeof ProtectedProfileIndexRoute
 }
 export interface FileRoutesById {
@@ -58,19 +74,35 @@ export interface FileRoutesById {
   '/_protected': typeof ProtectedRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
+  '/_protected/budget/': typeof ProtectedBudgetIndexRoute
+  '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
   '/_protected/profile/': typeof ProtectedProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth/sign-in' | '/auth/sign-up' | '/profile'
+  fullPaths:
+    | '/'
+    | '/auth/sign-in'
+    | '/auth/sign-up'
+    | '/budget'
+    | '/dashboard'
+    | '/profile'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth/sign-in' | '/auth/sign-up' | '/profile'
+  to:
+    | '/'
+    | '/auth/sign-in'
+    | '/auth/sign-up'
+    | '/budget'
+    | '/dashboard'
+    | '/profile'
   id:
     | '__root__'
     | '/'
     | '/_protected'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/_protected/budget/'
+    | '/_protected/dashboard/'
     | '/_protected/profile/'
   fileRoutesById: FileRoutesById
 }
@@ -118,14 +150,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedProfileIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/dashboard/': {
+      id: '/_protected/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof ProtectedDashboardIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/budget/': {
+      id: '/_protected/budget/'
+      path: '/budget'
+      fullPath: '/budget'
+      preLoaderRoute: typeof ProtectedBudgetIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
   }
 }
 
 interface ProtectedRouteChildren {
+  ProtectedBudgetIndexRoute: typeof ProtectedBudgetIndexRoute
+  ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
   ProtectedProfileIndexRoute: typeof ProtectedProfileIndexRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedBudgetIndexRoute: ProtectedBudgetIndexRoute,
+  ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
   ProtectedProfileIndexRoute: ProtectedProfileIndexRoute,
 }
 
