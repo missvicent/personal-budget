@@ -5,7 +5,6 @@ import ReactDOM from 'react-dom/client'
 import { AppRouter } from './Router.tsx'
 
 import './styles.css'
-import reportWebVitals from './reportWebVitals.ts'
 
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
@@ -21,5 +20,3 @@ if (rootElement && !rootElement.innerHTML) {
     </StrictMode>,
   )
 }
-
-reportWebVitals()
