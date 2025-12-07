@@ -19,9 +19,9 @@ const heroContent: HeroContent = {
 // Reusable button styles
 const buttonStyles = {
   primary:
-    'py-7 px-12 bg-gradient-to-l from-purple-600 via-purple-500 to-purple-400 text-white hover:opacity-90 rounded-full md:px-20',
+    'py-7 px-12 text-lg  bg-gradient-to-l from-purple-600 via-purple-500 to-purple-400 text-white hover:opacity-90 rounded-full md:px-20',
   outline:
-    'py-7 px-12 bg-transparent border-2 border-purple-500 text-white hover:bg-purple-500 rounded-full transition-colors md:px-20',
+    'py-7 px-12 text-lg bg-transparent border-2 border-purple-500 text-white hover:bg-purple-500 rounded-full transition-colors md:px-20',
 } as const
 
 export default function HeroSection() {
