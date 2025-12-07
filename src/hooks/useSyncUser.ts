@@ -10,7 +10,7 @@ export function useSyncUser() {
   const hasAttemptedCreate = useRef(false)
 
   const getToken = async (): Promise<string | null> =>
-    session?.getToken() || null
+    session?.getToken({ template: 'supabase' }) || null
 
   const shouldSyncProfile = isLoaded && !!user && !!session
 
@@ -23,16 +23,13 @@ export function useSyncUser() {
     queryFn: async () => {
       if (!user || !session) return null
 
-      console.log('Fetching profile for user:', user.id)
       const supabase = createSupabaseClient(getToken)
-
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('clerk_user_id', user.id)
         .single()
 
-      console.log('Profile fetch result:', { data, error })
       if (error && error.code !== 'PGRST116') throw error
       return data
     },
@@ -44,22 +41,21 @@ export function useSyncUser() {
     mutationFn: async () => {
       if (!user || !session) throw new Error('User or session not found')
 
-      console.log('Creating profile for user:', user.id)
       const supabase = createSupabaseClient(getToken)
       const { data, error } = await supabase
         .from('profiles')
-        .insert({
-          clerk_user_id: user.id,
-          email: user.primaryEmailAddress?.emailAddress || '',
-          avatar_url: user.imageUrl,
-        })
+        .upsert(
+          {
+            clerk_user_id: user.id,
+            email: user.primaryEmailAddress?.emailAddress || '',
+            full_name: user.fullName,
+            avatar_url: user.imageUrl,
+          },
+          { onConflict: 'clerk_user_id' },
+        )
         .select()
         .single()
-      if (error) {
-        console.error('Error creating profile:', error)
-        throw error
-      }
-      console.log('Profile created:', data)
+      if (error) throw error
       return data
     },
     onSuccess: (data) => {
