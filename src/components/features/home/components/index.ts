@@ -1,2 +1,2 @@
-export { default as HeroSection } from './HeroSection'
-export { FeaturesSection, FeatureCard, FeatureTitle } from './FeaturesSection'
+export { default as HeroSection } from './Hero/HeroSection'
+export { FeaturesSection, FeatureCard } from './Features'
