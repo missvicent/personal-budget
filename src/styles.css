@@ -13,6 +13,7 @@ body {
 }
 
 @theme inline {
+  --min-height-content: calc(100vh - 100px);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

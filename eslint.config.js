@@ -6,6 +6,14 @@ import reactHooksPlugin from 'eslint-plugin-react-hooks'
 import jsxA11yPlugin from 'eslint-plugin-jsx-a11y'
 
 export default [
+  {
+    ignores: [
+      'src/components/ui/**',
+      'src/routeTree.gen.ts',
+      '*.config.js',
+      '*.config.ts',
+    ],
+  },
   ...tanstackConfig,
   {
     files: ['**/*.{jsx,tsx}'],

@@ -24,7 +24,7 @@ export function AppRouter() {
 
   if (!auth.isLoaded) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="text-lg">Loading authentication...</div>
       </div>
     )

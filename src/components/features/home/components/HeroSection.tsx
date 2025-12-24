@@ -26,8 +26,8 @@ const buttonStyles = {
 
 export default function HeroSection() {
   return (
-    <section className="min-h-[80vh] flex flex-col items-start justify-start p-8 md:items-center md:justify-center md:p-6">
-      <span className="text-2xl font-bold uppercase text-green-300 md:text-3xl">
+    <section className="min-h-content flex flex-col items-start justify-start p-8 md:items-center md:justify-center md:p-6">
+      <span className="text-2xl font-bold text-green-300 uppercase md:text-3xl">
         {heroContent.badge}
       </span>
 
@@ -35,7 +35,7 @@ export default function HeroSection() {
         {heroContent.title}
       </h1>
 
-      <h2 className="pb-4 text-6xl font-bold bg-gradient-to-r from-purple-500 via-purple-400 to-purple-300 bg-clip-text text-transparent md:text-7xl">
+      <h2 className="bg-gradient-to-r from-purple-500 via-purple-400 to-purple-300 bg-clip-text pb-4 text-6xl font-bold text-transparent md:text-7xl">
         {heroContent.subtitle}
       </h2>
 
@@ -43,9 +43,9 @@ export default function HeroSection() {
         {heroContent.description}
       </p>
 
-      <div className="flex justify-center w-full mt-6 gap-4">
+      <div className="mt-6 flex w-full justify-center gap-4">
         <Button className={buttonStyles.primary} size="lg">
-          Get Started
+          Start Now
         </Button>
         <Button className={buttonStyles.outline} size="lg">
           Learn More

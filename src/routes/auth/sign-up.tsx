@@ -14,7 +14,7 @@ function RouteComponent() {
   const { redirect } = useSearch({ from: '/auth/sign-up' })
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex min-h-screen items-center justify-center">
       <SignUp
         routing="path"
         path="/auth/sign-up"
