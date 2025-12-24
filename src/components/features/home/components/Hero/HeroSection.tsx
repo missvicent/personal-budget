@@ -26,7 +26,7 @@ const buttonStyles = {
 
 export default function HeroSection() {
   return (
-    <section className="min-h-content flex flex-col items-start justify-start p-8 md:items-center md:justify-center md:p-6">
+    <section className="min-h-content flex flex-col items-center justify-center p-8 md:p-6">
       <span className="text-2xl font-bold text-green-300 uppercase md:text-3xl">
         {heroContent.badge}
       </span>
@@ -39,7 +39,7 @@ export default function HeroSection() {
         {heroContent.subtitle}
       </h2>
 
-      <p className="mt-4 max-w-2xl text-2xl font-semibold text-purple-300 opacity-90 md:text-center">
+      <p className="mt-4 max-w-2xl text-center text-2xl font-semibold text-purple-300 opacity-90">
         {heroContent.description}
       </p>
 
