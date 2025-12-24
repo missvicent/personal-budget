@@ -12,7 +12,7 @@ export default function SectionHeader({
   description,
 }: SectionHeaderProps) {
   return (
-    <div className="mb-16 text-center lg:mb-20">
+    <div className="mb-4 text-center">
       <p className="mb-4 text-sm font-semibold tracking-wider text-purple-400 uppercase">
         {badge}
       </p>

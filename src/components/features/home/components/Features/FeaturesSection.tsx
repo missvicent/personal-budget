@@ -1,10 +1,8 @@
 import { BarChart3, Receipt, Sparkles, Wallet } from 'lucide-react'
 
-
 import { FEATURES } from './constants'
 import FeatureCard from './FeatureCard'
 import type { LucideProps } from 'lucide-react'
-import type { Feature } from '../../types'
 import type { ComponentType } from 'react'
 import SectionHeader from '@/components/common/SectionHeader'
 
