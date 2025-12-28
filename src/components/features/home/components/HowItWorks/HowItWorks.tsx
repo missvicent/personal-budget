@@ -13,7 +13,7 @@ export default function HowItWorks() {
         highlight="financial clarity"
       />
 
-      <div className="flex w-full flex-col gap-6">
+      <div className="flex w-full flex-col gap-6 p-5">
         {steps.map((step) => (
           <HowItWorksCard
             key={step.id}
