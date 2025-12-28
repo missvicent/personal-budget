@@ -9,22 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ProtectedRouteImport } from './routes/_protected'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as PublicRouteImport } from './routes/_public'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/auth/sign-in'
-import { Route as ProtectedProfileIndexRouteImport } from './routes/_protected/profile/index'
-import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
-import { Route as ProtectedBudgetIndexRouteImport } from './routes/_protected/budget/index'
+import { Route as AppProfileIndexRouteImport } from './routes/_app/profile/index'
+import { Route as AppDashboardIndexRouteImport } from './routes/_app/dashboard/index'
+import { Route as AppBudgetIndexRouteImport } from './routes/_app/budget/index'
 
-const ProtectedRoute = ProtectedRouteImport.update({
-  id: '/_protected',
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
 const AuthSignUpRoute = AuthSignUpRouteImport.update({
   id: '/auth/sign-up',
@@ -36,98 +41,107 @@ const AuthSignInRoute = AuthSignInRouteImport.update({
   path: '/auth/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProtectedProfileIndexRoute = ProtectedProfileIndexRouteImport.update({
+const AppProfileIndexRoute = AppProfileIndexRouteImport.update({
   id: '/profile/',
   path: '/profile/',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => AppRoute,
 } as any)
-const ProtectedDashboardIndexRoute = ProtectedDashboardIndexRouteImport.update({
+const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => AppRoute,
 } as any)
-const ProtectedBudgetIndexRoute = ProtectedBudgetIndexRouteImport.update({
+const AppBudgetIndexRoute = AppBudgetIndexRouteImport.update({
   id: '/budget/',
   path: '/budget/',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
-  '/budget': typeof ProtectedBudgetIndexRoute
-  '/dashboard': typeof ProtectedDashboardIndexRoute
-  '/profile': typeof ProtectedProfileIndexRoute
+  '/': typeof PublicIndexRoute
+  '/budget': typeof AppBudgetIndexRoute
+  '/dashboard': typeof AppDashboardIndexRoute
+  '/profile': typeof AppProfileIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
-  '/budget': typeof ProtectedBudgetIndexRoute
-  '/dashboard': typeof ProtectedDashboardIndexRoute
-  '/profile': typeof ProtectedProfileIndexRoute
+  '/': typeof PublicIndexRoute
+  '/budget': typeof AppBudgetIndexRoute
+  '/dashboard': typeof AppDashboardIndexRoute
+  '/profile': typeof AppProfileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/_protected': typeof ProtectedRouteWithChildren
+  '/_app': typeof AppRouteWithChildren
+  '/_public': typeof PublicRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
-  '/_protected/budget/': typeof ProtectedBudgetIndexRoute
-  '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
-  '/_protected/profile/': typeof ProtectedProfileIndexRoute
+  '/_public/': typeof PublicIndexRoute
+  '/_app/budget/': typeof AppBudgetIndexRoute
+  '/_app/dashboard/': typeof AppDashboardIndexRoute
+  '/_app/profile/': typeof AppProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/'
     | '/budget'
     | '/dashboard'
     | '/profile'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/'
     | '/budget'
     | '/dashboard'
     | '/profile'
   id:
     | '__root__'
-    | '/'
-    | '/_protected'
+    | '/_app'
+    | '/_public'
     | '/auth/sign-in'
     | '/auth/sign-up'
-    | '/_protected/budget/'
-    | '/_protected/dashboard/'
-    | '/_protected/profile/'
+    | '/_public/'
+    | '/_app/budget/'
+    | '/_app/dashboard/'
+    | '/_app/profile/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  ProtectedRoute: typeof ProtectedRouteWithChildren
+  AppRoute: typeof AppRouteWithChildren
+  PublicRoute: typeof PublicRouteWithChildren
   AuthSignInRoute: typeof AuthSignInRoute
   AuthSignUpRoute: typeof AuthSignUpRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_protected': {
-      id: '/_protected'
+    '/_public': {
+      id: '/_public'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof ProtectedRouteImport
+      preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public/': {
+      id: '/_public/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/auth/sign-up': {
       id: '/auth/sign-up'
@@ -143,49 +157,58 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignInRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_protected/profile/': {
-      id: '/_protected/profile/'
+    '/_app/profile/': {
+      id: '/_app/profile/'
       path: '/profile'
       fullPath: '/profile'
-      preLoaderRoute: typeof ProtectedProfileIndexRouteImport
-      parentRoute: typeof ProtectedRoute
+      preLoaderRoute: typeof AppProfileIndexRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/_protected/dashboard/': {
-      id: '/_protected/dashboard/'
+    '/_app/dashboard/': {
+      id: '/_app/dashboard/'
       path: '/dashboard'
       fullPath: '/dashboard'
-      preLoaderRoute: typeof ProtectedDashboardIndexRouteImport
-      parentRoute: typeof ProtectedRoute
+      preLoaderRoute: typeof AppDashboardIndexRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/_protected/budget/': {
-      id: '/_protected/budget/'
+    '/_app/budget/': {
+      id: '/_app/budget/'
       path: '/budget'
       fullPath: '/budget'
-      preLoaderRoute: typeof ProtectedBudgetIndexRouteImport
-      parentRoute: typeof ProtectedRoute
+      preLoaderRoute: typeof AppBudgetIndexRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
-interface ProtectedRouteChildren {
-  ProtectedBudgetIndexRoute: typeof ProtectedBudgetIndexRoute
-  ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
-  ProtectedProfileIndexRoute: typeof ProtectedProfileIndexRoute
+interface AppRouteChildren {
+  AppBudgetIndexRoute: typeof AppBudgetIndexRoute
+  AppDashboardIndexRoute: typeof AppDashboardIndexRoute
+  AppProfileIndexRoute: typeof AppProfileIndexRoute
 }
 
-const ProtectedRouteChildren: ProtectedRouteChildren = {
-  ProtectedBudgetIndexRoute: ProtectedBudgetIndexRoute,
-  ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
-  ProtectedProfileIndexRoute: ProtectedProfileIndexRoute,
+const AppRouteChildren: AppRouteChildren = {
+  AppBudgetIndexRoute: AppBudgetIndexRoute,
+  AppDashboardIndexRoute: AppDashboardIndexRoute,
+  AppProfileIndexRoute: AppProfileIndexRoute,
 }
 
-const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
-  ProtectedRouteChildren,
-)
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
+interface PublicRouteChildren {
+  PublicIndexRoute: typeof PublicIndexRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicIndexRoute: PublicIndexRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  ProtectedRoute: ProtectedRouteWithChildren,
+  AppRoute: AppRouteWithChildren,
+  PublicRoute: PublicRouteWithChildren,
   AuthSignInRoute: AuthSignInRoute,
   AuthSignUpRoute: AuthSignUpRoute,
 }
