@@ -1,4 +1,14 @@
+import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
+
+const fadeUpVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (delay: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, delay, ease: 'easeOut' as const },
+  }),
+}
 
 interface HeroContent {
   badge: string
@@ -27,30 +37,60 @@ const buttonStyles = {
 export default function HeroSection() {
   return (
     <section className="min-h-content flex flex-col items-center justify-center p-8 md:p-6">
-      <span className="text-2xl font-bold text-green-300 uppercase md:text-3xl">
+      <motion.span
+        className="text-2xl font-bold text-green-300 uppercase md:text-3xl"
+        variants={fadeUpVariants}
+        initial="hidden"
+        animate="visible"
+        custom={0}
+      >
         {heroContent.badge}
-      </span>
+      </motion.span>
 
-      <h1 className="text-7xl font-bold text-white lg:text-8xl">
+      <motion.h1
+        className="text-7xl font-bold text-white lg:text-8xl"
+        variants={fadeUpVariants}
+        initial="hidden"
+        animate="visible"
+        custom={0.1}
+      >
         {heroContent.title}
-      </h1>
+      </motion.h1>
 
-      <h2 className="bg-gradient-to-r from-purple-500 via-purple-400 to-purple-300 bg-clip-text pb-4 text-6xl font-bold text-transparent md:text-7xl">
+      <motion.h2
+        className="bg-gradient-to-r from-purple-500 via-purple-400 to-purple-300 bg-clip-text pb-4 text-6xl font-bold text-transparent md:text-7xl"
+        variants={fadeUpVariants}
+        initial="hidden"
+        animate="visible"
+        custom={0.2}
+      >
         {heroContent.subtitle}
-      </h2>
+      </motion.h2>
 
-      <p className="mt-4 max-w-2xl text-center text-2xl font-semibold text-purple-300 opacity-90">
+      <motion.p
+        className="mt-4 max-w-2xl text-center text-2xl font-semibold text-purple-300 opacity-90"
+        variants={fadeUpVariants}
+        initial="hidden"
+        animate="visible"
+        custom={0.3}
+      >
         {heroContent.description}
-      </p>
+      </motion.p>
 
-      <div className="mt-6 flex w-full justify-center gap-4">
+      <motion.div
+        className="mt-6 flex w-full justify-center gap-4"
+        variants={fadeUpVariants}
+        initial="hidden"
+        animate="visible"
+        custom={0.4}
+      >
         <Button className={buttonStyles.primary} size="lg">
           Start Now
         </Button>
         <Button className={buttonStyles.outline} size="lg">
           Learn More
         </Button>
-      </div>
+      </motion.div>
     </section>
   )
 }
