@@ -1,14 +1,24 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
-import AppHeader from '@/components/common/AppHeader'
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from '@/components/ui/sidebar'
+import { AppSidebar } from '@/components/common/AppSidebar'
 
 function AppLayout() {
   return (
-    <>
-      <AppHeader />
-      <main className="flex-1">
-        <Outlet />
-      </main>
-    </>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <header className="flex items-center gap-2 p-4">
+          <SidebarTrigger />
+        </header>
+        <main className="bg-app-bg flex-1">
+          <Outlet />
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
 

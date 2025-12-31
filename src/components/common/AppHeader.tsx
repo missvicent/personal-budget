@@ -16,7 +16,6 @@ export default function AppHeader() {
           </p>
         </div>
       </Link>
-
       <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center md:flex">
         <ul className="flex list-none items-center gap-8 font-medium lg:gap-12">
           <li className="flex items-center">

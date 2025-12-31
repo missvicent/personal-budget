@@ -13,6 +13,12 @@ body {
 }
 
 @theme inline {
+  /* Custom app colors */
+  --color-app-bg: rgb(15, 10, 31);
+  --color-app-border: rgba(126, 34, 206, 0.3);
+  --color-app-surface: rgb(20, 15, 40);
+  --color-app-surface-hover: rgb(30, 22, 55);
+
   --min-height-content: calc(100vh - 100px);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

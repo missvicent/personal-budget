@@ -13,11 +13,10 @@ interface RouterContext {
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: () => (
-    <div className="to-purple-925 flex min-h-screen flex-col bg-gradient-to-br from-black via-purple-950">
+    <div className="flex min-h-screen flex-col">
       <main className="flex-1">
         <Outlet />
       </main>
-      <Footer />
       <TanstackDevtools
         config={{
           position: 'bottom-left',

@@ -1,4 +1,4 @@
-import { useSyncUser } from '@/hooks/useSyncUser'
+import { useSyncUser } from '@/hooks/use-sync-user'
 
 export function UserSync({ children }: { children: React.ReactNode }) {
   // Run sync in background - never blocks rendering
