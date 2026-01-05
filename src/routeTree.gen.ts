@@ -14,7 +14,11 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/auth/sign-in'
+import { Route as AppTransactionsIndexRouteImport } from './routes/_app/transactions/index'
+import { Route as AppRecurringExpensesIndexRouteImport } from './routes/_app/recurring-expenses/index'
 import { Route as AppProfileIndexRouteImport } from './routes/_app/profile/index'
+import { Route as AppIaInsightsIndexRouteImport } from './routes/_app/ia-insights/index'
+import { Route as AppGoalTrackerIndexRouteImport } from './routes/_app/goal-tracker/index'
 import { Route as AppDashboardIndexRouteImport } from './routes/_app/dashboard/index'
 import { Route as AppBudgetIndexRouteImport } from './routes/_app/budget/index'
 
@@ -41,9 +45,30 @@ const AuthSignInRoute = AuthSignInRouteImport.update({
   path: '/auth/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppTransactionsIndexRoute = AppTransactionsIndexRouteImport.update({
+  id: '/transactions/',
+  path: '/transactions/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRecurringExpensesIndexRoute =
+  AppRecurringExpensesIndexRouteImport.update({
+    id: '/recurring-expenses/',
+    path: '/recurring-expenses/',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppProfileIndexRoute = AppProfileIndexRouteImport.update({
   id: '/profile/',
   path: '/profile/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppIaInsightsIndexRoute = AppIaInsightsIndexRouteImport.update({
+  id: '/ia-insights/',
+  path: '/ia-insights/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGoalTrackerIndexRoute = AppGoalTrackerIndexRouteImport.update({
+  id: '/goal-tracker/',
+  path: '/goal-tracker/',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
@@ -63,7 +88,11 @@ export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/budget': typeof AppBudgetIndexRoute
   '/dashboard': typeof AppDashboardIndexRoute
+  '/goal-tracker': typeof AppGoalTrackerIndexRoute
+  '/ia-insights': typeof AppIaInsightsIndexRoute
   '/profile': typeof AppProfileIndexRoute
+  '/recurring-expenses': typeof AppRecurringExpensesIndexRoute
+  '/transactions': typeof AppTransactionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth/sign-in': typeof AuthSignInRoute
@@ -71,7 +100,11 @@ export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/budget': typeof AppBudgetIndexRoute
   '/dashboard': typeof AppDashboardIndexRoute
+  '/goal-tracker': typeof AppGoalTrackerIndexRoute
+  '/ia-insights': typeof AppIaInsightsIndexRoute
   '/profile': typeof AppProfileIndexRoute
+  '/recurring-expenses': typeof AppRecurringExpensesIndexRoute
+  '/transactions': typeof AppTransactionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -82,7 +115,11 @@ export interface FileRoutesById {
   '/_public/': typeof PublicIndexRoute
   '/_app/budget/': typeof AppBudgetIndexRoute
   '/_app/dashboard/': typeof AppDashboardIndexRoute
+  '/_app/goal-tracker/': typeof AppGoalTrackerIndexRoute
+  '/_app/ia-insights/': typeof AppIaInsightsIndexRoute
   '/_app/profile/': typeof AppProfileIndexRoute
+  '/_app/recurring-expenses/': typeof AppRecurringExpensesIndexRoute
+  '/_app/transactions/': typeof AppTransactionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -92,7 +129,11 @@ export interface FileRouteTypes {
     | '/'
     | '/budget'
     | '/dashboard'
+    | '/goal-tracker'
+    | '/ia-insights'
     | '/profile'
+    | '/recurring-expenses'
+    | '/transactions'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth/sign-in'
@@ -100,7 +141,11 @@ export interface FileRouteTypes {
     | '/'
     | '/budget'
     | '/dashboard'
+    | '/goal-tracker'
+    | '/ia-insights'
     | '/profile'
+    | '/recurring-expenses'
+    | '/transactions'
   id:
     | '__root__'
     | '/_app'
@@ -110,7 +155,11 @@ export interface FileRouteTypes {
     | '/_public/'
     | '/_app/budget/'
     | '/_app/dashboard/'
+    | '/_app/goal-tracker/'
+    | '/_app/ia-insights/'
     | '/_app/profile/'
+    | '/_app/recurring-expenses/'
+    | '/_app/transactions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -157,11 +206,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignInRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/transactions/': {
+      id: '/_app/transactions/'
+      path: '/transactions'
+      fullPath: '/transactions'
+      preLoaderRoute: typeof AppTransactionsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/recurring-expenses/': {
+      id: '/_app/recurring-expenses/'
+      path: '/recurring-expenses'
+      fullPath: '/recurring-expenses'
+      preLoaderRoute: typeof AppRecurringExpensesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/profile/': {
       id: '/_app/profile/'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AppProfileIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/ia-insights/': {
+      id: '/_app/ia-insights/'
+      path: '/ia-insights'
+      fullPath: '/ia-insights'
+      preLoaderRoute: typeof AppIaInsightsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/goal-tracker/': {
+      id: '/_app/goal-tracker/'
+      path: '/goal-tracker'
+      fullPath: '/goal-tracker'
+      preLoaderRoute: typeof AppGoalTrackerIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/dashboard/': {
@@ -184,13 +261,21 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppBudgetIndexRoute: typeof AppBudgetIndexRoute
   AppDashboardIndexRoute: typeof AppDashboardIndexRoute
+  AppGoalTrackerIndexRoute: typeof AppGoalTrackerIndexRoute
+  AppIaInsightsIndexRoute: typeof AppIaInsightsIndexRoute
   AppProfileIndexRoute: typeof AppProfileIndexRoute
+  AppRecurringExpensesIndexRoute: typeof AppRecurringExpensesIndexRoute
+  AppTransactionsIndexRoute: typeof AppTransactionsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppBudgetIndexRoute: AppBudgetIndexRoute,
   AppDashboardIndexRoute: AppDashboardIndexRoute,
+  AppGoalTrackerIndexRoute: AppGoalTrackerIndexRoute,
+  AppIaInsightsIndexRoute: AppIaInsightsIndexRoute,
   AppProfileIndexRoute: AppProfileIndexRoute,
+  AppRecurringExpensesIndexRoute: AppRecurringExpensesIndexRoute,
+  AppTransactionsIndexRoute: AppTransactionsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

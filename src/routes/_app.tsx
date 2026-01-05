@@ -1,4 +1,6 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
+import { Calendar1Icon } from 'lucide-react'
+import dayjs from 'dayjs'
 import {
   SidebarInset,
   SidebarProvider,
@@ -7,14 +9,19 @@ import {
 import { AppSidebar } from '@/components/common/AppSidebar'
 
 function AppLayout() {
+  const currentDate = dayjs().format('MMMM D, YYYY')
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
-        <header className="flex items-center gap-2 p-4">
-          <SidebarTrigger />
+      <SidebarInset className="h-screen flex-col">
+        <header className="bg-sidebar border-sidebar-border flex h-[72px] shrink-0 items-center border-b-2 p-4">
+          <div className="flex items-center gap-2">
+            <Calendar1Icon className="h-4 w-4" />
+            <p>{currentDate}</p>
+            <p>Welcome back</p>
+          </div>
         </header>
-        <main className="bg-app-bg flex-1">
+        <main className="bg-sidebar flex-1 overflow-auto">
           <Outlet />
         </main>
       </SidebarInset>
