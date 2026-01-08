@@ -10,7 +10,14 @@ import './styles.css'
 
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 1000 * 60 * 5,
+        retry: 1,
+      },
+    },
+  })
 
   const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
   if (!PUBLISHABLE_KEY) throw new Error('Missing Publishable Key')
