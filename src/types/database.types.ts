@@ -70,3 +70,19 @@ export type CreateAccount = Omit<Account, 'id' | 'created_at' | 'updated_at'>
 export type UpdateAccount = Partial<
   Omit<Account, 'id' | 'user_id' | 'created_at' | 'updated_at'>
 >
+
+export interface TransactionFilters {
+  accountId?: string
+  categoryId?: string
+  type?: 'income' | 'expense'
+  startDate?: string
+  endDate?: string
+  page?: number
+  pageSize?: number
+}
+
+export interface PaginatedResponse<T> {
+  data: Array<T>
+  hasMore: boolean
+  total: number
+}
