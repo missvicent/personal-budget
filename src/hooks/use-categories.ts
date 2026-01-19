@@ -3,8 +3,6 @@ import type { Category } from '@/types/database.types'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { categoriesService } from '@/services/categories.service'
 
-const queryClient = useQueryClient()
-
 export const queryKeys = {
   categories: () => ['categories'],
   category: (id: string) => ['categories', id],
@@ -14,6 +12,9 @@ export const useCategories = (supabase: SupabaseClient) => {
   return useQuery<Array<Category>>({
     queryKey: queryKeys.categories(),
     queryFn: () => categoriesService.getAll(supabase),
+    enabled: !!supabase,
+    staleTime: 1000 * 60 * 5,
+    retry: false,
   })
 }
 
@@ -21,6 +22,7 @@ export const useCreateCategory = (
   category: Omit<Category, 'id' | 'created_at' | 'user_id'>,
   supabase: SupabaseClient,
 ) => {
+  const queryClient = useQueryClient()
   return useMutation<
     Category,
     Error,
@@ -42,6 +44,7 @@ export const useUpdateCategory = (
   category: Partial<Omit<Category, 'id' | 'created_at' | 'user_id'>>,
   supabase: SupabaseClient,
 ) => {
+  const queryClient = useQueryClient()
   return useMutation<
     Category,
     Error,

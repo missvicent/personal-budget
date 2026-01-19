@@ -3,10 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const categoriesService = {
   getAll: async (supabase: SupabaseClient): Promise<Array<Category>> => {
-    const { data, error } = await supabase
-      .from('categories')
-      .select('*')
-      .order('display_order', { ascending: true })
+    const { data, error } = await supabase.from('categories').select('*')
 
     if (error) throw error
     return data

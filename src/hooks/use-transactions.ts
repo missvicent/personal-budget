@@ -7,10 +7,8 @@ import type {
 } from '@/types/database.types'
 import { transactionsService } from '@/services/transactions.service'
 
-const queryClient = useQueryClient()
-
 export const queryKeys = {
-  transactions: () => ['transactions'],
+  transactions: (filters: TransactionFilters) => ['transactions', filters],
   transaction: (id: string) => ['transactions', id],
 }
 
@@ -19,8 +17,11 @@ export const useTransactions = (
   filters: TransactionFilters,
 ) => {
   return useQuery<PaginatedResponse<Transaction>>({
-    queryKey: queryKeys.transactions(),
+    queryKey: queryKeys.transactions(filters),
     queryFn: () => transactionsService.getAll(supabase, filters),
+    enabled: !!supabase,
+    staleTime: 1000 * 60 * 5,
+    retry: false,
   })
 }
 
@@ -28,6 +29,7 @@ export const useCreateTransaction = (
   transaction: Omit<Transaction, 'id' | 'created_at' | 'updated_at'>,
   supabase: SupabaseClient,
 ) => {
+  const queryClient = useQueryClient()
   return useMutation<
     Transaction,
     Error,
@@ -35,9 +37,9 @@ export const useCreateTransaction = (
   >({
     mutationFn: () => transactionsService.create(transaction, supabase),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.transactions() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.transactions({}) })
       queryClient.setQueryData(
-        queryKeys.transactions(),
+        queryKeys.transactions({}),
         (old: Array<Transaction>) => [...old, data],
       )
     },
@@ -49,6 +51,7 @@ export const useUpdateTransaction = (
   transaction: Partial<Omit<Transaction, 'id' | 'created_at' | 'updated_at'>>,
   supabase: SupabaseClient,
 ) => {
+  const queryClient = useQueryClient()
   return useMutation<
     Transaction,
     Error,
@@ -56,9 +59,9 @@ export const useUpdateTransaction = (
   >({
     mutationFn: () => transactionsService.update(id, transaction, supabase),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.transactions() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.transactions({}) })
       queryClient.setQueryData(
-        queryKeys.transactions(),
+        queryKeys.transactions({}),
         (old: Array<Transaction>) => old.map((t) => (t.id === id ? data : t)),
       )
     },
@@ -66,11 +69,15 @@ export const useUpdateTransaction = (
 }
 
 export const useDeleteTransaction = (id: string, supabase: SupabaseClient) => {
+  const queryClient = useQueryClient()
   return useMutation<void, Error, string>({
     mutationFn: () => transactionsService.delete(id, supabase),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.transactions() })
-      queryClient.removeQueries({ queryKey: queryKeys.transaction(id) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.transactions({}) })
+      queryClient.setQueryData(
+        queryKeys.transactions({}),
+        (old: Array<Transaction>) => old.filter((t) => t.id !== id),
+      )
     },
   })
 }
