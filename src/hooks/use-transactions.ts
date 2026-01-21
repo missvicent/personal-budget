@@ -7,7 +7,7 @@ import type {
 } from '@/types/database.types'
 import { transactionsService } from '@/services/transactions.service'
 
-export const queryKeys = {
+const queryKeys = {
   transactions: (filters: TransactionFilters) => ['transactions', filters],
   transaction: (id: string) => ['transactions', id],
 }

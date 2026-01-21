@@ -7,17 +7,17 @@
 
 body {
   margin: 0;
-  color: white;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 @theme inline {
   /* Custom app colors */
-  --color-app-bg: rgb(15, 10, 31);
-  --color-app-border: rgba(126, 34, 206, 0.3);
-  --color-app-surface: rgb(20, 15, 40);
-  --color-app-surface-hover: rgb(30, 22, 55);
+  --color-app-bg: rgb(250, 245, 255);
+  --color-app-bg-dark: rgb(24, 20, 36);
+  --color-app-border: rgba(168, 85, 247, 0.2);
+  --color-app-surface: rgb(255, 255, 255);
+  --color-app-surface-hover: rgb(245, 240, 255);
 
   --min-height-content: calc(100vh - 100px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -59,8 +59,8 @@ body {
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: oklch(0.98 0.01 300);
+  --foreground: oklch(0.2 0.02 280);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -93,24 +93,24 @@ body {
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: oklch(0.18 0.03 280);
+  --foreground: oklch(0.95 0.01 280);
+  --card: oklch(0.22 0.035 280);
+  --card-foreground: oklch(0.95 0.01 280);
+  --popover: oklch(0.22 0.035 280);
+  --popover-foreground: oklch(0.95 0.01 280);
+  --primary: oklch(0.7 0.15 280);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.25 0.03 280);
+  --secondary-foreground: oklch(0.95 0.01 280);
+  --muted: oklch(0.25 0.025 280);
+  --muted-foreground: oklch(0.65 0.02 280);
+  --accent: oklch(0.3 0.04 280);
+  --accent-foreground: oklch(0.95 0.01 280);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --border: oklch(0.35 0.04 280);
+  --input: oklch(0.28 0.03 280);
+  --ring: oklch(0.6 0.12 280);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
