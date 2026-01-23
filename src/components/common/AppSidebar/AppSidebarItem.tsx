@@ -13,10 +13,14 @@ export default function AppSidebarItem({
       <SidebarMenuButton asChild>
         <Link
           to={url}
-          className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md p-4"
+          className="flex items-center gap-2"
+          activeProps={{
+            className:
+              'border-l-4 border-purple-500 rounded-l-md text-purple-300 bg-purple-950/30 font-semibold',
+          }}
         >
-          <Icon className="text-md" />
-          <span className="text-md">{title}</span>
+          <Icon className="text-lg" />
+          <span className="text-md p-2">{title}</span>
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>

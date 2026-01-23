@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/common/AppSidebar/AppSidebar'
-import ThemeToggle from '@/components/common/ThemeToggle'
+import AppToolbar from '@/components/common/AppToolbar'
 
 function AppLayout() {
   // Menu items.
@@ -50,11 +50,7 @@ function AppLayout() {
     <SidebarProvider>
       <AppSidebar items={items} />
       <SidebarInset className="h-screen flex-col">
-        <header className="bg-sidebar border-sidebar-border flex h-[72px] shrink-0 items-center border-b-2 p-4">
-          <div className="flex w-full items-center justify-end gap-2">
-            <ThemeToggle />
-          </div>
-        </header>
+        <AppToolbar />
         <main className="bg-sidebar flex-1 overflow-auto">
           <Outlet />
         </main>
