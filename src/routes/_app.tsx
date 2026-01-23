@@ -1,30 +1,62 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
-import { Calendar1Icon, MoonIcon, SunIcon } from 'lucide-react'
-import dayjs from 'dayjs'
+import {
+  BarChart3,
+  LayoutDashboard,
+  Lightbulb,
+  MoonIcon,
+  Receipt,
+  RefreshCcw,
+  SunIcon,
+  Zap,
+} from 'lucide-react'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-import { AppSidebar } from '@/components/common/AppSidebar'
+import { AppSidebar } from '@/components/common/AppSidebar/AppSidebar'
 import { useTheme } from '@/hooks/use-theme'
-import { Switch } from '@/components/ui/switch'
+import ThemeToggle from '@/components/common/ThemeToggle'
 
 function AppLayout() {
   const { toggleTheme, isDarkMode } = useTheme()
+  // Menu items.
+  const items = [
+    {
+      title: 'Dashboard',
+      url: '/dashboard',
+      icon: LayoutDashboard,
+    },
+    {
+      title: 'Transactions',
+      url: '/transactions',
+      icon: Receipt,
+    },
+    {
+      title: 'Budget',
+      url: '/budget',
+      icon: BarChart3,
+    },
+    {
+      title: 'Recurring Expenses',
+      url: '/recurring-expenses',
+      icon: RefreshCcw,
+    },
+    {
+      title: 'Goal Tracker',
+      url: '/goal-tracker',
+      icon: Zap,
+    },
+    {
+      title: 'AI Insights',
+      url: '/ia-insights',
+      icon: Lightbulb,
+    },
+  ]
 
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar items={items} />
       <SidebarInset className="h-screen flex-col">
         <header className="bg-sidebar border-sidebar-border flex h-[72px] shrink-0 items-center border-b-2 p-4">
           <div className="flex w-full items-center justify-end gap-2">
-            <button
-              onClick={toggleTheme}
-              className="rounded-md p-2 hover:bg-gray-100"
-            >
-              {isDarkMode ? (
-                <SunIcon className="h-5 w-5" />
-              ) : (
-                <MoonIcon className="h-5 w-5" />
-              )}
-            </button>
+            <ThemeToggle />
           </div>
         </header>
         <main className="bg-sidebar flex-1 overflow-auto">
