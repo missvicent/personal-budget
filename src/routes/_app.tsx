@@ -3,19 +3,15 @@ import {
   BarChart3,
   LayoutDashboard,
   Lightbulb,
-  MoonIcon,
   Receipt,
   RefreshCcw,
-  SunIcon,
   Zap,
 } from 'lucide-react'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/common/AppSidebar/AppSidebar'
-import { useTheme } from '@/hooks/use-theme'
 import ThemeToggle from '@/components/common/ThemeToggle'
 
 function AppLayout() {
-  const { toggleTheme, isDarkMode } = useTheme()
   // Menu items.
   const items = [
     {
