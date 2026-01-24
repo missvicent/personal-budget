@@ -13,14 +13,14 @@ export default function AppSidebarItem({
       <SidebarMenuButton asChild>
         <Link
           to={url}
-          className="flex items-center gap-2"
+          className="flex items-center"
           activeProps={{
             className:
-              'border-l-4 border-purple-500 rounded-l-md text-purple-300 bg-purple-950/30 font-semibold',
+              'bg-sidebar-item-active-bg text-sidebar-item-active-text font-semibold border-l-4 border-sidebar-item-active-border rounded-l-md',
           }}
         >
-          <Icon className="text-lg" />
-          <span className="text-md p-2">{title}</span>
+          <Icon className="text-sm" />
+          <span className="text-sm">{title}</span>
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>

@@ -3,7 +3,7 @@ import { useSupabase } from '@/hooks/use-supabase'
 import { useCategories } from '@/hooks/use-categories'
 import { IconCard } from '@/components/shared'
 
-export const Route = createFileRoute('/_app/transactions/')({
+export const Route = createFileRoute('/_app/expenses/')({
   component: RouteComponent,
 })
 

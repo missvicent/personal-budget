@@ -1,10 +1,9 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
 import {
-  BarChart3,
-  LayoutDashboard,
-  Lightbulb,
-  Receipt,
-  RefreshCcw,
+  Brain,
+  ChartNoAxesCombined,
+  ClipboardList,
+  House,
   Zap,
 } from 'lucide-react'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
@@ -17,22 +16,17 @@ function AppLayout() {
     {
       title: 'Dashboard',
       url: '/dashboard',
-      icon: LayoutDashboard,
+      icon: House,
     },
     {
-      title: 'Transactions',
-      url: '/transactions',
-      icon: Receipt,
+      title: 'Expenses',
+      url: '/expenses',
+      icon: ClipboardList,
     },
     {
-      title: 'Budget',
+      title: 'Budgets',
       url: '/budget',
-      icon: BarChart3,
-    },
-    {
-      title: 'Recurring Expenses',
-      url: '/recurring-expenses',
-      icon: RefreshCcw,
+      icon: ChartNoAxesCombined,
     },
     {
       title: 'Goal Tracker',
@@ -42,7 +36,7 @@ function AppLayout() {
     {
       title: 'AI Insights',
       url: '/ia-insights',
-      icon: Lightbulb,
+      icon: Brain,
     },
   ]
 
@@ -51,7 +45,7 @@ function AppLayout() {
       <AppSidebar items={items} />
       <SidebarInset className="h-screen flex-col">
         <AppToolbar />
-        <main className="bg-sidebar flex-1 overflow-auto">
+        <main className="dark:bg-sidebar flex-1 overflow-auto">
           <Outlet />
         </main>
       </SidebarInset>
