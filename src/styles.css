@@ -74,9 +74,10 @@ body {
   --foreground: oklch(0.2 0.02 280);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
+  --card-border: oklch(0.9 0.01 280);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: var(--purple-bright);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -108,6 +109,9 @@ body {
   --sidebar-item-active-bg: oklch(0.94 0.04 290);
   --sidebar-item-active-text: oklch(0.45 0.2 290);
   --sidebar-item-active-border: var(--purple-bright);
+
+  /* Content */
+  --content-background: oklch(0.9842 0.0034 247.86);
 }
 
 .dark {
@@ -120,11 +124,11 @@ body {
   /* App colors */
   --background: oklch(0.18 0.03 280);
   --foreground: oklch(0.95 0.01 280);
-  --card: oklch(0.22 0.035 280);
+  --card: oklch(0.2099 0.0318 297.98);
   --card-foreground: var(--foreground);
   --popover: oklch(0.22 0.035 280);
   --popover-foreground: var(--foreground);
-  --primary: oklch(0.7 0.15 280);
+  --primary: oklch(0.558 0.228 292.717);
   --primary-foreground: oklch(0.98 0 0);
   --secondary: oklch(0.25 0.03 280);
   --secondary-foreground: var(--foreground);
@@ -133,7 +137,7 @@ body {
   --accent: oklch(0.3 0.04 280);
   --accent-foreground: var(--foreground);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: var(--purple-border);
+  --border: oklch(0.345 0.128 286.067 / 0.5);
   --input: oklch(0.28 0.03 280);
   --ring: oklch(0.6 0.12 280);
   --chart-1: oklch(0.488 0.243 264.376);
@@ -156,6 +160,9 @@ body {
   --sidebar-item-active-bg: oklch(0.22 0.08 285);
   --sidebar-item-active-text: oklch(0.8 0.15 290);
   --sidebar-item-active-border: var(--purple-bright);
+
+  /* Content */
+  --content-background: oklch(0.1649 0.0429 291.98);
 }
 
 /* =================================
@@ -163,10 +170,6 @@ body {
    ================================= */
 [data-slot='sidebar-wrapper'] [data-slot='sidebar-content'] {
   padding: 0.25rem;
-}
-
-[data-slot='sidebar-menu'] > [data-slot='sidebar-menu-item'] {
-  padding-bottom: 0.25rem;
 }
 
 @layer base {

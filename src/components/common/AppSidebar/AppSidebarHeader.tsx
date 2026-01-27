@@ -18,12 +18,6 @@ export default function AppSidebarHeader() {
         )}
       >
         <img src="/logo.svg" alt="BudgetApp" className="h-12 w-12" />
-        <div>
-          <p className="text-sidebar-foreground/80 text-sm leading-tight font-semibold">
-            Personal Budget
-          </p>
-          <p className="text-sidebar-primary text-xs">Expense Manager</p>
-        </div>
       </div>
     </SidebarHeader>
   )
