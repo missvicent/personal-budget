@@ -11,12 +11,7 @@ export default function AppSidebarHeader() {
         'group-data-[collapsible=icon]:px-0',
       )}
     >
-      <div
-        className={cn(
-          'flex items-center gap-2',
-          'group-data-[collapsible=icon]:hidden',
-        )}
-      >
+      <div className={cn('group-data-[collapsible=icon]:flex')}>
         <img src="/logo.svg" alt="BudgetApp" className="h-12 w-12" />
       </div>
     </SidebarHeader>

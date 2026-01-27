@@ -41,7 +41,7 @@ function AppLayout() {
   ]
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={false}>
       <AppSidebar items={items} />
       <SidebarInset className="h-screen flex-col">
         <AppToolbar />
