@@ -27,6 +27,7 @@ export default function AppSidebarItem({
               }}
             >
               <Icon className="h-10 w-10 p-2" />
+              <span className="block md:hidden">{title}</span>
             </Link>
           </TooltipTrigger>
           <TooltipContent side="right">

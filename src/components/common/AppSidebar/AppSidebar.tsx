@@ -1,8 +1,11 @@
+import { UserButtonWithName } from '../UserButtonWithName'
+import ThemeToggle from '../ThemeToggle'
 import AppSidebarItem from './AppSidebarItem'
 import AppSidebarHeader from './AppSidebarHeader'
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
@@ -27,6 +30,10 @@ export function AppSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="flex-start flex gap-2 p-2">
+        <UserButtonWithName />
+        <ThemeToggle />
+      </SidebarFooter>
     </Sidebar>
   )
 }

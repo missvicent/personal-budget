@@ -1,3 +1,4 @@
+import { SidebarTrigger } from '../ui/sidebar'
 import ThemeToggle from './ThemeToggle'
 import { cn } from '@/lib/utils'
 
@@ -11,7 +12,7 @@ export default function AppToolbar() {
       )}
     >
       <div className={cn('flex w-full items-center justify-end', 'gap-2 p-4')}>
-        <ThemeToggle />
+        <SidebarTrigger className="md:hidden" />
       </div>
     </header>
   )
