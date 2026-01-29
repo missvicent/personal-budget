@@ -11,7 +11,9 @@ export default function AppToolbar() {
         'flex shrink-0 items-center',
       )}
     >
-      <div className={cn('flex w-full items-center justify-end', 'gap-2 p-4')}>
+      <div
+        className={cn('flex w-full items-center justify-start', 'gap-2 p-4')}
+      >
         <SidebarTrigger className="md:hidden" />
       </div>
     </header>
