@@ -3,8 +3,8 @@ import { StatCard } from '@/components/shared'
 export interface SummaryGridProps {
   summaryData: Array<{
     title: string
-    percentage: number
-    badgeType: 'positive' | 'negative'
+    percentage?: number
+    badgeType?: 'positive' | 'negative'
     amountSpent: number
     additionalDescription: string
   }>

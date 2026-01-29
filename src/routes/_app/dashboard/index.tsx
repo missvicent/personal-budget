@@ -30,8 +30,6 @@ const summaryData: SummaryGridProps['summaryData'] = [
   },
   {
     title: 'Total Investments',
-    percentage: 10,
-    badgeType: 'positive',
     amountSpent: 1000,
     additionalDescription: 'Total investments for the month',
   },
