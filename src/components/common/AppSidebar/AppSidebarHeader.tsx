@@ -20,7 +20,7 @@ export default function AppSidebarHeader() {
           <img src="/logo.svg" alt="BudgetApp" className="h-12 w-12" />
         </div>
 
-        <div className="items-left flex flex-col gap-1 md:hidden">
+        <div className="items-left flex flex-col gap-1 group-data-[collapsible=icon]:hidden">
           <span className="text-sm font-bold">Personal Budget</span>
           <span className="text-muted-foreground text-xs">
             Budget friendly, life ready

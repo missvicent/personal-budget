@@ -23,13 +23,13 @@ export const StatCard = ({
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <p className="text-md font-semibold uppercase">{title}</p>
+        <p className="text-base font-semibold uppercase">{title}</p>
         {percentage && (
           <Badge
             variant="outline"
             className={cn(badgeColor, 'border-0 px-3 py-1')}
           >
-            <p className="text-md">{percentage}%</p>
+            <p className="text-base">{percentage}%</p>
           </Badge>
         )}
       </CardHeader>

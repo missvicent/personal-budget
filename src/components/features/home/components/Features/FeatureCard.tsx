@@ -24,7 +24,7 @@ export default function FeatureCard({ feature, Icon }: FeatureCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-md text-white">{description}</p>
+        <p className="text-base text-white">{description}</p>
       </CardContent>
     </Card>
   )

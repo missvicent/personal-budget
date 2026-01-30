@@ -18,7 +18,7 @@ export default function HowItWorksCard({
       </div>
       <div className="flex flex-1 flex-col items-center justify-center gap-2">
         <h3 className="text-2xl font-bold text-white">{title}</h3>
-        <p className="text-md text-white">{description}</p>
+        <p className="text-base text-white">{description}</p>
       </div>
     </div>
   )

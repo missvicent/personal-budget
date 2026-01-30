@@ -5,6 +5,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { cn } from '@/lib/utils'
 
 export default function AppSidebarItem({
   item,
@@ -23,11 +24,13 @@ export default function AppSidebarItem({
               className="flex items-center"
               activeProps={{
                 className:
-                  'bg-sidebar-item-active-bg text-sidebar-item-active-text font-semibold border-l-4  border-sidebar-item-active-border rounded-l-md',
+                  'bg-sidebar-item-active-bg text-sidebar-item-active-text font-semibold border-l-4 border-sidebar-item-active-border rounded-l-md',
               }}
             >
               <Icon className="h-10 w-10 p-2" />
-              <span className="block md:hidden">{title}</span>
+              <span className="group-data-[collapsible=icon]:hidden">
+                {title}
+              </span>
             </Link>
           </TooltipTrigger>
           <TooltipContent side="right">
