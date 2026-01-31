@@ -1,27 +1,51 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
-import { Calendar1Icon } from 'lucide-react'
-import dayjs from 'dayjs'
 import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from '@/components/ui/sidebar'
-import { AppSidebar } from '@/components/common/AppSidebar'
+  Brain,
+  ChartNoAxesCombined,
+  ClipboardList,
+  House,
+  Zap,
+} from 'lucide-react'
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import { AppSidebar } from '@/components/common/AppSidebar/AppSidebar'
+import AppToolbar from '@/components/common/AppToolbar'
 
 function AppLayout() {
-  const currentDate = dayjs().format('MMMM D, YYYY')
+  // Menu items.
+  const items = [
+    {
+      title: 'Dashboard',
+      url: '/dashboard',
+      icon: House,
+    },
+    {
+      title: 'Expenses',
+      url: '/expenses',
+      icon: ClipboardList,
+    },
+    {
+      title: 'Budgets',
+      url: '/budget',
+      icon: ChartNoAxesCombined,
+    },
+    {
+      title: 'Goal Tracker',
+      url: '/goal-tracker',
+      icon: Zap,
+    },
+    {
+      title: 'AI Insights',
+      url: '/ia-insights',
+      icon: Brain,
+    },
+  ]
+
   return (
-    <SidebarProvider>
-      <AppSidebar />
+    <SidebarProvider defaultOpen={false}>
+      <AppSidebar items={items} />
       <SidebarInset className="h-screen flex-col">
-        <header className="bg-sidebar border-sidebar-border flex h-[72px] shrink-0 items-center border-b-2 p-4">
-          <div className="flex items-center gap-2">
-            <Calendar1Icon className="h-4 w-4" />
-            <p>{currentDate}</p>
-            <p>Welcome back</p>
-          </div>
-        </header>
-        <main className="bg-sidebar flex-1 overflow-auto">
+        <AppToolbar />
+        <main className="bg-app-bg flex-1 overflow-auto">
           <Outlet />
         </main>
       </SidebarInset>

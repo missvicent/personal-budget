@@ -1,68 +1,70 @@
 export interface Profile {
-  id: string
-  userId: string
-  email: string
-  fullName: string
   avatarUrl: string
   createdAt: string
+  email: string
+  fullName: string
+  id: string
   updatedAt: string
+  userId: string
 }
 
 export interface Account {
+  balance: number
+  color: string
+  created_at: string
+  currency: string
+  icon: string
   id: string
-  user_id: string
+  initial_balance: number
+  is_active: boolean
   name: string
   type: 'checking' | 'savings' | 'credit' | 'cash'
-  balance: number
-  initial_balance: number
-  currency: string
-  color: string
-  icon: string
-  is_active: boolean
-  created_at: string
   updated_at: string
+  user_id: string
 }
 
 export interface Category {
-  id: string
-  user_id: string
-  name: string
-  type: 'income' | 'expense'
-  icon: string
   color: string
-  parent_id: string | null
-  is_system: boolean
-  display_order: number
   created_at: string
+  display_order: number
+  icon: string
+  id: string
+  is_system: boolean
+  name: string
+  parent_id: string | null
+  type: 'income' | 'expense'
+  updated_at: string
+  user_id: string
 }
 
 export interface Transaction {
-  id: string
-  user_id: string
-  account_id: string
-  category_id: string
-  type: 'income' | 'expense' | 'transfer'
+  account_id?: string
   amount: number
-  description: string
-  merchant: string
-  transaction_date: string
+  category_id: string
   created_at: string
+  description: string
+  id: string
+  merchant?: string
+  transaction_date: string
+  type: 'income' | 'expense' | 'transfer'
+  updated_at: string
+  user_id: string
 }
 
 export interface Budget {
-  id: string
-  user_id: string
-  name: string
-  category_id: string
-  amount: number
-  period: 'weekly' | 'monthly' | 'yearly'
-  start_date: string
-  end_date: string | null
   alert_enabled: boolean
   alert_threshold: number
-  is_active: boolean
+  amount: number
+  category_id: string
   created_at: string
+  end_date: string | null
+  id: string
+  is_active: boolean
+  name: string
+  period: 'weekly' | 'monthly' | 'yearly'
+  start_date: string
   updated_at: string
+  user_id: string
 }
 
 // Helper types for create/update operations
@@ -70,3 +72,26 @@ export type CreateAccount = Omit<Account, 'id' | 'created_at' | 'updated_at'>
 export type UpdateAccount = Partial<
   Omit<Account, 'id' | 'user_id' | 'created_at' | 'updated_at'>
 >
+
+export interface TransactionFilters {
+  accountId?: string
+  categoryId?: string
+  endDate?: string
+  page?: number
+  pageSize?: number
+  startDate?: string
+  type?: 'income' | 'expense'
+}
+
+export interface PaginatedResponse<T> {
+  data: Array<T>
+  hasMore: boolean
+  total: number
+}
+
+export interface UserSettings {
+  user_id: string
+  dark_mode: boolean
+  created_at: string
+  updated_at: string
+}

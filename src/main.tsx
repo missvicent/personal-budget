@@ -7,6 +7,7 @@ import { AppRouter } from './Router.tsx'
 import { UserSync } from './components/user/UserSync.tsx'
 
 import './styles.css'
+import { ThemeProvider } from './contexts/ThemeContext.tsx'
 
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
@@ -28,7 +29,9 @@ if (rootElement && !rootElement.innerHTML) {
       <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
         <QueryClientProvider client={queryClient}>
           <UserSync>
-            <AppRouter />
+            <ThemeProvider>
+              <AppRouter />
+            </ThemeProvider>
           </UserSync>
         </QueryClientProvider>
       </ClerkProvider>

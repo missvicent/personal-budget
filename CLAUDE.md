@@ -96,5 +96,54 @@ npm run check        # Fix all issues (prettier --write . && eslint --fix)
 
 ## Authentication
 
-- Google OAuth integration via `@react-oauth/google`
+- Clerk for user authentication (`@clerk/clerk-react`)
+- Supabase for database with Row Level Security (RLS)
 - Auth routes under `src/routes/auth/`
+
+### Clerk + Supabase Integration
+
+This project uses Clerk for authentication and Supabase for the database. Key points:
+
+#### User IDs
+
+- Clerk user IDs are strings like `user_33IZQVpXj8DAGKJyec47RxZanBE`
+- NOT UUIDs - all `user_id` columns must be TEXT type, not UUID
+
+#### Supabase Client Setup
+
+- Located in `src/lib/supabaseClient.ts`
+- Uses Clerk JWT token via `getToken({ template: 'supabase' })`
+- Hook: `src/hooks/use-supabase.ts`
+
+#### RLS Policies
+
+When creating Row Level Security policies, use JWT claims (NOT `auth.uid()`):
+
+```sql
+-- ✅ Correct for Clerk
+CREATE POLICY "Users can manage own data"
+ON your_table
+FOR ALL
+USING ((auth.jwt()->>'sub') = user_id)
+WITH CHECK ((auth.jwt()->>'sub') = user_id);
+
+-- ❌ Wrong - auth.uid() is for Supabase Auth only
+USING (auth.uid() = user_id)
+```
+
+#### Auto-set user_id on Insert
+
+Add a default to automatically set user_id from JWT:
+
+```sql
+ALTER TABLE your_table
+ALTER COLUMN user_id SET DEFAULT (auth.jwt()->>'sub');
+```
+
+#### Common Errors
+
+| Error                                  | Cause                              | Fix                         |
+| -------------------------------------- | ---------------------------------- | --------------------------- |
+| `invalid input syntax for type uuid`   | Column is UUID, Clerk ID is string | Change column to TEXT       |
+| `operator does not exist: text = uuid` | Type mismatch in RLS policy        | Change column type first    |
+| `violates row-level security policy`   | user_id not set or wrong           | Add default or pass user_id |
