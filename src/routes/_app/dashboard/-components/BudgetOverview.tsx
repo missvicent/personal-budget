@@ -10,6 +10,7 @@ export interface BudgetOverviewProps {
 export interface BudgetOverViewByCategory {
   Icon: ComponentType<LucideProps>
   category: string
+  color: string
   amountSpent: number
   amountBudget: number
 }
@@ -25,14 +26,14 @@ export const BudgetOverview = (budgetOverview: BudgetOverviewProps) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="max-h-96 overflow-y-auto">
-        {categories.map((c, index) => (
+        {categories.map((c) => (
           <BudgetCategoryCard
             key={c.category}
             category={c.category}
             Icon={c.Icon}
             amountSpent={c.amountSpent}
             amountBudget={c.amountBudget}
-            colorIndex={index}
+            color={c.color}
           />
         ))}
       </CardContent>

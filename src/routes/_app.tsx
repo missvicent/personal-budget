@@ -45,7 +45,7 @@ function AppLayout() {
       <AppSidebar items={items} />
       <SidebarInset className="h-screen flex-col">
         <AppToolbar />
-        <main className="dark:bg-sidebar flex-1 overflow-auto">
+        <main className="bg-app-bg flex-1 overflow-auto">
           <Outlet />
         </main>
       </SidebarInset>

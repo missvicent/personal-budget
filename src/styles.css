@@ -15,7 +15,7 @@ body {
 
 @theme inline {
   /* Custom app colors */
-  --color-app-bg: rgb(250, 245, 255);
+  --color-app-bg: var(--app-bg);
   --color-app-bg-dark: rgb(24, 20, 36);
   --color-app-border: rgba(168, 85, 247, 0.2);
   --color-app-surface: rgb(255, 255, 255);
@@ -72,6 +72,7 @@ body {
   --purple-border: oklch(0.35 0.08 285);
 
   /* App colors */
+  --app-bg: oklch(0.985 0 0);
   --background: oklch(0.98 0.01 300);
   --foreground: oklch(0.2 0.02 280);
   --card: oklch(1 0 0);
@@ -114,6 +115,9 @@ body {
 
   /* Content */
   --content-background: oklch(0.9842 0.0034 247.86);
+
+  /* Card */
+  --card: oklch(1 0 0);
 }
 
 .dark {
@@ -124,6 +128,7 @@ body {
   --purple-border: oklch(0.35 0.08 280);
 
   /* App colors */
+  --app-bg: oklch(0 0 0);
   --background: oklch(0.18 0.03 280);
   --foreground: oklch(0.95 0.01 280);
   --card: oklch(0.2099 0.0318 297.98);
@@ -165,6 +170,9 @@ body {
 
   /* Content */
   --content-background: oklch(0.1649 0.0429 291.98);
+
+  /* Card */
+  --card: var(--purple-dark);
 }
 
 /* =================================

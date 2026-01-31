@@ -7,7 +7,7 @@ export default function AppToolbar() {
   return (
     <header
       className={cn(
-        'bg-sidebar border-b-2',
+        'bg-sidebar border-b',
         'h-[72px]',
         'flex shrink-0 items-center',
         'pointer-events-none select-none',

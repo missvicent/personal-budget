@@ -6,7 +6,7 @@ export default function AppSidebarHeader() {
   return (
     <SidebarHeader
       className={cn(
-        'h-[72px] border-b-2',
+        'h-[72px] border-b',
         'flex-row! items-center gap-2',
         'group-data-[collapsible=icon]:justify-center',
         'group-data-[collapsible=icon]:px-0',
