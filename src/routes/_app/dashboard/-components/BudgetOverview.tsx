@@ -1,6 +1,12 @@
 import type { ComponentType } from 'react'
 import type { LucideProps } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { BudgetCategoryCard } from '@/components/shared'
 
 export interface BudgetOverviewProps {
@@ -8,6 +14,7 @@ export interface BudgetOverviewProps {
   categories: Array<BudgetOverViewByCategory>
 }
 export interface BudgetOverViewByCategory {
+  id: string
   Icon: ComponentType<LucideProps>
   category: string
   color: string
@@ -18,17 +25,17 @@ export interface BudgetOverViewByCategory {
 export const BudgetOverview = (budgetOverview: BudgetOverviewProps) => {
   const { currentMonth, categories } = budgetOverview
   return (
-    <Card className="my-8 w-full gap-4">
+    <Card className="w-full gap-4">
       <CardHeader>
-        <CardTitle>
-          <p className="text-lg font-bold">Budget Overview</p>
-          <p className="text-muted-foreground text-sm">{currentMonth}</p>
-        </CardTitle>
+        <CardTitle className="text-lg font-bold">Budget Overview</CardTitle>
+        <CardDescription className="text-muted-foreground text-sm">
+          {currentMonth}
+        </CardDescription>
       </CardHeader>
-      <CardContent className="max-h-96 overflow-y-auto">
+      <CardContent className="h-120 overflow-y-auto pt-4">
         {categories.map((c) => (
           <BudgetCategoryCard
-            key={c.category}
+            key={c.id}
             category={c.category}
             Icon={c.Icon}
             amountSpent={c.amountSpent}

@@ -10,7 +10,7 @@ export default function AppToolbar() {
         'bg-sidebar border-b',
         'h-[72px]',
         'flex shrink-0 items-center',
-        'pointer-events-none select-none',
+        'select-none',
       )}
     >
       <div
