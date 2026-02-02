@@ -1,11 +1,10 @@
 import { Link } from '@tanstack/react-router'
-import { SidebarMenuButton, SidebarMenuItem } from '../../ui/sidebar'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { cn } from '@/lib/utils'
+import { SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 
 export default function AppSidebarItem({
   item,

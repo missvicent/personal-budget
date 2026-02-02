@@ -1,7 +1,5 @@
-import { UserButtonWithName } from '../UserButtonWithName'
-import ThemeToggle from '../ThemeToggle'
+import { AppSidebarHeader } from './AppSidebarHeader'
 import AppSidebarItem from './AppSidebarItem'
-import AppSidebarHeader from './AppSidebarHeader'
 import {
   Sidebar,
   SidebarContent,
@@ -10,12 +8,14 @@ import {
   SidebarGroupContent,
   SidebarMenu,
 } from '@/components/ui/sidebar'
+import { UserButtonWithName } from '@/components/common/UserButtonWithName'
+import ThemeToggle from '@/components/common/ThemeToggle'
 
-export function AppSidebar({
+export const AppSidebar = ({
   items,
 }: {
   items: Array<{ title: string; url: string; icon: React.ElementType }>
-}) {
+}) => {
   return (
     <Sidebar collapsible="icon">
       <AppSidebarHeader />
