@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader } from '../ui/card'
 import { Badge } from '../ui/badge'
 import { cn } from '@/lib/utils'
+import { currencyFormatter, percentFormatter } from '@/lib/format'
 
 export interface StatCardProps {
   amountSpent: number
@@ -8,18 +9,26 @@ export interface StatCardProps {
   title: string
   percentage?: number
   badgeType?: 'positive' | 'negative'
+  symbol: string
 }
 export const StatCard = ({
-  title,
-  percentage,
-  badgeType,
-  amountSpent,
   additionalDescription,
+  amountSpent,
+  badgeType,
+  percentage,
+  symbol,
+  title,
 }: StatCardProps) => {
   const badgeColor =
     badgeType === 'positive'
       ? 'text-green-500 bg-green-500/10'
       : 'text-red-500 bg-red-500/10'
+
+  const formattedAmount =
+    symbol === '%'
+      ? percentFormatter.format(percentage ?? 0)
+      : currencyFormatter.format(amountSpent)
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -34,7 +43,7 @@ export const StatCard = ({
         )}
       </CardHeader>
       <CardContent>
-        <p className="mb-6 text-3xl font-bold">${amountSpent}</p>
+        <p className="mb-6 text-3xl font-bold">{formattedAmount}</p>
         <p className="text-muted-foreground text-xs">{additionalDescription}</p>
       </CardContent>
     </Card>

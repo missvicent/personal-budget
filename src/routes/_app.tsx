@@ -1,44 +1,11 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
-import {
-  Brain,
-  ChartNoAxesCombined,
-  ClipboardList,
-  House,
-  Zap,
-} from 'lucide-react'
+import { AppToolbar } from './_app/-components/AppToolbar'
+import { AppSidebar } from './_app/-components/AppSidebar'
+import { NAVIGATION_ITEMS } from '@/config/navigation'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-import { AppSidebar } from '@/components/common/AppSidebar/AppSidebar'
-import AppToolbar from '@/components/common/AppToolbar'
 
-function AppLayout() {
-  // Menu items.
-  const items = [
-    {
-      title: 'Dashboard',
-      url: '/dashboard',
-      icon: House,
-    },
-    {
-      title: 'Expenses',
-      url: '/expenses',
-      icon: ClipboardList,
-    },
-    {
-      title: 'Budgets',
-      url: '/budget',
-      icon: ChartNoAxesCombined,
-    },
-    {
-      title: 'Goal Tracker',
-      url: '/goal-tracker',
-      icon: Zap,
-    },
-    {
-      title: 'AI Insights',
-      url: '/ia-insights',
-      icon: Brain,
-    },
-  ]
+export function AppLayout() {
+  const items = NAVIGATION_ITEMS
 
   return (
     <SidebarProvider defaultOpen={false}>

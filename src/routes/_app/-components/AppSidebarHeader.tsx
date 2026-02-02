@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { SidebarHeader } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
 
-export default function AppSidebarHeader() {
+export const AppSidebarHeader = () => {
   return (
     <SidebarHeader
       className={cn(

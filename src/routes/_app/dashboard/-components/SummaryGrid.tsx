@@ -2,11 +2,12 @@ import { StatCard } from '@/components/shared'
 
 export interface SummaryGridProps {
   summaryData: Array<{
-    title: string
-    percentage?: number
-    badgeType?: 'positive' | 'negative'
-    amountSpent: number
     additionalDescription: string
+    amountSpent: number
+    badgeType?: 'positive' | 'negative'
+    percentage?: number
+    symbol: string
+    title: string
   }>
 }
 export const SummaryGrid = ({ summaryData }: SummaryGridProps) => {
@@ -20,6 +21,7 @@ export const SummaryGrid = ({ summaryData }: SummaryGridProps) => {
           badgeType={item.badgeType}
           amountSpent={item.amountSpent}
           additionalDescription={item.additionalDescription}
+          symbol={item.symbol}
         />
       ))}
     </div>
