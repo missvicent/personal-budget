@@ -1,21 +1,65 @@
-export interface Transaction {
+import { currencyFormatter } from '@/lib/format'
+import { ExpenseItem } from '@/components/shared/ExpenseItem'
+import { Separator } from '@/components/ui/separator'
+
+export interface ExpenseTransaction {
   amount: number
   category: string
+  color: string
   date: string
-  description: string
+  icon: string
   id: string
+  title: string
 }
 
 export interface ExpenseRecord {
+  id: string
   date: string
   totalAmount: number
-  transactions: Array<Transaction>
+  transactions: Array<ExpenseTransaction>
 }
 
-export const ExpenseList = () => {
+export interface ExpenseListProps {
+  expenses: Array<ExpenseRecord>
+}
+
+export const ExpenseList = ({ expenses }: ExpenseListProps) => {
+  if (expenses.length === 0) {
+    return (
+      <section className="flex flex-col items-center justify-center py-16 text-center">
+        <p className="text-muted-foreground text-base">No expenses found</p>
+      </section>
+    )
+  }
+
   return (
-    <div>
-      <h1>Expense List</h1>
-    </div>
+    <section>
+      {expenses.map((expense) => (
+        <div key={expense.id} className="py-2">
+          <div className="flex items-center justify-between">
+            <p className="text-foreground text-base font-semibold capitalize">
+              {expense.date}
+            </p>
+            <p className="text-muted-foreground pr-4 text-base font-semibold">
+              {currencyFormatter.format(expense.totalAmount)}
+            </p>
+          </div>
+          <div className="bg-sidebar mt-3 rounded-lg border px-4 py-3">
+            {expense.transactions.map((transaction, index) => (
+              <div key={transaction.id}>
+                {index > 0 && <Separator />}
+                <ExpenseItem
+                  amount={transaction.amount}
+                  category={transaction.category}
+                  color={transaction.color}
+                  icon={transaction.icon}
+                  title={transaction.title}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
   )
 }

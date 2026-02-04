@@ -7,6 +7,7 @@ export const AppToolbar = () => {
   const { pathname } = useLocation()
   const itemData = NAVIGATION_ITEMS.find((item) => item.url === pathname)
   const { description } = itemData ?? { description: '' }
+
   return (
     <header
       className={cn(

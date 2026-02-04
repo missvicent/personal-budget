@@ -1,9 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { PlusIcon } from 'lucide-react'
-import { AddExpenseForm, TotalExpensesCard } from './-components'
-import { Button } from '@/components/ui/button'
+import { AddExpenseForm } from './-components'
+import { ExpenseList } from './-components/ExpenseList'
+import { mockExpenses } from './-components/mock'
 import { cn, toSelectOptions } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 import { SearchInput } from '@/components/common/SearchInput'
 import { SelectField } from '@/components/common/SelectField'
 import { useCategories } from '@/hooks/use-categories'
@@ -14,6 +16,7 @@ export const Route = createFileRoute('/_app/expenses/')({
 })
 
 function RouteComponent() {
+  const expenses = mockExpenses
   const supabase = useSupabase()
   const { data: categories } = useCategories(supabase)
   const [isAddExpenseModalOpen, setIsAddExpenseModalOpen] = useState(false)
@@ -67,6 +70,7 @@ function RouteComponent() {
           </Button>
         </div>
       </header>
+      <ExpenseList expenses={expenses} />
       <div
         className={cn(
           'overflow-hidden transition-all duration-300 ease-out',
