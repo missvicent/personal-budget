@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { ExpenseItem } from '@/components/shared/ExpenseItem'
+import { ExpenseItemMeta } from '@/components/shared/ExpenseItemMeta'
 
 export interface RecentActivityByCategory {
   amountSpent: number
@@ -38,11 +39,12 @@ export const RecentActivity = ({
             amountSpent={c.amountSpent}
             category={c.category}
             color={c.color}
-            date={c.date}
             Icon={c.Icon}
             key={c.id}
             title={c.title}
-          />
+          >
+            <ExpenseItemMeta> • {c.date}</ExpenseItemMeta>
+          </ExpenseItem>
         ))}
       </CardContent>
     </Card>

@@ -1,20 +1,21 @@
+import type { ComponentType, ReactNode } from 'react'
 import type { LucideProps } from 'lucide-react'
-import type { ComponentType } from 'react'
+import { currencyFormatter } from '@/lib/format'
 import { getCategoryStyles } from '@/lib/colors'
 
 export interface ExpenseItemProps {
   amountSpent: number
   category: string
+  children?: ReactNode
   color: string
-  date: string
   Icon: ComponentType<LucideProps>
   title: string
 }
 export const ExpenseItem = ({
   amountSpent,
   category,
+  children,
   color,
-  date,
   Icon,
   title,
 }: ExpenseItemProps) => {
@@ -29,13 +30,16 @@ export const ExpenseItem = ({
           />
           <div className="flex flex-col">
             <p className="text-base font-semibold capitalize">{title}</p>
-            <p className="text-muted-foreground text-sm capitalize">
-              {category} • {date}
-            </p>
+            <div className="flex items-center gap-2">
+              <p className="text-muted-foreground text-sm capitalize">
+                {category}
+              </p>
+              {children}
+            </div>
           </div>
         </div>
         <p className="text-foreground text-base font-semibold">
-          ${amountSpent}
+          {currencyFormatter.format(amountSpent)}
         </p>
       </div>
     </div>

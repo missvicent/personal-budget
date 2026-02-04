@@ -1,10 +1,13 @@
-import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
+import { useState } from 'react'
+import { PlusIcon } from 'lucide-react'
 import { AddExpenseForm, TotalExpensesCard } from './-components'
-import { useSupabase } from '@/hooks/use-supabase'
+import { Button } from '@/components/ui/button'
+import { cn, toSelectOptions } from '@/lib/utils'
+import { SearchInput } from '@/components/common/SearchInput'
+import { SelectField } from '@/components/common/SelectField'
 import { useCategories } from '@/hooks/use-categories'
-import { IconCard } from '@/components/shared'
-import { cn } from '@/lib/utils'
+import { useSupabase } from '@/hooks/use-supabase'
 
 export const Route = createFileRoute('/_app/expenses/')({
   component: RouteComponent,
@@ -12,25 +15,58 @@ export const Route = createFileRoute('/_app/expenses/')({
 
 function RouteComponent() {
   const supabase = useSupabase()
-  const { data: Categories } = useCategories(supabase)
+  const { data: categories } = useCategories(supabase)
   const [isAddExpenseModalOpen, setIsAddExpenseModalOpen] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
+  const categoryOptions = toSelectOptions(
+    { label: 'All Categories', value: 'all' },
+    categories || [],
+    (c) => `${c.icon} ${c.name}`,
+    (c) => c.id,
+  )
 
-  const handleClick = (categoryId: string) => {
-    console.log(categoryId)
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value)
+  }
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      console.log(searchValue)
+    }
   }
 
   const onAddExpense = () => {
     setIsAddExpenseModalOpen(true)
   }
 
+  const onCategoryChange = (value: { label: string; value: string }) => {
+    const { value: categoryValue, label: categoryLabel } = value
+    if (categoryValue === 'all') return
+  }
+
   return (
-    <div className={cn('flex flex-col gap-4', 'px-4 py-4 md:px-16 md:py-6')}>
-      <TotalExpensesCard
-        totalExpenses={1000}
-        totalExpensesLabel="Total Expenses"
-        totalTransactions="10 transactions"
-        onAddExpense={onAddExpense}
-      />
+    <section className={cn('flex flex-col gap-4', 'px-4 py-4 md:px-8 md:py-8')}>
+      <header className="flex flex-col justify-between gap-2 md:flex-row">
+        <div className="flex w-full gap-2 md:w-2/3">
+          <SearchInput
+            placeholder="Search expenses.."
+            value={searchValue}
+            onChange={onChange}
+            onKeyDown={onKeyDown}
+          />
+          <SelectField
+            items={categoryOptions}
+            onChange={onCategoryChange}
+            placeholder="All Categories"
+          />
+        </div>
+        <div className="flex justify-start py-2 md:justify-end md:py-0">
+          <Button size="lg" onClick={onAddExpense} className="w-full md:w-auto">
+            <PlusIcon className="h-4 w-4" />
+            Add Expense
+          </Button>
+        </div>
+      </header>
       <div
         className={cn(
           'overflow-hidden transition-all duration-300 ease-out',
@@ -41,22 +77,6 @@ function RouteComponent() {
       >
         <AddExpenseForm />
       </div>
-      \
-    </div>
+    </section>
   )
 }
-
-/**
- * <div className={cn(
-        'grid grid-cols-1 gap-4 p-5 md:grid-cols-2 lg:grid-cols-6',
-      )}>
-        {Categories?.map((category) => (
-          <IconCard
-            key={category.id}
-            title={category.name}
-            icon={category.icon}
-            onClick={() => handleClick(category.id)}
-          />
-        ))}
-      </div>
- */
