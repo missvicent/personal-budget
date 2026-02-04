@@ -1,6 +1,4 @@
 import { Progress } from '../ui/progress'
-import type { LucideProps } from 'lucide-react'
-import type { ComponentType } from 'react'
 import { getCategoryStyles } from '@/lib/colors'
 
 export interface BudgetCategoryCardProps {
@@ -8,25 +6,27 @@ export interface BudgetCategoryCardProps {
   amountSpent: number
   category: string
   color: string
-  Icon: ComponentType<LucideProps>
+  icon: string
 }
 export const BudgetCategoryCard = ({
   amountBudget,
   amountSpent,
   category,
   color,
-  Icon,
+  icon,
 }: BudgetCategoryCardProps) => {
   const progressValue = (amountSpent / amountBudget) * 100
-  const { text, bg, progress } = getCategoryStyles(color)
+  const { bg, progress } = getCategoryStyles(color)
   return (
     <div className="w-full space-y-2 py-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Icon
-            className="h-10 w-10 rounded-lg p-2"
-            style={{ color: text.color, backgroundColor: bg.backgroundColor }}
-          />
+          <span
+            className="flex h-10 w-10 items-center justify-center rounded-lg text-lg"
+            style={{ backgroundColor: bg.backgroundColor }}
+          >
+            {icon}
+          </span>
           <p className="text-base font-semibold uppercase">{category}</p>
         </div>
         <p className="text-muted-foreground text-sm">

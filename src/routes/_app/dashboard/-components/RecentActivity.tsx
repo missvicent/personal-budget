@@ -1,5 +1,3 @@
-import type { ComponentType } from 'react'
-import type { LucideProps } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -9,22 +7,23 @@ import {
 } from '@/components/ui/card'
 import { ExpenseItem } from '@/components/shared/ExpenseItem'
 import { ExpenseItemMeta } from '@/components/shared/ExpenseItemMeta'
+import { Separator } from '@/components/ui/separator'
 
-export interface RecentActivityByCategory {
-  amountSpent: number
+export interface RecentActivityItem {
+  amount: number
   category: string
   color: string
   date: string
-  Icon: ComponentType<LucideProps>
+  icon: string
   id: string
   title: string
 }
 
-export const RecentActivity = ({
-  recentActivity,
-}: {
-  recentActivity: Array<RecentActivityByCategory>
-}) => {
+export interface RecentActivityProps {
+  recentActivity: Array<RecentActivityItem>
+}
+
+export const RecentActivity = ({ recentActivity }: RecentActivityProps) => {
   return (
     <Card className="w-full gap-4">
       <CardHeader>
@@ -34,18 +33,28 @@ export const RecentActivity = ({
         </CardDescription>
       </CardHeader>
       <CardContent className="h-120 overflow-y-auto pt-4">
-        {recentActivity.map((c) => (
-          <ExpenseItem
-            amountSpent={c.amountSpent}
-            category={c.category}
-            color={c.color}
-            Icon={c.Icon}
-            key={c.id}
-            title={c.title}
-          >
-            <ExpenseItemMeta> • {c.date}</ExpenseItemMeta>
-          </ExpenseItem>
-        ))}
+        {recentActivity.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <p className="text-muted-foreground text-base">
+              No recent activity
+            </p>
+          </div>
+        ) : (
+          recentActivity.map((c, index) => (
+            <div key={c.id}>
+              {index > 0 && <Separator />}
+              <ExpenseItem
+                amount={c.amount}
+                category={c.category}
+                color={c.color}
+                icon={c.icon}
+                title={c.title}
+              >
+                <ExpenseItemMeta> • {c.date}</ExpenseItemMeta>
+              </ExpenseItem>
+            </div>
+          ))
+        )}
       </CardContent>
     </Card>
   )

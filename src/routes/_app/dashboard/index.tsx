@@ -1,17 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import {
-  Briefcase,
-  Car,
-  CreditCard,
-  Home,
-  Music,
-  Receipt,
-  Zap,
-} from 'lucide-react'
 import { BudgetOverview, RecentActivity, SummaryGrid } from './-components'
 import type { SummaryGridProps } from './-components/SummaryGrid'
 import type { BudgetOverviewProps } from './-components/BudgetOverview'
-import type { RecentActivityByCategory } from './-components/RecentActivity'
+import type { RecentActivityItem } from './-components/RecentActivity'
 
 export const Route = createFileRoute('/_app/dashboard/')({
   component: RouteComponent,
@@ -57,7 +48,7 @@ const budgetOverview: BudgetOverviewProps = {
   categories: [
     {
       id: '1',
-      Icon: Receipt,
+      icon: '🛒',
       category: 'Food',
       amountSpent: 300,
       amountBudget: 200,
@@ -65,7 +56,7 @@ const budgetOverview: BudgetOverviewProps = {
     },
     {
       id: '2',
-      Icon: Car,
+      icon: '🚗',
       category: 'Transport',
       amountSpent: 50,
       amountBudget: 100,
@@ -73,7 +64,7 @@ const budgetOverview: BudgetOverviewProps = {
     },
     {
       id: '3',
-      Icon: Home,
+      icon: '🏠',
       category: 'Housing',
       amountSpent: 75,
       amountBudget: 150,
@@ -81,7 +72,7 @@ const budgetOverview: BudgetOverviewProps = {
     },
     {
       id: '4',
-      Icon: Zap,
+      icon: '⚡',
       category: 'Utilities',
       amountSpent: 25,
       amountBudget: 50,
@@ -89,7 +80,7 @@ const budgetOverview: BudgetOverviewProps = {
     },
     {
       id: '5',
-      Icon: Music,
+      icon: '🎵',
       category: 'Entertainment',
       amountSpent: 10,
       amountBudget: 20,
@@ -97,7 +88,7 @@ const budgetOverview: BudgetOverviewProps = {
     },
     {
       id: '6',
-      Icon: CreditCard,
+      icon: '👕',
       category: 'Clothing',
       amountSpent: 10,
       amountBudget: 20,
@@ -105,7 +96,7 @@ const budgetOverview: BudgetOverviewProps = {
     },
     {
       id: '7',
-      Icon: Briefcase,
+      icon: '💼',
       category: 'Business',
       amountSpent: 10,
       amountBudget: 20,
@@ -114,14 +105,14 @@ const budgetOverview: BudgetOverviewProps = {
   ],
 }
 
-const recentActivity: Array<RecentActivityByCategory> = [
+const recentActivity: Array<RecentActivityItem> = [
   {
     id: '1',
-    amountSpent: 100,
+    amount: 100,
     category: 'Food',
     color: '#064E3B',
     date: '2026-01-01',
-    Icon: Receipt,
+    icon: '🛒',
     title: 'Food',
   },
 ]

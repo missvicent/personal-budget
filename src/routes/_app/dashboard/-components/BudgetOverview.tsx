@@ -1,5 +1,3 @@
-import type { ComponentType } from 'react'
-import type { LucideProps } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -15,7 +13,7 @@ export interface BudgetOverviewProps {
 }
 export interface BudgetOverViewByCategory {
   id: string
-  Icon: ComponentType<LucideProps>
+  icon: string
   category: string
   color: string
   amountSpent: number
@@ -33,16 +31,24 @@ export const BudgetOverview = (budgetOverview: BudgetOverviewProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent className="h-120 overflow-y-auto pt-4">
-        {categories.map((c) => (
-          <BudgetCategoryCard
-            key={c.id}
-            category={c.category}
-            Icon={c.Icon}
-            amountSpent={c.amountSpent}
-            amountBudget={c.amountBudget}
-            color={c.color}
-          />
-        ))}
+        {categories.length === 0 ? (
+          <section className="flex flex-col items-center justify-center py-16 text-center">
+            <p className="text-muted-foreground text-base">
+              No categories found
+            </p>
+          </section>
+        ) : (
+          categories.map((c) => (
+            <BudgetCategoryCard
+              key={c.id}
+              category={c.category}
+              icon={c.icon}
+              amountSpent={c.amountSpent}
+              amountBudget={c.amountBudget}
+              color={c.color}
+            />
+          ))
+        )}
       </CardContent>
     </Card>
   )
