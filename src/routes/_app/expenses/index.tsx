@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { PlusIcon } from 'lucide-react'
+import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
 import { AddExpenseForm } from './-components'
 import { ExpenseList } from './-components/ExpenseList'
 import { mockExpenses } from './-components/mock'
@@ -19,7 +20,6 @@ function RouteComponent() {
   const expenses = mockExpenses
   const supabase = useSupabase()
   const { data: categories } = useCategories(supabase)
-  const [isAddExpenseModalOpen, setIsAddExpenseModalOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const categoryOptions = toSelectOptions(
     { label: 'All Categories', value: 'all' },
@@ -39,7 +39,7 @@ function RouteComponent() {
   }
 
   const onAddExpense = () => {
-    setIsAddExpenseModalOpen(true)
+    console.log('add expense')
   }
 
   const onCategoryChange = (value: { label: string; value: string }) => {
@@ -64,23 +64,25 @@ function RouteComponent() {
           />
         </div>
         <div className="flex justify-start py-2 md:justify-end md:py-0">
-          <Button size="lg" onClick={onAddExpense} className="w-full md:w-auto">
-            <PlusIcon className="h-4 w-4" />
-            Add Expense
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                size="lg"
+                onClick={onAddExpense}
+                className="w-full md:w-auto"
+              >
+                <PlusIcon className="h-4 w-4" />
+                Add Expense
+              </Button>
+            </DialogTrigger>
+            <AddExpenseForm
+              categories={categories || []}
+              onSubmit={onAddExpense}
+            />
+          </Dialog>
         </div>
       </header>
       <ExpenseList expenses={expenses} />
-      <div
-        className={cn(
-          'overflow-hidden transition-all duration-300 ease-out',
-          isAddExpenseModalOpen
-            ? 'max-h-[500px] opacity-100'
-            : 'max-h-0 opacity-0',
-        )}
-      >
-        <AddExpenseForm />
-      </div>
     </section>
   )
 }

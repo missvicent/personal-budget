@@ -20,7 +20,7 @@ export const SelectField = ({ items, onChange }: SelectFieldProps) => {
   }
 
   return (
-    <Select defaultValue={items[0].value} onValueChange={handleChange}>
+    <Select defaultValue={items[0]?.value} onValueChange={handleChange}>
       <SelectTrigger>
         <SelectValue />
       </SelectTrigger>
