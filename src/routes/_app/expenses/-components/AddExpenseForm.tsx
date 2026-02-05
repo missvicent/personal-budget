@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import {
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -63,6 +64,9 @@ export const AddExpenseForm = ({
         >
           <DialogHeader>
             <DialogTitle>Add Expense</DialogTitle>
+            <DialogDescription className="sr-only">
+              Fill in the details to add a new expense
+            </DialogDescription>
           </DialogHeader>
           <FieldGroup>
             <FormField

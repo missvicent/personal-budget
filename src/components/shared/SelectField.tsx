@@ -26,7 +26,7 @@ export const SelectField = ({
   }
 
   return (
-    <Select value={value || undefined} onValueChange={handleChange}>
+    <Select value={value} onValueChange={handleChange}>
       <SelectTrigger>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
