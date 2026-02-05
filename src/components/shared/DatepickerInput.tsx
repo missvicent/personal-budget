@@ -23,7 +23,7 @@ function formatDate(date: Date | undefined) {
 
   return date.toLocaleDateString('en-US', {
     day: '2-digit',
-    month: 'long',
+    month: '2-digit',
     year: 'numeric',
   })
 }
@@ -36,9 +36,10 @@ function isValidDate(date: Date | undefined) {
 }
 
 export interface DatePickerInputProps {
-  label: string
   id: string
+  label: string
   placeholder: string
+  value: Date
   onChange: (date: Date) => void
 }
 
@@ -46,20 +47,20 @@ export function DatePickerInput({
   label,
   id,
   placeholder,
+  value,
   onChange,
 }: DatePickerInputProps) {
   const [open, setOpen] = React.useState(false)
-  const [date, setDate] = React.useState<Date | undefined>(new Date())
-  const [month, setMonth] = React.useState<Date | undefined>(date)
-  const [value, setValue] = React.useState(formatDate(date))
+  const [date, setDate] = React.useState<Date | undefined>(value)
+  const [dateValue, setDateValue] = React.useState(formatDate(date))
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = e.target.value
-    const dateValue = new Date(v)
-    onChange(dateValue)
-    if (isValidDate(dateValue)) {
-      setDate(dateValue)
-      setMonth(dateValue)
+    setDateValue(v)
+    const dv = new Date(v)
+    if (isValidDate(dv)) {
+      setDate(dv)
+      onChange(dv)
     }
   }
 
@@ -73,7 +74,8 @@ export function DatePickerInput({
   const handleSelect = (v: Date | undefined) => {
     if (!v) return
     setDate(v)
-    setValue(formatDate(v))
+    setDateValue(formatDate(v))
+    onChange(v)
     setOpen(false)
   }
 
@@ -82,8 +84,8 @@ export function DatePickerInput({
       <FieldLabel htmlFor={id}>{label}</FieldLabel>
       <InputGroup>
         <InputGroupInput
-          id="date-required"
-          value={value}
+          id={id}
+          value={dateValue}
           placeholder={placeholder}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
@@ -98,7 +100,7 @@ export function DatePickerInput({
                 aria-label="Select date"
               >
                 <CalendarIcon />
-                <span className="sr-only">Select date</span>
+                <span className="sr-only">{label}</span>
               </InputGroupButton>
             </PopoverTrigger>
             <PopoverContent
@@ -111,8 +113,6 @@ export function DatePickerInput({
                 style={{ '--cell-size': '3rem' } as React.CSSProperties}
                 mode="single"
                 selected={date}
-                month={month}
-                onMonthChange={setMonth}
                 onSelect={handleSelect}
               />
             </PopoverContent>

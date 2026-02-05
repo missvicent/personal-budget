@@ -8,7 +8,7 @@ import { mockExpenses } from './-components/mock'
 import { cn, toSelectOptions } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { SearchInput } from '@/components/common/SearchInput'
-import { SelectField } from '@/components/common/SelectField'
+import { SelectField } from '@/components/shared/SelectField'
 import { useCategories } from '@/hooks/use-categories'
 import { useSupabase } from '@/hooks/use-supabase'
 

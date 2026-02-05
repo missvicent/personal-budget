@@ -10,17 +10,18 @@ import {
 export interface SelectFieldProps {
   placeholder?: string
   items: Array<{ label: string; value: string }>
+  value: string
   onChange: (value: { label: string; value: string }) => void
 }
 
-export const SelectField = ({ items, onChange }: SelectFieldProps) => {
-  const handleChange = (value: string) => {
-    const selected = items.find((item) => item.value === value)
+export const SelectField = ({ items, value, onChange }: SelectFieldProps) => {
+  const handleChange = (v: string) => {
+    const selected = items.find((item) => item.value === v)
     if (selected) onChange(selected)
   }
 
   return (
-    <Select defaultValue={items[0]?.value} onValueChange={handleChange}>
+    <Select value={value} onValueChange={handleChange}>
       <SelectTrigger>
         <SelectValue />
       </SelectTrigger>

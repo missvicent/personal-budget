@@ -1,6 +1,9 @@
-import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import type { Category } from '@/types/database.types'
-import { SelectField } from '@/components/common/SelectField'
+import type { ExpenseFormData } from '@/lib/validations/expense.schema'
+import { expenseSchema } from '@/lib/validations/expense.schema'
+import { SelectField } from '@/components/shared/SelectField'
 import { Button } from '@/components/ui/button'
 import {
   DialogClose,
@@ -9,22 +12,33 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Field, FieldGroup } from '@/components/ui/field'
+import { FieldGroup } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { toSelectOptions } from '@/lib/utils'
 import { CurrencyInput } from '@/components/shared/CurrencyInput'
 import { DatePickerInput } from '@/components/shared/DatepickerInput'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form'
 
 interface AddExpenseFormProps {
   categories: Array<Category>
-  onSubmit: (data: any) => void
 }
+export const AddExpenseForm = ({ categories }: AddExpenseFormProps) => {
+  const form = useForm<ExpenseFormData>({
+    resolver: zodResolver(expenseSchema),
+    defaultValues: {
+      amount: 0,
+      category_id: '',
+      description: '',
+      transaction_date: new Date(),
+    },
+  })
 
-export const AddExpenseForm = ({
-  categories,
-  onSubmit,
-}: AddExpenseFormProps) => {
   const categoryOptions =
     categories.length > 0
       ? toSelectOptions(
@@ -37,77 +51,99 @@ export const AddExpenseForm = ({
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    const formData = new FormData(e.target as HTMLFormElement)
-    const data = Object.fromEntries(formData)
-    onSubmit(data)
-  }
-
-  const handleDateChange = (date: Date) => {
-    console.log(date)
-  }
-
-  const handleCategoryChange = (value: { label: string; value: string }) => {
-    console.log(value)
-  }
-
-  const handleAmountChange = (value: number) => {
-    console.log(value)
+    console.log(form.getValues())
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <DialogContent className="sm:max-w-sm">
-        <DialogHeader>
-          <DialogTitle>Add Expense</DialogTitle>
-        </DialogHeader>
-        <FieldGroup>
-          <Field>
-            <CurrencyInput
-              id="amount"
-              label="Amount"
-              min={0}
-              onChange={handleAmountChange}
-              placeholder="0.00"
-              step={0.01}
-              type="number"
+    <Form {...form}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Add Expense</DialogTitle>
+          </DialogHeader>
+          <FieldGroup>
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <CurrencyInput
+                      id="amount"
+                      label="Amount"
+                      min={0}
+                      placeholder="0.00"
+                      step={0.01}
+                      type="number"
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </Field>
-          <Field>
-            <Label htmlFor="category">Category</Label>
-            <SelectField
-              items={categoryOptions}
-              onChange={handleCategoryChange}
-              placeholder="Select Category"
+            <FormField
+              control={form.control}
+              name="category_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <SelectField
+                      items={categoryOptions}
+                      onChange={field.onChange}
+                      placeholder="Select Category"
+                      value={field.value}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </Field>
-          <Field>
-            <Label htmlFor="description">Description</Label>
-            <Input
-              id="description"
+            <FormField
+              control={form.control}
               name="description"
-              placeholder="What did you spend on?"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      id="description"
+                      name="description"
+                      placeholder="What did you spend on?"
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </Field>
-          <Field>
-            <DatePickerInput
-              id="date"
-              label="Date"
-              placeholder="Select Date"
-              onChange={handleDateChange}
+            <FormField
+              control={form.control}
+              name="transaction_date"
+              render={({ field }) => (
+                <DatePickerInput
+                  id="date"
+                  label="Date"
+                  placeholder="Select Date"
+                  onChange={field.onChange}
+                  value={form.getValues('transaction_date')}
+                />
+              )}
             />
-          </Field>
-        </FieldGroup>
-        <DialogFooter className="flex flex-row gap-2">
-          <DialogClose asChild>
-            <Button variant="outline" className="w-full">
-              Cancel
+          </FieldGroup>
+          <DialogFooter className="flex flex-row gap-2">
+            <DialogClose asChild>
+              <Button variant="outline" className="w-full">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button type="submit" className="w-full">
+              Add Expense
             </Button>
-          </DialogClose>
-          <Button onClick={handleSubmit} className="w-full">
-            Add Expense
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </form>
+          </DialogFooter>
+        </DialogContent>
+      </form>
+    </Form>
   )
 }
