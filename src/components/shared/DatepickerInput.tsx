@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { CalendarIcon } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
-import { Field, FieldLabel } from '@/components/ui/field'
 import {
   InputGroup,
   InputGroupAddon,
@@ -37,14 +36,12 @@ function isValidDate(date: Date | undefined) {
 
 export interface DatePickerInputProps {
   id: string
-  label: string
   placeholder: string
-  value: Date
+  value: Date | undefined
   onChange: (date: Date) => void
 }
 
 export function DatePickerInput({
-  label,
   id,
   placeholder,
   value,
@@ -80,45 +77,42 @@ export function DatePickerInput({
   }
 
   return (
-    <Field>
-      <FieldLabel htmlFor={id}>{label}</FieldLabel>
-      <InputGroup>
-        <InputGroupInput
-          id={id}
-          value={dateValue}
-          placeholder={placeholder}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-        />
-        <InputGroupAddon align="inline-end">
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <InputGroupButton
-                id="date-picker"
-                variant="ghost"
-                size="icon-xs"
-                aria-label="Select date"
-              >
-                <CalendarIcon />
-                <span className="sr-only">{label}</span>
-              </InputGroupButton>
-            </PopoverTrigger>
-            <PopoverContent
-              className="w-auto overflow-hidden p-0"
-              align="end"
-              alignOffset={-8}
-              sideOffset={10}
+    <InputGroup>
+      <InputGroupInput
+        id={id}
+        value={dateValue}
+        placeholder={placeholder}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+      />
+      <InputGroupAddon align="inline-end">
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <InputGroupButton
+              id="date-picker"
+              variant="ghost"
+              size="icon-xs"
+              aria-label="Select date"
             >
-              <Calendar
-                style={{ '--cell-size': '3rem' } as React.CSSProperties}
-                mode="single"
-                selected={date}
-                onSelect={handleSelect}
-              />
-            </PopoverContent>
-          </Popover>
-        </InputGroupAddon>
-      </InputGroup>
-    </Field>
+              <CalendarIcon />
+              <span className="sr-only">Select date</span>
+            </InputGroupButton>
+          </PopoverTrigger>
+          <PopoverContent
+            className="w-auto overflow-hidden p-0"
+            align="end"
+            alignOffset={-8}
+            sideOffset={10}
+          >
+            <Calendar
+              style={{ '--cell-size': '3rem' } as React.CSSProperties}
+              mode="single"
+              selected={date}
+              onSelect={handleSelect}
+            />
+          </PopoverContent>
+        </Popover>
+      </InputGroupAddon>
+    </InputGroup>
   )
 }

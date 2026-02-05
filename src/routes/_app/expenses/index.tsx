@@ -5,6 +5,7 @@ import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
 import { AddExpenseForm } from './-components'
 import { ExpenseList } from './-components/ExpenseList'
 import { mockExpenses } from './-components/mock'
+import type { ExpenseFormData } from '@/lib/validations/expense.schema'
 import { cn, toSelectOptions } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { SearchInput } from '@/components/common/SearchInput'
@@ -38,8 +39,8 @@ function RouteComponent() {
     }
   }
 
-  const onAddExpense = () => {
-    console.log('add expense')
+  const onAddExpense = (data: ExpenseFormData) => {
+    console.log('add expense', data)
   }
 
   const onCategoryChange = (value: { label: string; value: string }) => {
@@ -61,16 +62,13 @@ function RouteComponent() {
             items={categoryOptions}
             onChange={onCategoryChange}
             placeholder="All Categories"
+            value="all"
           />
         </div>
         <div className="flex justify-start py-2 md:justify-end md:py-0">
           <Dialog>
             <DialogTrigger asChild>
-              <Button
-                size="lg"
-                onClick={onAddExpense}
-                className="w-full md:w-auto"
-              >
+              <Button size="lg" className="w-full md:w-auto">
                 <PlusIcon className="h-4 w-4" />
                 Add Expense
               </Button>

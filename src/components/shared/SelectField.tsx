@@ -14,16 +14,21 @@ export interface SelectFieldProps {
   onChange: (value: { label: string; value: string }) => void
 }
 
-export const SelectField = ({ items, value, onChange }: SelectFieldProps) => {
+export const SelectField = ({
+  items,
+  value,
+  onChange,
+  placeholder,
+}: SelectFieldProps) => {
   const handleChange = (v: string) => {
     const selected = items.find((item) => item.value === v)
     if (selected) onChange(selected)
   }
 
   return (
-    <Select value={value} onValueChange={handleChange}>
+    <Select value={value || undefined} onValueChange={handleChange}>
       <SelectTrigger>
-        <SelectValue />
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className="max-h-94 overflow-y-auto">
         <SelectGroup>

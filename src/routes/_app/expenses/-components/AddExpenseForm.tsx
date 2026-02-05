@@ -22,20 +22,25 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 
 interface AddExpenseFormProps {
   categories: Array<Category>
+  onSubmit: (data: ExpenseFormData) => void
 }
-export const AddExpenseForm = ({ categories }: AddExpenseFormProps) => {
+export const AddExpenseForm = ({
+  categories,
+  onSubmit,
+}: AddExpenseFormProps) => {
   const form = useForm<ExpenseFormData>({
     resolver: zodResolver(expenseSchema),
     defaultValues: {
       amount: 0,
       category_id: '',
       description: '',
-      transaction_date: new Date(),
+      transaction_date: undefined,
     },
   })
 
@@ -49,15 +54,13 @@ export const AddExpenseForm = ({ categories }: AddExpenseFormProps) => {
         )
       : []
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault()
-    console.log(form.getValues())
-  }
-
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-        <DialogContent className="sm:max-w-sm">
+      <DialogContent className="sm:max-w-sm">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-4"
+        >
           <DialogHeader>
             <DialogTitle>Add Expense</DialogTitle>
           </DialogHeader>
@@ -67,10 +70,10 @@ export const AddExpenseForm = ({ categories }: AddExpenseFormProps) => {
               name="amount"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Amount</FormLabel>
                   <FormControl>
                     <CurrencyInput
                       id="amount"
-                      label="Amount"
                       min={0}
                       placeholder="0.00"
                       step={0.01}
@@ -88,10 +91,11 @@ export const AddExpenseForm = ({ categories }: AddExpenseFormProps) => {
               name="category_id"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Category</FormLabel>
                   <FormControl>
                     <SelectField
                       items={categoryOptions}
-                      onChange={field.onChange}
+                      onChange={(selected) => field.onChange(selected.value)}
                       placeholder="Select Category"
                       value={field.value}
                     />
@@ -105,6 +109,7 @@ export const AddExpenseForm = ({ categories }: AddExpenseFormProps) => {
               name="description"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Input
                       id="description"
@@ -122,13 +127,18 @@ export const AddExpenseForm = ({ categories }: AddExpenseFormProps) => {
               control={form.control}
               name="transaction_date"
               render={({ field }) => (
-                <DatePickerInput
-                  id="date"
-                  label="Date"
-                  placeholder="Select Date"
-                  onChange={field.onChange}
-                  value={form.getValues('transaction_date')}
-                />
+                <FormItem>
+                  <FormLabel>Date</FormLabel>
+                  <FormControl>
+                    <DatePickerInput
+                      id="date"
+                      placeholder="Select Date"
+                      onChange={field.onChange}
+                      value={field.value}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
             />
           </FieldGroup>
@@ -142,8 +152,8 @@ export const AddExpenseForm = ({ categories }: AddExpenseFormProps) => {
               Add Expense
             </Button>
           </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+      </DialogContent>
     </Form>
   )
 }
