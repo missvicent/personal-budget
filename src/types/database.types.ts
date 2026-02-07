@@ -38,17 +38,21 @@ export interface Category {
 }
 
 export interface Transaction {
-  account_id?: string
+  id?: string
+  user_id?: string
+  account_id?: string | null
+  category_id: string | null
+  type: 'income' | 'expense'
   amount: number
-  category_id: string
-  created_at: string
-  description: string
-  id: string
-  merchant?: string
-  transaction_date: string
-  type: 'income' | 'expense' | 'transfer'
-  updated_at: string
-  user_id: string
+  description: string | null
+  merchant?: string | null
+  transaction_date: Date | string
+  created_at?: string | null
+  updated_at?: string | null
+  recurring_id?: string | null
+  note?: string | null
+  is_recurring?: boolean | null
+  tags?: Array<string> | null
 }
 
 export interface Budget {

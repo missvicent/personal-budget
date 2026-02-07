@@ -1,113 +1,170 @@
-import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import type { Category } from '@/types/database.types'
-import { SelectField } from '@/components/common/SelectField'
+import type { ExpenseFormData } from '@/lib/validations/expense.schema'
+import { expenseSchema } from '@/lib/validations/expense.schema'
+import { SelectField } from '@/components/shared/SelectField'
 import { Button } from '@/components/ui/button'
 import {
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Field, FieldGroup } from '@/components/ui/field'
+import { FieldGroup } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { toSelectOptions } from '@/lib/utils'
 import { CurrencyInput } from '@/components/shared/CurrencyInput'
 import { DatePickerInput } from '@/components/shared/DatepickerInput'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 
 interface AddExpenseFormProps {
   categories: Array<Category>
-  onSubmit: (data: any) => void
+  onSubmit: (data: ExpenseFormData) => void
 }
-
 export const AddExpenseForm = ({
   categories,
   onSubmit,
 }: AddExpenseFormProps) => {
+  const form = useForm<ExpenseFormData>({
+    resolver: zodResolver(expenseSchema),
+    defaultValues: {
+      amount: 0,
+      category_id: '',
+      description: '',
+      transaction_date: undefined,
+    },
+  })
+
+  const handleSubmit = (data: ExpenseFormData) => {
+    onSubmit(data)
+    form.reset()
+  }
+
   const categoryOptions =
     categories.length > 0
       ? toSelectOptions(
           { label: 'Select Category', value: 'all' },
-          categories,
+          categories.filter((c) => c.type === 'expense'),
           (c) => `${c.icon} ${c.name}`,
           (c) => c.id,
         )
       : []
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault()
-    const formData = new FormData(e.target as HTMLFormElement)
-    const data = Object.fromEntries(formData)
-    onSubmit(data)
-  }
-
-  const handleDateChange = (date: Date) => {
-    console.log(date)
-  }
-
-  const handleCategoryChange = (value: { label: string; value: string }) => {
-    console.log(value)
-  }
-
-  const handleAmountChange = (value: number) => {
-    console.log(value)
-  }
-
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <Form {...form}>
       <DialogContent className="sm:max-w-sm">
-        <DialogHeader>
-          <DialogTitle>Add Expense</DialogTitle>
-        </DialogHeader>
-        <FieldGroup>
-          <Field>
-            <CurrencyInput
-              id="amount"
-              label="Amount"
-              min={0}
-              onChange={handleAmountChange}
-              placeholder="0.00"
-              step={0.01}
-              type="number"
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="flex flex-col gap-4"
+        >
+          <DialogHeader>
+            <DialogTitle>Add Expense</DialogTitle>
+            <DialogDescription className="sr-only">
+              Fill in the details to add a new expense
+            </DialogDescription>
+          </DialogHeader>
+          <FieldGroup>
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Amount</FormLabel>
+                  <FormControl>
+                    <CurrencyInput
+                      id="amount"
+                      min={0}
+                      placeholder="0.00"
+                      step={0.01}
+                      type="number"
+                      ref={field.ref}
+                      value={field.value}
+                      onBlur={field.onBlur}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </Field>
-          <Field>
-            <Label htmlFor="category">Category</Label>
-            <SelectField
-              items={categoryOptions}
-              onChange={handleCategoryChange}
-              placeholder="Select Category"
+            <FormField
+              control={form.control}
+              name="category_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <SelectField
+                      items={categoryOptions}
+                      onChange={(selected) => field.onChange(selected.value)}
+                      placeholder="Select Category"
+                      value={field.value}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </Field>
-          <Field>
-            <Label htmlFor="description">Description</Label>
-            <Input
-              id="description"
+            <FormField
+              control={form.control}
               name="description"
-              placeholder="What did you spend on?"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="What did you spend on?" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </Field>
-          <Field>
-            <DatePickerInput
-              id="date"
-              label="Date"
-              placeholder="Select Date"
-              onChange={handleDateChange}
+            <FormField
+              control={form.control}
+              name="transaction_date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date</FormLabel>
+                  <FormControl>
+                    <DatePickerInput
+                      ref={field.ref}
+                      id="date"
+                      placeholder="Select Date"
+                      onBlur={field.onBlur}
+                      onChange={field.onChange}
+                      value={field.value}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </Field>
-        </FieldGroup>
-        <DialogFooter className="flex flex-row gap-2">
-          <DialogClose asChild>
-            <Button variant="outline" className="w-full">
-              Cancel
+          </FieldGroup>
+          <DialogFooter className="flex flex-row gap-2">
+            <DialogClose asChild>
+              <Button variant="outline" className="w-full">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={form.formState.isSubmitting}
+            >
+              Add Expense
             </Button>
-          </DialogClose>
-          <Button onClick={handleSubmit} className="w-full">
-            Add Expense
-          </Button>
-        </DialogFooter>
+          </DialogFooter>
+        </form>
       </DialogContent>
-    </form>
+    </Form>
   )
 }

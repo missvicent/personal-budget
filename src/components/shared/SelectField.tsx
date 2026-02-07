@@ -1,3 +1,4 @@
+import * as React from 'react'
 import {
   Select,
   SelectContent,
@@ -7,22 +8,32 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-export interface SelectFieldProps {
+export interface SelectFieldProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof SelectTrigger>,
+  'value' | 'onChange'
+> {
   placeholder?: string
   items: Array<{ label: string; value: string }>
+  value: string
   onChange: (value: { label: string; value: string }) => void
 }
 
-export const SelectField = ({ items, onChange }: SelectFieldProps) => {
-  const handleChange = (value: string) => {
-    const selected = items.find((item) => item.value === value)
+export const SelectField = ({
+  items,
+  value,
+  onChange,
+  placeholder,
+  ...triggerProps
+}: SelectFieldProps) => {
+  const handleChange = (v: string) => {
+    const selected = items.find((item) => item.value === v)
     if (selected) onChange(selected)
   }
 
   return (
-    <Select defaultValue={items[0]?.value} onValueChange={handleChange}>
-      <SelectTrigger>
-        <SelectValue />
+    <Select value={value} onValueChange={handleChange}>
+      <SelectTrigger {...triggerProps}>
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className="max-h-94 overflow-y-auto">
         <SelectGroup>
