@@ -34,7 +34,10 @@ function isValidDate(date: Date | undefined) {
   return !isNaN(date.getTime())
 }
 
-export interface DatePickerInputProps {
+export interface DatePickerInputProps extends Omit<
+  React.ComponentPropsWithoutRef<'div'>,
+  'id' | 'value' | 'onChange' | 'onBlur'
+> {
   id: string
   placeholder: string
   value: Date | undefined
@@ -45,7 +48,10 @@ export interface DatePickerInputProps {
 export const DatePickerInput = React.forwardRef<
   HTMLInputElement,
   DatePickerInputProps
->(function DatePickerInput({ id, placeholder, value, onBlur, onChange }, ref) {
+>(function DatePickerInput(
+  { id, placeholder, value, onBlur, onChange, ...groupProps },
+  ref,
+) {
   const [open, setOpen] = React.useState(false)
   const [date, setDate] = React.useState<Date | undefined>(value)
   const [dateValue, setDateValue] = React.useState(formatDate(value))
@@ -81,7 +87,7 @@ export const DatePickerInput = React.forwardRef<
   }
 
   return (
-    <InputGroup>
+    <InputGroup {...groupProps}>
       <InputGroupInput
         ref={ref}
         id={id}

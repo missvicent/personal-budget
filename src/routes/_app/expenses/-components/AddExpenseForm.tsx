@@ -41,7 +41,7 @@ export const AddExpenseForm = ({
       amount: 0,
       category_id: '',
       description: '',
-      transaction_date: new Date(),
+      transaction_date: undefined,
     },
   })
 
