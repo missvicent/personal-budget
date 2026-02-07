@@ -41,15 +41,20 @@ export const AddExpenseForm = ({
       amount: 0,
       category_id: '',
       description: '',
-      transaction_date: undefined,
+      transaction_date: new Date(),
     },
   })
+
+  const handleSubmit = (data: ExpenseFormData) => {
+    onSubmit(data)
+    form.reset()
+  }
 
   const categoryOptions =
     categories.length > 0
       ? toSelectOptions(
           { label: 'Select Category', value: 'all' },
-          categories,
+          categories.filter((c) => c.type === 'expense'),
           (c) => `${c.icon} ${c.name}`,
           (c) => c.id,
         )
@@ -59,7 +64,7 @@ export const AddExpenseForm = ({
     <Form {...form}>
       <DialogContent className="sm:max-w-sm">
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(handleSubmit)}
           className="flex flex-col gap-4"
         >
           <DialogHeader>
@@ -82,7 +87,9 @@ export const AddExpenseForm = ({
                       placeholder="0.00"
                       step={0.01}
                       type="number"
+                      ref={field.ref}
                       value={field.value}
+                      onBlur={field.onBlur}
                       onChange={field.onChange}
                     />
                   </FormControl>
@@ -115,13 +122,7 @@ export const AddExpenseForm = ({
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input
-                      id="description"
-                      name="description"
-                      placeholder="What did you spend on?"
-                      value={field.value}
-                      onChange={field.onChange}
-                    />
+                    <Input {...field} placeholder="What did you spend on?" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -135,8 +136,10 @@ export const AddExpenseForm = ({
                   <FormLabel>Date</FormLabel>
                   <FormControl>
                     <DatePickerInput
+                      ref={field.ref}
                       id="date"
                       placeholder="Select Date"
+                      onBlur={field.onBlur}
                       onChange={field.onChange}
                       value={field.value}
                     />
@@ -152,7 +155,11 @@ export const AddExpenseForm = ({
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" className="w-full">
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={form.formState.isSubmitting}
+            >
               Add Expense
             </Button>
           </DialogFooter>

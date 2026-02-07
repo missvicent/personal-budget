@@ -38,18 +38,22 @@ export interface DatePickerInputProps {
   id: string
   placeholder: string
   value: Date | undefined
+  onBlur?: () => void
   onChange: (date: Date) => void
 }
 
-export function DatePickerInput({
-  id,
-  placeholder,
-  value,
-  onChange,
-}: DatePickerInputProps) {
+export const DatePickerInput = React.forwardRef<
+  HTMLInputElement,
+  DatePickerInputProps
+>(function DatePickerInput({ id, placeholder, value, onBlur, onChange }, ref) {
   const [open, setOpen] = React.useState(false)
   const [date, setDate] = React.useState<Date | undefined>(value)
-  const [dateValue, setDateValue] = React.useState(formatDate(date))
+  const [dateValue, setDateValue] = React.useState(formatDate(value))
+
+  React.useEffect(() => {
+    setDate(value)
+    setDateValue(formatDate(value))
+  }, [value])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = e.target.value
@@ -79,9 +83,11 @@ export function DatePickerInput({
   return (
     <InputGroup>
       <InputGroupInput
+        ref={ref}
         id={id}
         value={dateValue}
         placeholder={placeholder}
+        onBlur={onBlur}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
       />
@@ -115,4 +121,4 @@ export function DatePickerInput({
       </InputGroupAddon>
     </InputGroup>
   )
-}
+})
