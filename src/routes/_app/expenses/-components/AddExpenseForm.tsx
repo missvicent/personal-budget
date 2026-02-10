@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Category } from '@/types/database.types'
 import type { ExpenseFormData } from '@/lib/validations/expense.schema'
+import { Checkbox } from '@/components/ui/checkbox'
 import { expenseSchema } from '@/lib/validations/expense.schema'
 import { SelectField } from '@/components/shared/SelectField'
 import { Button } from '@/components/ui/button'
@@ -41,6 +42,7 @@ export const AddExpenseForm = ({
       amount: 0,
       category_id: '',
       description: '',
+      is_recurring: false,
       transaction_date: undefined,
     },
   })
@@ -144,6 +146,21 @@ export const AddExpenseForm = ({
                       value={field.value}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="is_recurring"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center gap-2">
+                  <Checkbox
+                    ref={field.ref}
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                  <FormLabel>Is Recurring</FormLabel>
                   <FormMessage />
                 </FormItem>
               )}

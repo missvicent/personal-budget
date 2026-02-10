@@ -2,6 +2,7 @@ import type {
   PaginatedResponse,
   Transaction,
   TransactionFilters,
+  TransactionWithCategory,
 } from '@/types/database.types'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
@@ -79,5 +80,20 @@ export const transactionsService = {
       .single()
     if (error) throw new Error(`Failed to update transaction: ${error.message}`)
     return data
+  },
+
+  getTransactionsWithCategories: async (
+    supabase: SupabaseClient,
+  ): Promise<Array<TransactionWithCategory>> => {
+    const { data, error } = await supabase
+      .rpc('get_transactions_with_categories')
+      .select('*')
+      .eq('category_type', 'expense')
+      .order('transaction_date', { ascending: false })
+    if (error)
+      throw new Error(
+        `Failed to fetch transactions with categories: ${error.message}`,
+      )
+    return data as Array<TransactionWithCategory>
   },
 }
