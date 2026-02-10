@@ -1,8 +1,8 @@
 import type {
-  Category,
   PaginatedResponse,
   Transaction,
   TransactionFilters,
+  TransactionWithCategory,
 } from '@/types/database.types'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
@@ -84,7 +84,7 @@ export const transactionsService = {
 
   getTransactionsWithCategories: async (
     supabase: SupabaseClient,
-  ): Promise<Array<Transaction & { category: Category }>> => {
+  ): Promise<Array<TransactionWithCategory>> => {
     const { data, error } = await supabase
       .rpc('get_transactions_with_categories')
       .select('*')
@@ -94,6 +94,6 @@ export const transactionsService = {
       throw new Error(
         `Failed to fetch transactions with categories: ${error.message}`,
       )
-    return data as Array<Transaction & { category: Category }>
+    return data as Array<TransactionWithCategory>
   },
 }

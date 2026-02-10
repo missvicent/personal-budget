@@ -93,6 +93,17 @@ export interface PaginatedResponse<T> {
   total: number
 }
 
+export interface TransactionWithCategory {
+  id: string
+  amount: number
+  category_name: string
+  category_type: 'income' | 'expense'
+  icon: string
+  color: string
+  description: string
+  transaction_date: string
+}
+
 export interface UserSettings {
   user_id: string
   dark_mode: boolean

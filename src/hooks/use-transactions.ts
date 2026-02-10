@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type {
-  Category,
   PaginatedResponse,
   Transaction,
   TransactionFilters,
+  TransactionWithCategory,
 } from '@/types/database.types'
 import { transactionsService } from '@/services/transactions.service'
 
@@ -71,7 +71,7 @@ export const useDeleteTransaction = (supabase: SupabaseClient) => {
 }
 
 export const useGetTransactionsWithCategories = (supabase: SupabaseClient) => {
-  return useQuery<Array<Transaction & { category: Category }>>({
+  return useQuery<Array<TransactionWithCategory>>({
     queryKey: queryKeys.transactionsWithCategories(),
     queryFn: () => transactionsService.getTransactionsWithCategories(supabase),
     enabled: !!supabase,

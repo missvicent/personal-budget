@@ -4,8 +4,8 @@ import { PlusIcon } from 'lucide-react'
 import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
 import { AddExpenseForm } from './-components'
 import { ExpenseList } from './-components/ExpenseList'
-import { mockExpenses } from './-components/mock'
 import type { ExpenseFormData } from '@/lib/validations/expense.schema'
+import { groupTransactionsByDate } from '@/lib/transactions.utils'
 import {
   useCreateTransaction,
   useGetTransactionsWithCategories,
@@ -23,7 +23,6 @@ export const Route = createFileRoute('/_app/expenses/')({
 })
 
 function RouteComponent() {
-  const expenses = mockExpenses
   const supabase = useSupabase()
   const { mutate: createTransaction } = useCreateTransaction(supabase)
   const { data: categories } = useCategories(supabase)
@@ -36,7 +35,10 @@ function RouteComponent() {
     (c) => `${c.icon} ${c.name}`,
     (c) => c.id,
   )
-  console.log(transactionsWithCategories)
+  const groupedExpenses = groupTransactionsByDate(
+    transactionsWithCategories ?? [],
+  )
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
   }
@@ -88,7 +90,7 @@ function RouteComponent() {
           </Dialog>
         </div>
       </header>
-      <ExpenseList expenses={expenses} />
+      <ExpenseList expenses={groupedExpenses} />
     </section>
   )
 }
