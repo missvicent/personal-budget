@@ -6,12 +6,17 @@ import { AddExpenseForm } from './-components'
 import { ExpenseList } from './-components/ExpenseList'
 import { mockExpenses } from './-components/mock'
 import type { ExpenseFormData } from '@/lib/validations/expense.schema'
+import {
+  useCreateTransaction,
+  useGetTransactionsWithCategories,
+} from '@/hooks/use-transactions'
 import { cn, toSelectOptions } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { SearchInput } from '@/components/common/SearchInput'
 import { SelectField } from '@/components/shared/SelectField'
 import { useCategories } from '@/hooks/use-categories'
 import { useSupabase } from '@/hooks/use-supabase'
+import { toTransactionPayload } from '@/lib/validations/expense.schema'
 
 export const Route = createFileRoute('/_app/expenses/')({
   component: RouteComponent,
@@ -20,7 +25,10 @@ export const Route = createFileRoute('/_app/expenses/')({
 function RouteComponent() {
   const expenses = mockExpenses
   const supabase = useSupabase()
+  const { mutate: createTransaction } = useCreateTransaction(supabase)
   const { data: categories } = useCategories(supabase)
+  const { data: transactionsWithCategories } =
+    useGetTransactionsWithCategories(supabase)
   const [searchValue, setSearchValue] = useState('')
   const categoryOptions = toSelectOptions(
     { label: 'All Categories', value: 'all' },
@@ -28,7 +36,7 @@ function RouteComponent() {
     (c) => `${c.icon} ${c.name}`,
     (c) => c.id,
   )
-
+  console.log(transactionsWithCategories)
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
   }
@@ -40,11 +48,11 @@ function RouteComponent() {
   }
 
   const onAddExpense = (data: ExpenseFormData) => {
-    console.log('add expense', data)
+    createTransaction(toTransactionPayload(data))
   }
 
   const onCategoryChange = (value: { label: string; value: string }) => {
-    const { value: categoryValue, label: categoryLabel } = value
+    const { value: categoryValue } = value
     if (categoryValue === 'all') return
   }
 
