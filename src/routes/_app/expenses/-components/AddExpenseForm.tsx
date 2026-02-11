@@ -56,7 +56,7 @@ export const AddExpenseForm = ({
     categories.length > 0
       ? toSelectOptions(
           { label: 'Select Category', value: 'all' },
-          categories.filter((c) => c.type === 'expense'),
+          categories.filter((c) => c.category_type === 'expense'),
           (c) => `${c.icon} ${c.name}`,
           (c) => c.id,
         )

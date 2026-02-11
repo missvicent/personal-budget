@@ -1,23 +1,24 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { SupabaseClient } from '@supabase/supabase-js'
 import type { UserSettings } from '@/types/database.types'
 import { userSettingsService } from '@/services/user-settings.service'
+import { useSupabase } from '@/contexts/SupabaseContext'
 
 const queryKeys = {
   userSettings: () => ['user_settings'],
   userSetting: (userId: string) => ['user_settings', userId],
 }
-export const useUserSetting = (supabase: SupabaseClient) => {
+export const useUserSetting = () => {
+  const supabase = useSupabase()
   return useQuery<UserSettings>({
     queryKey: queryKeys.userSettings(),
     queryFn: () => userSettingsService.get(supabase),
-    enabled: !!supabase,
     staleTime: 1000 * 60 * 5,
     retry: false,
   })
 }
 
-export const useUpdateUserSetting = (supabase: SupabaseClient) => {
+export const useUpdateUserSetting = () => {
+  const supabase = useSupabase()
   const queryClient = useQueryClient()
   return useMutation<
     UserSettings,

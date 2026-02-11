@@ -15,7 +15,6 @@ import { Button } from '@/components/ui/button'
 import { SearchInput } from '@/components/common/SearchInput'
 import { SelectField } from '@/components/shared/SelectField'
 import { useCategories } from '@/hooks/use-categories'
-import { useSupabase } from '@/hooks/use-supabase'
 import { toTransactionPayload } from '@/lib/validations/expense.schema'
 
 export const Route = createFileRoute('/_app/expenses/')({
@@ -23,11 +22,10 @@ export const Route = createFileRoute('/_app/expenses/')({
 })
 
 function RouteComponent() {
-  const supabase = useSupabase()
-  const { mutate: createTransaction } = useCreateTransaction(supabase)
-  const { data: categories } = useCategories(supabase)
+  const { mutate: createTransaction } = useCreateTransaction()
+  const { data: categories } = useCategories()
   const { data: transactionsWithCategories } =
-    useGetTransactionsWithCategories(supabase)
+    useGetTransactionsWithCategories()
   const [searchValue, setSearchValue] = useState('')
   const categoryOptions = toSelectOptions(
     { label: 'All Categories', value: 'all' },
@@ -35,6 +33,7 @@ function RouteComponent() {
     (c) => `${c.icon} ${c.name}`,
     (c) => c.id,
   )
+
   const groupedExpenses = groupTransactionsByDate(
     transactionsWithCategories ?? [],
   )
@@ -44,9 +43,7 @@ function RouteComponent() {
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      console.log(searchValue)
-    }
+    if (e.key === 'Enter') console.log(searchValue)
   }
 
   const onAddExpense = (data: ExpenseFormData) => {
@@ -84,7 +81,7 @@ function RouteComponent() {
               </Button>
             </DialogTrigger>
             <AddExpenseForm
-              categories={categories || []}
+              categories={categories ?? []}
               onSubmit={onAddExpense}
             />
           </Dialog>

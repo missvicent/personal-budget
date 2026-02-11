@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { SupabaseClient } from '@supabase/supabase-js'
 import type {
   PaginatedResponse,
   Transaction,
@@ -7,6 +6,7 @@ import type {
   TransactionWithCategory,
 } from '@/types/database.types'
 import { transactionsService } from '@/services/transactions.service'
+import { useSupabase } from '@/contexts/SupabaseContext'
 
 const queryKeys = {
   transactions: (filters: TransactionFilters) => ['transactions', filters],
@@ -14,20 +14,18 @@ const queryKeys = {
   transactionsWithCategories: () => ['transactions', 'with-categories'],
 }
 
-export const useTransactions = (
-  supabase: SupabaseClient,
-  filters: TransactionFilters,
-) => {
+export const useTransactions = (filters: TransactionFilters) => {
+  const supabase = useSupabase()
   return useQuery<PaginatedResponse<Transaction>>({
     queryKey: queryKeys.transactions(filters),
     queryFn: () => transactionsService.getAll(supabase, filters),
-    enabled: !!supabase,
     staleTime: 1000 * 60 * 5,
     retry: false,
   })
 }
 
-export const useCreateTransaction = (supabase: SupabaseClient) => {
+export const useCreateTransaction = () => {
+  const supabase = useSupabase()
   const queryClient = useQueryClient()
   return useMutation<
     Transaction,
@@ -43,7 +41,8 @@ export const useCreateTransaction = (supabase: SupabaseClient) => {
   })
 }
 
-export const useUpdateTransaction = (supabase: SupabaseClient) => {
+export const useUpdateTransaction = () => {
+  const supabase = useSupabase()
   const queryClient = useQueryClient()
   return useMutation<
     Transaction,
@@ -60,7 +59,8 @@ export const useUpdateTransaction = (supabase: SupabaseClient) => {
   })
 }
 
-export const useDeleteTransaction = (supabase: SupabaseClient) => {
+export const useDeleteTransaction = () => {
+  const supabase = useSupabase()
   const queryClient = useQueryClient()
   return useMutation<void, Error, string>({
     mutationFn: (id: string) => transactionsService.delete(id, supabase),
@@ -70,11 +70,11 @@ export const useDeleteTransaction = (supabase: SupabaseClient) => {
   })
 }
 
-export const useGetTransactionsWithCategories = (supabase: SupabaseClient) => {
+export const useGetTransactionsWithCategories = () => {
+  const supabase = useSupabase()
   return useQuery<Array<TransactionWithCategory>>({
     queryKey: queryKeys.transactionsWithCategories(),
     queryFn: () => transactionsService.getTransactionsWithCategories(supabase),
-    enabled: !!supabase,
     staleTime: 1000 * 60 * 5,
     retry: false,
   })

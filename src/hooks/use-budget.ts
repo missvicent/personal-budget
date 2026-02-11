@@ -1,16 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Budget } from '@/types/database.types'
 import { budgetService } from '@/services/budget.service'
-
-const queryClient = useQueryClient()
+import { useSupabase } from '@/contexts/SupabaseContext'
 
 export const queryKeys = {
   budgets: () => ['budgets'],
   budget: (id: string) => ['budgets', id],
 }
 
-export const useBudgets = (supabase: SupabaseClient) => {
+export const useBudgets = () => {
+  const supabase = useSupabase()
   return useQuery<Array<Budget & { progress: number }>>({
     queryKey: queryKeys.budgets(),
     queryFn: () => budgetService.getAllWithProgress(supabase),
@@ -19,8 +18,9 @@ export const useBudgets = (supabase: SupabaseClient) => {
 
 export const useCreateBudget = (
   budget: Omit<Budget, 'id' | 'created_at' | 'updated_at'>,
-  supabase: SupabaseClient,
 ) => {
+  const supabase = useSupabase()
+  const queryClient = useQueryClient()
   return useMutation<
     Budget,
     Error,
@@ -37,7 +37,9 @@ export const useCreateBudget = (
   })
 }
 
-export const useDeleteBudget = (id: string, supabase: SupabaseClient) => {
+export const useDeleteBudget = (id: string) => {
+  const supabase = useSupabase()
+  const queryClient = useQueryClient()
   return useMutation<void, Error, string>({
     mutationFn: () => budgetService.delete(id, supabase),
     onSuccess: () => {
@@ -50,8 +52,9 @@ export const useDeleteBudget = (id: string, supabase: SupabaseClient) => {
 export const useUpdateBudget = (
   id: string,
   budget: Partial<Omit<Budget, 'id' | 'created_at' | 'updated_at'>>,
-  supabase: SupabaseClient,
 ) => {
+  const supabase = useSupabase()
+  const queryClient = useQueryClient()
   return useMutation<
     Budget,
     Error,

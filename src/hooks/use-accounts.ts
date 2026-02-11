@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Account, CreateAccount } from '@/types/database.types'
 import { accountService } from '@/services/account.service'
+import { useSupabase } from '@/contexts/SupabaseContext'
 
 export const queryKeys = {
   accounts: () => ['accounts'],
@@ -9,21 +9,24 @@ export const queryKeys = {
   accountWithTransactions: (id: string) => ['accounts', id, 'transactions'],
 }
 
-export const useAccounts = (supabase: SupabaseClient) => {
+export const useAccounts = () => {
+  const supabase = useSupabase()
   return useQuery({
     queryKey: queryKeys.accounts(),
     queryFn: () => accountService.getAll(supabase),
   })
 }
 
-export const useAccount = (supabase: SupabaseClient, id: string) => {
+export const useAccount = (id: string) => {
+  const supabase = useSupabase()
   return useQuery({
     queryKey: queryKeys.account(id),
     queryFn: () => accountService.getById(id, supabase),
   })
 }
 
-export const useCreateAccount = (supabase: SupabaseClient) => {
+export const useCreateAccount = () => {
+  const supabase = useSupabase()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (account: CreateAccount) =>
@@ -37,11 +40,8 @@ export const useCreateAccount = (supabase: SupabaseClient) => {
   })
 }
 
-export const useUpdateAccount = (
-  id: string,
-  account: Account,
-  supabase: SupabaseClient,
-) => {
+export const useUpdateAccount = (id: string, account: Account) => {
+  const supabase = useSupabase()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: () => accountService.update(id, account, supabase),
@@ -52,7 +52,8 @@ export const useUpdateAccount = (
   })
 }
 
-export const useDeleteAccount = (id: string, supabase: SupabaseClient) => {
+export const useDeleteAccount = (id: string) => {
+  const supabase = useSupabase()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: () => accountService.delete(id, supabase),
