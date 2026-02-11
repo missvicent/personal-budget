@@ -32,7 +32,7 @@ export interface Category {
   is_system: boolean
   name: string
   parent_id: string | null
-  type: 'income' | 'expense'
+  category_type: 'income' | 'expense'
   updated_at: string
   user_id: string
 }

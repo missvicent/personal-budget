@@ -25,7 +25,6 @@ export type ExpenseFormData = z.infer<typeof expenseSchema>
 export function toTransactionPayload(data: ExpenseFormData) {
   const { amount, category_id, description, transaction_date, is_recurring } =
     data
-  console.log(is_recurring)
   return {
     amount,
     category_id,

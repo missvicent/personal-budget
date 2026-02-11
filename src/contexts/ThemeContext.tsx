@@ -18,7 +18,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const { mutate: updateUserSetting } = useUpdateUserSetting(supabase)
 
   useEffect(() => {
-    console.log(UserSettings?.dark_mode)
     document.documentElement.classList.toggle(
       'dark',
       UserSettings?.dark_mode || false,

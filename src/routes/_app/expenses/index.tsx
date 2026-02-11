@@ -35,6 +35,7 @@ function RouteComponent() {
     (c) => `${c.icon} ${c.name}`,
     (c) => c.id,
   )
+
   const groupedExpenses = groupTransactionsByDate(
     transactionsWithCategories ?? [],
   )
@@ -44,9 +45,7 @@ function RouteComponent() {
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      console.log(searchValue)
-    }
+    if (e.key === 'Enter') console.log(searchValue)
   }
 
   const onAddExpense = (data: ExpenseFormData) => {
@@ -84,7 +83,7 @@ function RouteComponent() {
               </Button>
             </DialogTrigger>
             <AddExpenseForm
-              categories={categories || []}
+              categories={categories ?? []}
               onSubmit={onAddExpense}
             />
           </Dialog>
