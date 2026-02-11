@@ -3,6 +3,7 @@ import { ClerkProvider } from '@clerk/clerk-react'
 import ReactDOM from 'react-dom/client'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { SupabaseProvider } from './contexts/SupabaseContext.tsx'
 import { AppRouter } from './Router.tsx'
 import { UserSync } from './components/user/UserSync.tsx'
 
@@ -27,13 +28,15 @@ if (rootElement && !rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-        <QueryClientProvider client={queryClient}>
-          <UserSync>
-            <ThemeProvider>
-              <AppRouter />
-            </ThemeProvider>
-          </UserSync>
-        </QueryClientProvider>
+        <SupabaseProvider>
+          <QueryClientProvider client={queryClient}>
+            <UserSync>
+              <ThemeProvider>
+                <AppRouter />
+              </ThemeProvider>
+            </UserSync>
+          </QueryClientProvider>
+        </SupabaseProvider>
       </ClerkProvider>
     </StrictMode>,
   )

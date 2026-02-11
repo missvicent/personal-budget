@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { useUser } from '@clerk/clerk-react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useSupabase } from './use-supabase'
 import type { Profile } from '@/types/database.types'
+import { useSupabase } from '@/contexts/SupabaseContext'
 import { profilesService } from '@/services/profiles.service'
 
 export function useSyncUser() {

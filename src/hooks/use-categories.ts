@@ -1,18 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { Category } from '@/types/database.types'
-import type { SupabaseClient } from '@supabase/supabase-js'
 import { categoriesService } from '@/services/categories.service'
+import { useSupabase } from '@/contexts/SupabaseContext'
 
 export const queryKeys = {
   categories: () => ['categories'],
   category: (id: string) => ['categories', id],
 }
 
-export const useCategories = (supabase: SupabaseClient) => {
+export const useCategories = () => {
+  const supabase = useSupabase()
   return useQuery<Array<Category>>({
     queryKey: queryKeys.categories(),
     queryFn: () => categoriesService.getAll(supabase),
-    enabled: !!supabase,
     staleTime: 1000 * 60 * 5,
     retry: false,
   })
@@ -20,8 +20,8 @@ export const useCategories = (supabase: SupabaseClient) => {
 
 export const useCreateCategory = (
   category: Omit<Category, 'id' | 'created_at' | 'user_id'>,
-  supabase: SupabaseClient,
 ) => {
+  const supabase = useSupabase()
   const queryClient = useQueryClient()
   return useMutation<
     Category,
@@ -42,8 +42,8 @@ export const useCreateCategory = (
 export const useUpdateCategory = (
   id: string,
   category: Partial<Omit<Category, 'id' | 'created_at' | 'user_id'>>,
-  supabase: SupabaseClient,
 ) => {
+  const supabase = useSupabase()
   const queryClient = useQueryClient()
   return useMutation<
     Category,

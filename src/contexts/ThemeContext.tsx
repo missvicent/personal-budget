@@ -1,5 +1,4 @@
 import { createContext, useEffect } from 'react'
-import { useSupabase } from '@/hooks/use-supabase'
 import { useUpdateUserSetting, useUserSetting } from '@/hooks/use-user-setting'
 
 interface ThemeContextValue {
@@ -13,9 +12,8 @@ export const ThemeContext = createContext<ThemeContextValue | undefined>(
 )
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const supabase = useSupabase()
-  const { data: UserSettings } = useUserSetting(supabase)
-  const { mutate: updateUserSetting } = useUpdateUserSetting(supabase)
+  const { data: UserSettings } = useUserSetting()
+  const { mutate: updateUserSetting } = useUpdateUserSetting()
 
   useEffect(() => {
     document.documentElement.classList.toggle(
