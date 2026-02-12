@@ -36,7 +36,9 @@ export const useCreateTransaction = () => {
       transaction: Omit<Transaction, 'id' | 'created_at' | 'updated_at'>,
     ) => transactionsService.create(transaction, supabase),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.transactions({}) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.transactionsWithCategories(),
+      })
     },
   })
 }
