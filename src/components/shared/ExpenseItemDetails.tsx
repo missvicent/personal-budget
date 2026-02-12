@@ -3,7 +3,7 @@ import { useExpenseItem } from '@/hooks/use-expense-item'
 export const ExpenseItemDetails = ({
   children,
 }: {
-  children: React.ReactNode
+  children?: React.ReactNode
 }) => {
   const { title, category } = useExpenseItem()
   return (

@@ -58,20 +58,27 @@ export const ExpenseList = ({ expenses }: ExpenseListProps) => {
                   title={transaction.title}
                 >
                   <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="hover:bg-primary/20 hover:text-primary/70"
-                    >
-                      <PencilIcon className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="hover:bg-destructive/20 hover:text-destructive/70"
-                    >
-                      <Trash2Icon className="h-4 w-4" />
-                    </Button>
+                    <ExpenseItem.Icon />
+                    <ExpenseItem.Details />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <ExpenseItem.Amount />
+                    <ExpenseItem.Actions>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="hover:bg-primary/20 hover:text-primary/70"
+                      >
+                        <PencilIcon className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="hover:bg-destructive/20 hover:text-destructive/70"
+                      >
+                        <Trash2Icon className="h-4 w-4" />
+                      </Button>
+                    </ExpenseItem.Actions>
                   </div>
                 </ExpenseItem>
               </div>

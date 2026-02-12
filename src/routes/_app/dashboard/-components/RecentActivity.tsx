@@ -6,7 +6,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { ExpenseItem } from '@/components/shared/ExpenseItem'
-import { ExpenseItemMeta } from '@/components/shared/ExpenseItemMeta'
 import { Separator } from '@/components/ui/separator'
 
 export interface RecentActivityItem {
@@ -50,7 +49,13 @@ export const RecentActivity = ({ recentActivity }: RecentActivityProps) => {
                 icon={c.icon}
                 title={c.title}
               >
-                <ExpenseItemMeta> • {c.date}</ExpenseItemMeta>
+                <div className="flex items-center gap-2">
+                  <ExpenseItem.Icon />
+                  <ExpenseItem.Details>
+                    <ExpenseItem.Meta>&bull; {c.date}</ExpenseItem.Meta>
+                  </ExpenseItem.Details>
+                </div>
+                <ExpenseItem.Amount />
               </ExpenseItem>
             </div>
           ))
