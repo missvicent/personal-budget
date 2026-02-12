@@ -1,6 +1,8 @@
+import { PencilIcon, Trash2Icon } from 'lucide-react'
 import { currencyFormatter } from '@/lib/format'
 import { ExpenseItem } from '@/components/shared/ExpenseItem'
 import { Separator } from '@/components/ui/separator'
+import { Button } from '@/components/ui/button'
 
 export interface ExpenseTransaction {
   amount: number
@@ -54,7 +56,31 @@ export const ExpenseList = ({ expenses }: ExpenseListProps) => {
                   color={transaction.color}
                   icon={transaction.icon}
                   title={transaction.title}
-                />
+                >
+                  <div className="flex items-center gap-2">
+                    <ExpenseItem.Icon />
+                    <ExpenseItem.Details />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <ExpenseItem.Amount />
+                    <ExpenseItem.Actions>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="hover:bg-primary/20 hover:text-primary/70"
+                      >
+                        <PencilIcon className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="hover:bg-destructive/20 hover:text-destructive/70"
+                      >
+                        <Trash2Icon className="h-4 w-4" />
+                      </Button>
+                    </ExpenseItem.Actions>
+                  </div>
+                </ExpenseItem>
               </div>
             ))}
           </div>
