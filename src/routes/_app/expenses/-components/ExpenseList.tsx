@@ -23,15 +23,29 @@ export interface ExpenseRecord {
 
 export interface ExpenseListProps {
   expenses: Array<ExpenseRecord>
+  onEdit: (transaction: ExpenseTransaction) => void
+  onDelete: (id: string) => void
 }
 
-export const ExpenseList = ({ expenses }: ExpenseListProps) => {
+export const ExpenseList = ({
+  expenses,
+  onEdit,
+  onDelete,
+}: ExpenseListProps) => {
   if (expenses.length === 0) {
     return (
       <section className="flex flex-col items-center justify-center py-16 text-center">
         <p className="text-muted-foreground text-base">No expenses found</p>
       </section>
     )
+  }
+
+  const handleEdit = (transaction: ExpenseTransaction) => {
+    onEdit(transaction)
+  }
+
+  const handleDelete = (transaction: ExpenseTransaction) => {
+    onDelete(transaction.id)
   }
 
   return (
@@ -68,6 +82,7 @@ export const ExpenseList = ({ expenses }: ExpenseListProps) => {
                         variant="ghost"
                         size="icon"
                         className="hover:bg-primary/20 hover:text-primary/70"
+                        onClick={() => handleEdit(transaction)}
                       >
                         <PencilIcon className="h-4 w-4" />
                       </Button>
@@ -75,6 +90,7 @@ export const ExpenseList = ({ expenses }: ExpenseListProps) => {
                         variant="ghost"
                         size="icon"
                         className="hover:bg-destructive/20 hover:text-destructive/70"
+                        onClick={() => handleDelete(transaction)}
                       >
                         <Trash2Icon className="h-4 w-4" />
                       </Button>

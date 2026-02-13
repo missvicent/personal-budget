@@ -4,6 +4,7 @@ import { PlusIcon } from 'lucide-react'
 import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
 import { AddExpenseForm } from './-components'
 import { ExpenseList } from './-components/ExpenseList'
+import type { ExpenseTransaction } from './-components/ExpenseList'
 import type { ExpenseFormData } from '@/lib/validations/expense.schema'
 import { groupTransactionsByDate } from '@/lib/transactions.utils'
 import {
@@ -55,6 +56,14 @@ function RouteComponent() {
     if (categoryValue === 'all') return
   }
 
+  const onEdit = (transaction: ExpenseTransaction) => {
+    console.log(transaction)
+  }
+
+  const onDelete = (id: string) => {
+    console.log(id)
+  }
+
   return (
     <section className={cn('flex flex-col gap-4', 'px-4 py-4 md:px-8 md:py-8')}>
       <header className="flex flex-col justify-between gap-2 md:flex-row">
@@ -87,7 +96,11 @@ function RouteComponent() {
           </Dialog>
         </div>
       </header>
-      <ExpenseList expenses={groupedExpenses} />
+      <ExpenseList
+        expenses={groupedExpenses}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
     </section>
   )
 }
