@@ -9,6 +9,7 @@ import type { ExpenseFormData } from '@/lib/validations/expense.schema'
 import { groupTransactionsByDate } from '@/lib/transactions.utils'
 import {
   useCreateTransaction,
+  useDeleteTransaction,
   useGetTransactionsWithCategories,
 } from '@/hooks/use-transactions'
 import { cn, toSelectOptions } from '@/lib/utils'
@@ -24,6 +25,8 @@ export const Route = createFileRoute('/_app/expenses/')({
 
 function RouteComponent() {
   const { mutate: createTransaction } = useCreateTransaction()
+  const { mutate: deleteTransaction, isPending: isDeleting } =
+    useDeleteTransaction()
   const { data: categories } = useCategories()
   const { data: transactionsWithCategories } =
     useGetTransactionsWithCategories()
@@ -51,17 +54,15 @@ function RouteComponent() {
     createTransaction(toTransactionPayload(data))
   }
 
+  const onEdit = (transaction: ExpenseTransaction) => {
+    console.log('Edit transaction:', transaction)
+  }
+
+  const onDelete = (id: string) => deleteTransaction(id)
+
   const onCategoryChange = (value: { label: string; value: string }) => {
     const { value: categoryValue } = value
     if (categoryValue === 'all') return
-  }
-
-  const onEdit = (transaction: ExpenseTransaction) => {
-    console.log(transaction)
-  }
-
-  const onDelete = (id: string) => {
-    console.log(id)
   }
 
   return (
@@ -100,6 +101,7 @@ function RouteComponent() {
         expenses={groupedExpenses}
         onEdit={onEdit}
         onDelete={onDelete}
+        isDeleting={isDeleting}
       />
     </section>
   )

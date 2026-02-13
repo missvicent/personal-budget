@@ -49,14 +49,17 @@ export const useUpdateTransaction = () => {
   return useMutation<
     Transaction,
     Error,
-    Partial<Omit<Transaction, 'id' | 'created_at' | 'updated_at'>>
+    { id: string } & Partial<
+      Omit<Transaction, 'id' | 'created_at' | 'updated_at'>
+    >
   >({
-    mutationFn: (
-      transaction: Partial<Omit<Transaction, 'created_at' | 'updated_at'>>,
-    ) =>
-      transactionsService.update(transaction.id ?? '', transaction, supabase),
+    mutationFn: (transaction) =>
+      transactionsService.update(transaction.id, transaction, supabase),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.transactions({}) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.transactionsWithCategories(),
+      })
     },
   })
 }
@@ -68,6 +71,9 @@ export const useDeleteTransaction = () => {
     mutationFn: (id: string) => transactionsService.delete(id, supabase),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.transactions({}) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.transactionsWithCategories(),
+      })
     },
   })
 }
