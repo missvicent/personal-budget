@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { PencilIcon, Trash2Icon } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { currencyFormatter } from '@/lib/format'
+import { DeleteDialog } from '@/components/shared/DeleteDialog'
 import { ExpenseItem } from '@/components/shared/ExpenseItem'
 import { Separator } from '@/components/ui/separator'
-import { Button } from '@/components/ui/button'
 
 export interface ExpenseTransaction {
   amount: number
@@ -23,15 +25,31 @@ export interface ExpenseRecord {
 
 export interface ExpenseListProps {
   expenses: Array<ExpenseRecord>
+  onEdit: (transaction: ExpenseTransaction) => void
+  onDelete: (id: string, onSuccess: () => void) => void
+  isDeleting: boolean
 }
 
-export const ExpenseList = ({ expenses }: ExpenseListProps) => {
+export const ExpenseList = ({
+  expenses,
+  onEdit,
+  onDelete,
+  isDeleting,
+}: ExpenseListProps) => {
+  const [deleteTarget, setDeleteTarget] = useState<ExpenseTransaction | null>(
+    null,
+  )
   if (expenses.length === 0) {
     return (
       <section className="flex flex-col items-center justify-center py-16 text-center">
         <p className="text-muted-foreground text-base">No expenses found</p>
       </section>
     )
+  }
+
+  const handleConfirmDelete = () => {
+    if (!deleteTarget) return
+    onDelete(deleteTarget.id, () => setDeleteTarget(null))
   }
 
   return (
@@ -68,6 +86,7 @@ export const ExpenseList = ({ expenses }: ExpenseListProps) => {
                         variant="ghost"
                         size="icon"
                         className="hover:bg-primary/20 hover:text-primary/70"
+                        onClick={() => onEdit(transaction)}
                       >
                         <PencilIcon className="h-4 w-4" />
                       </Button>
@@ -75,6 +94,7 @@ export const ExpenseList = ({ expenses }: ExpenseListProps) => {
                         variant="ghost"
                         size="icon"
                         className="hover:bg-destructive/20 hover:text-destructive/70"
+                        onClick={() => setDeleteTarget(transaction)}
                       >
                         <Trash2Icon className="h-4 w-4" />
                       </Button>
@@ -86,6 +106,23 @@ export const ExpenseList = ({ expenses }: ExpenseListProps) => {
           </div>
         </div>
       ))}
+      <DeleteDialog
+        open={deleteTarget !== null}
+        title="Delete Expense"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => {
+          if (!isDeleting) setDeleteTarget(null)
+        }}
+        isDeleting={isDeleting}
+      >
+        {deleteTarget && (
+          <>
+            Are you sure you want to delete {deleteTarget.title} for{' '}
+            {currencyFormatter.format(deleteTarget.amount)}? This action cannot
+            be undone.
+          </>
+        )}
+      </DeleteDialog>
     </section>
   )
 }

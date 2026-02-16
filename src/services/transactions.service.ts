@@ -69,7 +69,7 @@ export const transactionsService = {
   },
   update: async (
     id: string,
-    transaction: Partial<Omit<Transaction, 'id' | 'created_at' | 'updated_at'>>,
+    transaction: Partial<Transaction & { id: string }>,
     supabase: SupabaseClient,
   ): Promise<Transaction> => {
     const { data, error } = await supabase
