@@ -26,7 +26,7 @@ export interface ExpenseRecord {
 export interface ExpenseListProps {
   expenses: Array<ExpenseRecord>
   onEdit: (transaction: ExpenseTransaction) => void
-  onDelete: (id: string) => void
+  onDelete: (id: string, onSuccess: () => void) => void
   isDeleting: boolean
 }
 
@@ -49,8 +49,7 @@ export const ExpenseList = ({
 
   const handleConfirmDelete = () => {
     if (!deleteTarget) return
-    onDelete(deleteTarget.id)
-    setDeleteTarget(null)
+    onDelete(deleteTarget.id, () => setDeleteTarget(null))
   }
 
   return (
@@ -111,7 +110,9 @@ export const ExpenseList = ({
         open={deleteTarget !== null}
         title="Delete Expense"
         onConfirm={handleConfirmDelete}
-        onCancel={() => setDeleteTarget(null)}
+        onCancel={() => {
+          if (!isDeleting) setDeleteTarget(null)
+        }}
         isDeleting={isDeleting}
       >
         {deleteTarget && (

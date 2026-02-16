@@ -7,17 +7,15 @@ import { ExpenseList } from './-components/ExpenseList'
 import type { ExpenseTransaction } from './-components/ExpenseList'
 import type { ExpenseFormData } from '@/lib/validations/expense.schema'
 import { groupTransactionsByDate } from '@/lib/transactions.utils'
-import {
-  useCreateTransaction,
-  useDeleteTransaction,
-  useGetTransactionsWithCategories,
-} from '@/hooks/use-transactions'
+import { useCreateTransaction } from '@/hooks/transactions/use-create-transaction'
+import { useDeleteTransaction } from '@/hooks/transactions/use-delete-transaction'
 import { cn, toSelectOptions } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { SearchInput } from '@/components/common/SearchInput'
 import { SelectField } from '@/components/shared/SelectField'
 import { useCategories } from '@/hooks/use-categories'
 import { toTransactionPayload } from '@/lib/validations/expense.schema'
+import { useGetTransactionsWithCategories } from '@/hooks/transactions/use-transaction-with-categories'
 
 export const Route = createFileRoute('/_app/expenses/')({
   component: RouteComponent,
@@ -58,7 +56,8 @@ function RouteComponent() {
     console.log('Edit transaction:', transaction)
   }
 
-  const onDelete = (id: string) => deleteTransaction(id)
+  const onDelete = (id: string, onSuccess: () => void) =>
+    deleteTransaction(id, { onSuccess })
 
   const onCategoryChange = (value: { label: string; value: string }) => {
     const { value: categoryValue } = value
