@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { useAuthMutation } from '../use-auth-mutation'
+import { useAuthMutation } from '../auth/use-auth-mutation'
 import { useTransactionsQueryKeys } from './use-transactions-query-keys'
 import { transactionsService } from '@/services/transactions.service'
 
