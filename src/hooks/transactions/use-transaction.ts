@@ -1,4 +1,4 @@
-import { useAuthQuery } from '../use-auth-query'
+import { useAuthQuery } from '../auth/use-auth-query'
 import { useTransactionsQueryKeys } from './use-transactions-query-keys'
 import type {
   PaginatedResponse,

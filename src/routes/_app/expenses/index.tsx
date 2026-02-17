@@ -13,7 +13,7 @@ import { cn, toSelectOptions } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { SearchInput } from '@/components/common/SearchInput'
 import { SelectField } from '@/components/shared/SelectField'
-import { useCategories } from '@/hooks/use-categories'
+import { useCategories } from '@/hooks/categories/use-categories'
 import { toTransactionPayload } from '@/lib/validations/expense.schema'
 import { useGetTransactionsWithCategories } from '@/hooks/transactions/use-transaction-with-categories'
 
