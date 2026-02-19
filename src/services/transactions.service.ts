@@ -88,7 +88,7 @@ export const transactionsService = {
     const { data, error } = await supabase
       .rpc('get_transactions_with_categories')
       .select('*')
-      .eq('category_type', 'expense')
+      .in('category_type', ['expense', 'general'])
       .order('transaction_date', { ascending: false })
     if (error)
       throw new Error(

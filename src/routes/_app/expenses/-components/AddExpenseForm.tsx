@@ -22,6 +22,7 @@ import { DatePickerInput } from '@/components/shared/DatepickerInput'
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -30,10 +31,12 @@ import {
 
 interface AddExpenseFormProps {
   categories: Array<Category>
+  isCreatingTransaction: boolean
   onSubmit: (data: ExpenseFormData) => void
 }
 export const AddExpenseForm = ({
   categories,
+  isCreatingTransaction,
   onSubmit,
 }: AddExpenseFormProps) => {
   const form = useForm<ExpenseFormData>({
@@ -49,7 +52,6 @@ export const AddExpenseForm = ({
 
   const handleSubmit = (data: ExpenseFormData) => {
     onSubmit(data)
-    form.reset()
   }
 
   const categoryOptions =
@@ -101,6 +103,23 @@ export const AddExpenseForm = ({
             />
             <FormField
               control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="What did you spend on?" />
+                  </FormControl>
+                  <FormDescription>
+                    Type a description and we&apos;ll guess the category for
+                    you.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="category_id"
               render={({ field }) => (
                 <FormItem>
@@ -109,22 +128,9 @@ export const AddExpenseForm = ({
                     <SelectField
                       items={categoryOptions}
                       onChange={(selected) => field.onChange(selected.value)}
-                      placeholder="Select Category"
-                      value={field.value}
+                      placeholder="Select Category (Optional)"
+                      value={field.value || ''}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="What did you spend on?" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -175,7 +181,7 @@ export const AddExpenseForm = ({
             <Button
               type="submit"
               className="w-full"
-              disabled={form.formState.isSubmitting}
+              disabled={isCreatingTransaction}
             >
               Add Expense
             </Button>
