@@ -6,10 +6,7 @@ export const expenseSchema = z.object({
     .positive('Amount must be greater than 0')
     .min(0.01, 'Amount must be greater than 0')
     .max(1000000, 'Amount exceeds maximum'),
-  category_id: z
-    .string('Category is required')
-    .min(1, 'Category is required')
-    .refine((val) => val !== 'all', 'Category is required'),
+  category_id: z.string('').optional(),
   description: z
     .string('Description is required')
     .min(1, 'Description is required')
@@ -27,7 +24,7 @@ export function toTransactionPayload(data: ExpenseFormData) {
     data
   return {
     amount,
-    category_id,
+    category_id: category_id || null,
     description,
     is_recurring: is_recurring ?? false,
     transaction_date: transaction_date.toISOString().split('T')[0],

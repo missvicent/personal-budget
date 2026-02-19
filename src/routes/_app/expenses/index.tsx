@@ -22,7 +22,9 @@ export const Route = createFileRoute('/_app/expenses/')({
 })
 
 function RouteComponent() {
-  const { mutate: createTransaction } = useCreateTransaction()
+  const [open, setOpen] = useState(false)
+  const { mutate: createTransaction, isPending: isCreatingTransaction } =
+    useCreateTransaction()
   const { mutate: deleteTransaction, isPending: isDeleting } =
     useDeleteTransaction()
   const { data: categories } = useCategories()
@@ -49,7 +51,9 @@ function RouteComponent() {
   }
 
   const onAddExpense = (data: ExpenseFormData) => {
-    createTransaction(toTransactionPayload(data))
+    createTransaction(toTransactionPayload(data), {
+      onSuccess: () => setOpen(false),
+    })
   }
 
   const onEdit = (transaction: ExpenseTransaction) => {
@@ -82,7 +86,7 @@ function RouteComponent() {
           />
         </div>
         <div className="flex justify-start py-2 md:justify-end md:py-0">
-          <Dialog>
+          <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button size="lg" className="w-full md:w-auto">
                 <PlusIcon className="h-4 w-4" />
@@ -91,6 +95,7 @@ function RouteComponent() {
             </DialogTrigger>
             <AddExpenseForm
               categories={categories ?? []}
+              isCreatingTransaction={isCreatingTransaction}
               onSubmit={onAddExpense}
             />
           </Dialog>
