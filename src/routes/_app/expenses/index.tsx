@@ -1,20 +1,20 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
-import { PlusIcon } from 'lucide-react'
 import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
+import { PlusIcon } from 'lucide-react'
+import { useMemo, useState } from 'react'
 import { AddExpenseForm } from './-components'
 import { ExpenseList } from './-components/ExpenseList'
-import type { ExpenseTransaction } from './-components/ExpenseList'
 import type { ExpenseFormData } from '@/lib/validations/expense.schema'
-import { groupTransactionsByDate } from '@/lib/transactions.utils'
-import { useCreateTransaction } from '@/hooks/transactions/use-create-transaction'
-import { useDeleteTransaction } from '@/hooks/transactions/use-delete-transaction'
-import { cn, toSelectOptions } from '@/lib/utils'
+import type { ExpenseTransaction } from './-components/ExpenseList'
 import { Button } from '@/components/ui/button'
+import { cn, toSelectOptions } from '@/lib/utils'
+import { groupTransactionsByDate } from '@/lib/transactions.utils'
 import { SearchInput } from '@/components/common/SearchInput'
 import { SelectField } from '@/components/shared/SelectField'
-import { useCategories } from '@/hooks/categories/use-categories'
 import { toTransactionPayload } from '@/lib/validations/expense.schema'
+import { useCategories } from '@/hooks/categories/use-categories'
+import { useCreateTransaction } from '@/hooks/transactions/use-create-transaction'
+import { useDeleteTransaction } from '@/hooks/transactions/use-delete-transaction'
 import { useGetTransactionsWithCategories } from '@/hooks/transactions/use-transaction-with-categories'
 
 export const Route = createFileRoute('/_app/expenses/')({
@@ -23,6 +23,9 @@ export const Route = createFileRoute('/_app/expenses/')({
 
 function RouteComponent() {
   const [open, setOpen] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
+
   const { mutate: createTransaction, isPending: isCreatingTransaction } =
     useCreateTransaction()
   const { mutate: deleteTransaction, isPending: isDeleting } =
@@ -30,7 +33,6 @@ function RouteComponent() {
   const { data: categories } = useCategories()
   const { data: transactionsWithCategories } =
     useGetTransactionsWithCategories()
-  const [searchValue, setSearchValue] = useState('')
   const categoryOptions = toSelectOptions(
     { label: 'All Categories', value: 'all' },
     categories || [],
@@ -38,9 +40,17 @@ function RouteComponent() {
     (c) => c.id,
   )
 
-  const groupedExpenses = groupTransactionsByDate(
-    transactionsWithCategories ?? [],
-  )
+  const filteredTransactions = useMemo(() => {
+    const query = searchValue.trim().toLowerCase()
+    return (transactionsWithCategories ?? []).filter((tx) => {
+      if (selectedCategory !== 'all' && tx.category_id !== selectedCategory)
+        return false
+      if (query && !tx.description.toLowerCase().includes(query)) return false
+      return true
+    })
+  }, [transactionsWithCategories, searchValue, selectedCategory])
+
+  const groupedExpenses = groupTransactionsByDate(filteredTransactions)
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
@@ -64,8 +74,7 @@ function RouteComponent() {
     deleteTransaction(id, { onSuccess })
 
   const onCategoryChange = (value: { label: string; value: string }) => {
-    const { value: categoryValue } = value
-    if (categoryValue === 'all') return
+    setSelectedCategory(value.value)
   }
 
   return (
@@ -82,7 +91,7 @@ function RouteComponent() {
             items={categoryOptions}
             onChange={onCategoryChange}
             placeholder="All Categories"
-            value="all"
+            value={selectedCategory}
           />
         </div>
         <div className="flex justify-start py-2 md:justify-end md:py-0">

@@ -27,6 +27,7 @@ export const SelectField = ({
 }: SelectFieldProps) => {
   const handleChange = (v: string) => {
     const selected = items.find((item) => item.value === v)
+    console.log(selected)
     if (selected) onChange(selected)
   }
 
