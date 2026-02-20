@@ -1,7 +1,9 @@
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Category } from '@/types/database.types'
 import type { ExpenseFormData } from '@/lib/validations/expense.schema'
+import type { ExpenseTransaction } from './ExpenseList'
 import { Checkbox } from '@/components/ui/checkbox'
 import { expenseSchema } from '@/lib/validations/expense.schema'
 import { SelectField } from '@/components/shared/SelectField'
@@ -29,16 +31,18 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
-interface AddExpenseFormProps {
+interface ExpenseTransactionFormProps {
   categories: Array<Category>
-  isCreatingTransaction: boolean
+  isPending: boolean
   onSubmit: (data: ExpenseFormData) => void
+  selectedTransaction: ExpenseTransaction | null
 }
-export const AddExpenseForm = ({
+export const ExpenseTransactionForm = ({
   categories,
-  isCreatingTransaction,
+  isPending,
   onSubmit,
-}: AddExpenseFormProps) => {
+  selectedTransaction,
+}: ExpenseTransactionFormProps) => {
   const form = useForm<ExpenseFormData>({
     resolver: zodResolver(expenseSchema),
     defaultValues: {
@@ -54,15 +58,38 @@ export const AddExpenseForm = ({
     onSubmit(data)
   }
 
-  const categoryOptions =
-    categories.length > 0
-      ? toSelectOptions(
-          { label: 'Select Category', value: 'all' },
-          categories.filter((c) => c.category_type === 'expense'),
-          (c) => `${c.icon} ${c.name}`,
-          (c) => c.id,
-        )
-      : []
+  const categoryOptions = useMemo(
+    () =>
+      categories.length > 0
+        ? toSelectOptions(
+            { label: 'Select Category', value: 'all' },
+            categories.filter((c) => c.category_type === 'expense'),
+            (c) => `${c.icon} ${c.name}`,
+            (c) => c.id,
+          )
+        : [],
+    [categories],
+  )
+
+  useEffect(() => {
+    if (selectedTransaction) {
+      form.reset({
+        amount: selectedTransaction.amount,
+        category_id: selectedTransaction.category_id,
+        description: selectedTransaction.description,
+        is_recurring: selectedTransaction.is_recurring,
+        transaction_date: new Date(selectedTransaction.transaction_date),
+      })
+    } else {
+      form.reset({
+        amount: 0,
+        category_id: '',
+        description: '',
+        is_recurring: false,
+        transaction_date: undefined,
+      })
+    }
+  }, [selectedTransaction, form])
 
   return (
     <Form {...form}>
@@ -72,9 +99,12 @@ export const AddExpenseForm = ({
           className="flex flex-col gap-4"
         >
           <DialogHeader>
-            <DialogTitle>Add Expense</DialogTitle>
+            <DialogTitle>
+              {selectedTransaction ? 'Edit Expense' : 'Add Expense'}
+            </DialogTitle>
             <DialogDescription className="sr-only">
-              Fill in the details to add a new expense
+              Fill in the details to {selectedTransaction ? 'edit' : 'add'} a
+              new expense
             </DialogDescription>
           </DialogHeader>
           <FieldGroup>
@@ -178,12 +208,8 @@ export const AddExpenseForm = ({
                 Cancel
               </Button>
             </DialogClose>
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isCreatingTransaction}
-            >
-              Add Expense
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {selectedTransaction ? 'Edit Expense' : 'Add Expense'}
             </Button>
           </DialogFooter>
         </form>

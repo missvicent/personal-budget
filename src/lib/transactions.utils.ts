@@ -47,13 +47,15 @@ export function groupTransactionsByDate(
       date: formatDateLabel(dateStr),
       totalAmount: txs.reduce((sum, tx) => sum + tx.amount, 0),
       transactions: txs.map((tx) => ({
-        id: tx.id,
-        title: tx.description,
-        category: tx.category_name,
-        icon: tx.icon,
-        color: tx.color,
         amount: tx.amount,
-        date: tx.transaction_date,
+        category_id: tx.category_id,
+        color: tx.color,
+        description: tx.description,
+        icon: tx.icon,
+        id: tx.id,
+        is_recurring: tx.is_recurring ?? false,
+        name: tx.name,
+        transaction_date: tx.transaction_date,
       })),
     }))
 }

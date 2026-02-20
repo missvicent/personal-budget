@@ -2,17 +2,35 @@ import { StrictMode } from 'react'
 import { ClerkProvider } from '@clerk/clerk-react'
 import ReactDOM from 'react-dom/client'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import {
+  MutationCache,
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+import { Toaster, toast } from 'sonner'
 import { SupabaseProvider } from './contexts/SupabaseContext.tsx'
 import { AppRouter } from './Router.tsx'
 import { UserSync } from './components/user/UserSync.tsx'
 
-import './styles.css'
+import { getErrorMessage } from './lib/error.ts'
 import { ThemeProvider } from './contexts/ThemeContext.tsx'
+import './styles.css'
 
 const rootElement = document.getElementById('app')
+
 if (rootElement && !rootElement.innerHTML) {
   const queryClient = new QueryClient({
+    queryCache: new QueryCache({
+      onError: (error) => {
+        toast.error(getErrorMessage(error))
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError: (error) => {
+        toast.error(getErrorMessage(error))
+      },
+    }),
     defaultOptions: {
       queries: {
         staleTime: 1000 * 60 * 5,
@@ -33,6 +51,7 @@ if (rootElement && !rootElement.innerHTML) {
             <UserSync>
               <ThemeProvider>
                 <AppRouter />
+                <Toaster />
               </ThemeProvider>
             </UserSync>
           </QueryClientProvider>
