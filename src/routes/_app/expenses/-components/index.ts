@@ -1,3 +1,3 @@
 export { TotalExpensesCard } from './TotalExpensesCard'
-export { AddExpenseForm } from './AddExpenseForm'
+export { ExpenseTransactionForm } from './ExpenseTransactionForm'
 export { ExpenseList } from './ExpenseList'

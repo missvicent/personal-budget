@@ -96,12 +96,13 @@ export interface PaginatedResponse<T> {
 export interface TransactionWithCategory {
   amount: number
   category_id: string
-  category_name: string
   category_type: 'income' | 'expense'
   color: string
   description: string
   icon: string
   id: string
+  is_recurring?: boolean
+  name: string
   transaction_date: string
 }
 

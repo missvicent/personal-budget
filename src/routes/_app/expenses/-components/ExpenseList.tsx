@@ -4,16 +4,17 @@ import { Button } from '@/components/ui/button'
 import { currencyFormatter } from '@/lib/format'
 import { DeleteDialog } from '@/components/shared/DeleteDialog'
 import { ExpenseItem } from '@/components/shared/ExpenseItem'
-import { Separator } from '@/components/ui/separator'
 
 export interface ExpenseTransaction {
   amount: number
-  category: string
+  category_id: string
   color: string
-  date: string
+  description: string
   icon: string
   id: string
-  title: string
+  is_recurring: boolean
+  name: string
+  transaction_date: string
 }
 
 export interface ExpenseRecord {
@@ -64,16 +65,15 @@ export const ExpenseList = ({
               {currencyFormatter.format(expense.totalAmount)}
             </p>
           </div>
-          <div className="bg-sidebar mt-3 rounded-lg border px-4 py-3">
+          <div>
             {expense.transactions.map((transaction, index) => (
               <div key={transaction.id}>
-                {index > 0 && <Separator />}
                 <ExpenseItem
                   amount={transaction.amount}
-                  category={transaction.category}
+                  category={transaction.name}
                   color={transaction.color}
                   icon={transaction.icon}
-                  title={transaction.title}
+                  title={transaction.description}
                 >
                   <div className="flex items-center gap-2">
                     <ExpenseItem.Icon />
@@ -117,7 +117,7 @@ export const ExpenseList = ({
       >
         {deleteTarget && (
           <>
-            Are you sure you want to delete {deleteTarget.title} for{' '}
+            Are you sure you want to delete {deleteTarget.description} for{' '}
             {currencyFormatter.format(deleteTarget.amount)}? This action cannot
             be undone.
           </>

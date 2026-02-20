@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
 import { PlusIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { AddExpenseForm } from './-components'
+import { ExpenseTransactionForm } from './-components/ExpenseTransactionForm'
 import { ExpenseList } from './-components/ExpenseList'
 import type { ExpenseFormData } from '@/lib/validations/expense.schema'
 import type { ExpenseTransaction } from './-components/ExpenseList'
@@ -25,19 +25,24 @@ function RouteComponent() {
   const [open, setOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<ExpenseTransaction | null>(null)
 
-  const { mutate: createTransaction, isPending: isCreatingTransaction } =
-    useCreateTransaction()
+  const { mutate: createTransaction, isPending } = useCreateTransaction()
   const { mutate: deleteTransaction, isPending: isDeleting } =
     useDeleteTransaction()
   const { data: categories } = useCategories()
   const { data: transactionsWithCategories } =
     useGetTransactionsWithCategories()
-  const categoryOptions = toSelectOptions(
-    { label: 'All Categories', value: 'all' },
-    categories || [],
-    (c) => `${c.icon} ${c.name}`,
-    (c) => c.id,
+  const categoryOptions = useMemo(
+    () =>
+      toSelectOptions(
+        { label: 'All Categories', value: 'all' },
+        categories || [],
+        (c) => `${c.icon} ${c.name}`,
+        (c) => c.id,
+      ),
+    [categories],
   )
 
   const filteredTransactions = useMemo(() => {
@@ -50,7 +55,10 @@ function RouteComponent() {
     })
   }, [transactionsWithCategories, searchValue, selectedCategory])
 
-  const groupedExpenses = groupTransactionsByDate(filteredTransactions)
+  const groupedExpenses = useMemo(
+    () => groupTransactionsByDate(filteredTransactions),
+    [filteredTransactions],
+  )
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
@@ -67,7 +75,8 @@ function RouteComponent() {
   }
 
   const onEdit = (transaction: ExpenseTransaction) => {
-    console.log('Edit transaction:', transaction)
+    setOpen(true)
+    setSelectedTransaction(transaction)
   }
 
   const onDelete = (id: string, onSuccess: () => void) =>
@@ -75,6 +84,11 @@ function RouteComponent() {
 
   const onCategoryChange = (value: { label: string; value: string }) => {
     setSelectedCategory(value.value)
+  }
+
+  const onOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen)
+    if (!isOpen) setSelectedTransaction(null)
   }
 
   return (
@@ -95,17 +109,18 @@ function RouteComponent() {
           />
         </div>
         <div className="flex justify-start py-2 md:justify-end md:py-0">
-          <Dialog open={open} onOpenChange={setOpen}>
+          <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>
               <Button size="lg" className="w-full md:w-auto">
                 <PlusIcon className="h-4 w-4" />
                 Add Expense
               </Button>
             </DialogTrigger>
-            <AddExpenseForm
+            <ExpenseTransactionForm
               categories={categories ?? []}
-              isCreatingTransaction={isCreatingTransaction}
+              isPending={isPending}
               onSubmit={onAddExpense}
+              selectedTransaction={selectedTransaction}
             />
           </Dialog>
         </div>

@@ -29,7 +29,7 @@ export const ExpenseItemRoot = ({
     <ExpenseItemContext.Provider
       value={{ amount, category, color, icon, title }}
     >
-      <div className="flex w-full items-center justify-between py-3">
+      <div className="group bg-sidebar hover:border-primary/50 mt-3 flex w-full items-center justify-between rounded-lg border p-6 transition-colors">
         {children}
       </div>
     </ExpenseItemContext.Provider>
