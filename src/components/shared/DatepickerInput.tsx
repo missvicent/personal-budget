@@ -96,6 +96,16 @@ export const DatePickerInput = React.forwardRef<
         onBlur={onBlur}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        autoComplete="off"
+        aria-label="Select date"
+        aria-describedby="select-date-description"
+        aria-required="true"
+        aria-invalid="false"
+        aria-autocomplete="list"
+        aria-controls="select-date-list"
+        aria-expanded="false"
+        aria-haspopup="true"
+        aria-activedescendant="select-date-item-0"
       />
       <InputGroupAddon align="inline-end">
         <Popover open={open} onOpenChange={setOpen}>
