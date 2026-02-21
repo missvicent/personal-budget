@@ -28,8 +28,17 @@ export const SearchInput = ({
           value={value}
           onChange={onChange}
           onKeyDown={onKeyDown}
+          className="rounded-full"
+          autoComplete="off"
+          aria-label="Search expenses"
+          aria-describedby="search-expenses-description"
+          aria-required="true"
+          aria-invalid="false"
+          aria-autocomplete="list"
+          aria-controls="search-expenses-list"
+          aria-expanded="false"
         />
-        <InputGroupAddon align="inline-start">
+        <InputGroupAddon align="inline-start" className="rounded-full">
           <SearchIcon className="text-muted-foreground" />
         </InputGroupAddon>
       </InputGroup>

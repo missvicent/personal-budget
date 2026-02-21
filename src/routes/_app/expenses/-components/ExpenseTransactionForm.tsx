@@ -138,7 +138,17 @@ export const ExpenseTransactionForm = ({
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="What did you spend on?" />
+                    <Input
+                      {...field}
+                      placeholder="What did you spend on?"
+                      autoComplete="off"
+                      aria-label="Description"
+                      aria-required="true"
+                      aria-describedby="description-description"
+                      aria-autocomplete="list"
+                      aria-controls="description-list"
+                      className="rounded-full"
+                    />
                   </FormControl>
                   <FormDescription>
                     Type a description and we&apos;ll guess the category for
@@ -160,6 +170,15 @@ export const ExpenseTransactionForm = ({
                       onChange={(selected) => field.onChange(selected.value)}
                       placeholder="Select Category (Optional)"
                       value={field.value || ''}
+                      aria-label="Category"
+                      aria-describedby="category-description"
+                      aria-required="false"
+                      aria-invalid="false"
+                      aria-autocomplete="list"
+                      aria-controls="category-list"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-activedescendant="category-item-0"
                     />
                   </FormControl>
                   <FormMessage />
@@ -180,6 +199,15 @@ export const ExpenseTransactionForm = ({
                       onBlur={field.onBlur}
                       onChange={field.onChange}
                       value={field.value}
+                      aria-label="Select date"
+                      aria-describedby="select-date-description"
+                      aria-required="true"
+                      aria-invalid="false"
+                      aria-autocomplete="list"
+                      aria-controls="select-date-list"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-activedescendant="select-date-item-0"
                     />
                   </FormControl>
                   <FormMessage />
@@ -195,6 +223,15 @@ export const ExpenseTransactionForm = ({
                     ref={field.ref}
                     checked={field.value}
                     onCheckedChange={field.onChange}
+                    aria-label="Is Recurring"
+                    aria-describedby="is-recurring-description"
+                    aria-required="false"
+                    aria-invalid="false"
+                    aria-autocomplete="list"
+                    aria-controls="is-recurring-list"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    aria-activedescendant="is-recurring-item-0"
                   />
                   <FormLabel>Is Recurring</FormLabel>
                   <FormMessage />
@@ -204,11 +241,36 @@ export const ExpenseTransactionForm = ({
           </FieldGroup>
           <DialogFooter className="flex flex-row gap-2">
             <DialogClose asChild>
-              <Button variant="outline" className="w-full">
+              <Button
+                variant="outline"
+                className="w-full"
+                aria-label="Cancel"
+                aria-describedby="cancel-description"
+                aria-required="false"
+                aria-invalid="false"
+                aria-autocomplete="list"
+                aria-controls="cancel-list"
+                aria-expanded="false"
+                aria-haspopup="true"
+                aria-activedescendant="cancel-item-0"
+              >
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" className="w-full" disabled={isPending}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isPending}
+              aria-label="Submit"
+              aria-describedby="submit-description"
+              aria-required="true"
+              aria-invalid="false"
+              aria-autocomplete="list"
+              aria-controls="submit-list"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-activedescendant="submit-item-0"
+            >
               {selectedTransaction ? 'Edit Expense' : 'Add Expense'}
             </Button>
           </DialogFooter>
