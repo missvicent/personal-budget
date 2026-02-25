@@ -23,10 +23,10 @@ export const AppToolbar = () => {
         <SidebarTrigger className="md:hidden" />
         <div className="flex w-full items-center justify-between gap-2 px-4">
           <div className="flex flex-col items-start justify-center">
-            <p className="text-foreground text-lg leading-tight font-semibold capitalize md:text-2xl">
+            <p className="text-foreground text-lg leading-tight font-semibold capitalize md:text-lg">
               {pathname.split('/').pop()}
             </p>
-            <span className="text-muted-foreground text-xs leading-tight md:text-base">
+            <span className="text-muted-foreground text-xs leading-tight md:text-sm">
               {description}
             </span>
           </div>
@@ -34,7 +34,7 @@ export const AppToolbar = () => {
             <p className="text-muted-foreground text-xs leading-tight uppercase md:text-base">
               Balance
             </p>
-            <span className="text-foreground text-xl leading-tight font-semibold md:text-2xl">
+            <span className="text-foreground text-xl leading-tight font-semibold md:text-base">
               $4418.26
             </span>
           </div>
