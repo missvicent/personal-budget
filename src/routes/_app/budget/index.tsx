@@ -1,15 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { PlusIcon } from 'lucide-react'
 import type { BudgetSummaryCardItem } from '@/routes/_app/budget/-components/BudgetSummaryCard'
 
-import { Button } from '@/components/ui/button'
 import { BudgetSummaryCard } from '@/routes/_app/budget/-components/BudgetSummaryCard'
 import { cn } from '@/lib/utils'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 
 export const Route = createFileRoute('/_app/budget/')({
   component: RouteComponent,

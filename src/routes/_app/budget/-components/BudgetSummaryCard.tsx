@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { Separator } from '@/components/ui/separator'
@@ -33,7 +33,7 @@ export const BudgetSummaryCard = ({ data }: BudgetSummaryCardProps) => {
         <div className="flex flex-row items-center">
           {data.length > 0 &&
             data.map((item, index) => (
-              <Fragment key={item.id}>
+              <div key={item.id}>
                 {index > 0 && (
                   <Separator orientation="vertical" className="mx-4 h-12" />
                 )}
@@ -50,7 +50,7 @@ export const BudgetSummaryCard = ({ data }: BudgetSummaryCardProps) => {
                     ${item.value}
                   </p>
                 </div>
-              </Fragment>
+              </div>
             ))}
         </div>
       </CardContent>

@@ -66,7 +66,7 @@ export const ExpenseList = ({
             </p>
           </div>
           <div>
-            {expense.transactions.map((transaction, index) => (
+            {expense.transactions.map((transaction) => (
               <div key={transaction.id}>
                 <ExpenseItem
                   amount={transaction.amount}
