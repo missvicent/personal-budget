@@ -1,20 +1,22 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useAuthQuery } from './auth/use-auth-query'
 import type { UserSettings } from '@/types/database.types'
 import { userSettingsService } from '@/services/user-settings.service'
 import { useSupabase } from '@/contexts/SupabaseContext'
 
 const queryKeys = {
-  userSettings: () => ['user_settings'],
+  userSettings: (enabled: boolean) => ['user_settings', enabled],
   userSetting: (userId: string) => ['user_settings', userId],
 }
-export const useUserSetting = () => {
-  const supabase = useSupabase()
-  return useQuery<UserSettings>({
-    queryKey: queryKeys.userSettings(),
-    queryFn: () => userSettingsService.get(supabase),
-    staleTime: 1000 * 60 * 5,
-    retry: false,
-  })
+export const useUserSetting = (enabled: boolean) => {
+  return useAuthQuery<UserSettings>(
+    queryKeys.userSettings(enabled),
+    (supabase) => userSettingsService.get(supabase),
+    {
+      retry: false,
+      enabled,
+    },
+  )
 }
 
 export const useUpdateUserSetting = () => {
@@ -29,9 +31,9 @@ export const useUpdateUserSetting = () => {
       settings: Omit<UserSettings, 'user_id' | 'created_at' | 'updated_at'>,
     ) => userSettingsService.upsert(settings, supabase),
     onSuccess: (_, settings) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.userSettings() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.userSettings(true) })
       queryClient.setQueryData(
-        queryKeys.userSettings(),
+        queryKeys.userSettings(true),
         (old: UserSettings) => ({
           ...old,
           ...settings,
