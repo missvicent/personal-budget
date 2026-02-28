@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import type { QueryKey, QueryOptions } from '@tanstack/react-query'
+import type { QueryKey, UseQueryOptions } from '@tanstack/react-query'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { useSupabase } from '@/contexts/SupabaseContext'
 
@@ -13,7 +13,7 @@ import { useSupabase } from '@/contexts/SupabaseContext'
 export const useAuthQuery = <T>(
   queryKey: QueryKey | Array<string>,
   queryFn: (supabase: SupabaseClient) => Promise<T>,
-  queryOptions: QueryOptions<T>,
+  queryOptions: Omit<UseQueryOptions<T>, 'queryKey' | 'queryFn'>,
 ) => {
   const supabase = useSupabase()
 
@@ -21,5 +21,6 @@ export const useAuthQuery = <T>(
     queryKey: queryKey,
     queryFn: () => queryFn(supabase),
     ...queryOptions,
+    enabled: queryOptions.enabled ?? true,
   })
 }

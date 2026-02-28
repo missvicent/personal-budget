@@ -1,4 +1,5 @@
 import { createContext, useEffect } from 'react'
+import { useAuth } from '@clerk/clerk-react'
 import { useUpdateUserSetting, useUserSetting } from '@/hooks/use-user-setting'
 
 interface ThemeContextValue {
@@ -12,7 +13,8 @@ export const ThemeContext = createContext<ThemeContextValue | undefined>(
 )
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const { data: UserSettings } = useUserSetting()
+  const auth = useAuth()
+  const { data: UserSettings } = useUserSetting(!!auth.isSignedIn)
   const { mutate: updateUserSetting } = useUpdateUserSetting()
 
   useEffect(() => {

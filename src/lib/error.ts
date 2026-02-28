@@ -1,4 +1,10 @@
-export const getErrorMessage = (error: unknown): string => {
-  if (error instanceof Error) return error.message
-  return String(error)
+interface Error {
+  message: string
+  code: string
+  details: string
+  hint: string
+}
+
+export const getErrorMessage = (error: Error): string => {
+  return `Error: ${error.message || 'Unknown error'}`
 }
