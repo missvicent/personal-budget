@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { Fragment, useMemo } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { Separator } from '@/components/ui/separator'
@@ -30,27 +30,29 @@ export const BudgetSummaryCard = ({ data }: BudgetSummaryCardProps) => {
   return (
     <Card className="w-full gap-2 p-3 md:w-1/3 xl:w-1/4">
       <CardContent>
-        <div className="flex flex-row items-center">
+        <div className="flex flex-row justify-between">
           {data.length > 0 &&
             data.map((item, index) => (
-              <div key={item.id}>
-                {index > 0 && (
+              <Fragment key={item.id}>
+                <div>
+                  <div className="flex flex-1 flex-col items-center justify-center">
+                    <p className="text-muted-foreground text-base uppercase">
+                      {item.title}
+                    </p>
+                    <p
+                      className={cn(
+                        'text-3xl font-bold',
+                        getColor(item.value, item.title),
+                      )}
+                    >
+                      ${item.value}
+                    </p>
+                  </div>
+                </div>
+                {index < data.length - 1 && (
                   <Separator orientation="vertical" className="mx-4 h-12" />
                 )}
-                <div className="flex flex-1 flex-col items-center justify-center">
-                  <p className="text-muted-foreground text-base uppercase">
-                    {item.title}
-                  </p>
-                  <p
-                    className={cn(
-                      'text-3xl font-bold',
-                      getColor(item.value, item.title),
-                    )}
-                  >
-                    ${item.value}
-                  </p>
-                </div>
-              </div>
+              </Fragment>
             ))}
         </div>
       </CardContent>
