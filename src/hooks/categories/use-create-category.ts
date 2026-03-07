@@ -9,7 +9,8 @@ export const useCreateCategory = () => {
   return useAuthMutation<
     Category,
     Omit<Category, 'id' | 'created_at' | 'user_id'>,
-    Error
+    Error,
+    unknown
   >((category, supabase) => categoriesService.create(category, supabase), {
     onSuccess: () => {
       queryClient.invalidateQueries({
