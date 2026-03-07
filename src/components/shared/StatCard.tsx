@@ -38,12 +38,12 @@ export const StatCard = ({
             variant="outline"
             className={cn(badgeColor, 'border-0 px-3 py-1')}
           >
-            <p className="text-base">{percentage}%</p>
+            <p className="font-mono text-base">{percentage}%</p>
           </Badge>
         )}
       </CardHeader>
       <CardContent>
-        <p className="mb-6 text-3xl font-bold">{formattedAmount}</p>
+        <p className="mb-6 font-mono text-3xl font-bold">{formattedAmount}</p>
         <p className="text-muted-foreground text-xs">{additionalDescription}</p>
       </CardContent>
     </Card>

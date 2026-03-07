@@ -10,10 +10,13 @@ body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-sans);
 }
 
 @theme inline {
+  --font-sans: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+
   /* Custom app colors */
   --color-app-bg: var(--app-bg);
   --color-app-bg-dark: rgb(24, 20, 36);

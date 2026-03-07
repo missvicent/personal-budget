@@ -34,7 +34,7 @@ export const AppToolbar = () => {
             <p className="text-muted-foreground text-xs leading-tight uppercase md:text-base">
               Balance
             </p>
-            <span className="text-foreground text-xl leading-tight font-semibold md:text-base">
+            <span className="text-foreground font-mono text-xl leading-tight font-semibold md:text-base">
               $4418.26
             </span>
           </div>

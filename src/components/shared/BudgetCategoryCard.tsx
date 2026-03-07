@@ -29,7 +29,7 @@ export const BudgetCategoryCard = ({
           </span>
           <p className="text-base font-semibold uppercase">{category}</p>
         </div>
-        <p className="text-muted-foreground text-sm">
+        <p className="text-muted-foreground font-mono text-sm">
           ${amountSpent}/ ${amountBudget}
         </p>
       </div>
