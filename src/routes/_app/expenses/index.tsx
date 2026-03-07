@@ -73,6 +73,8 @@ function RouteComponent() {
               </TooltipContent>
             </Tooltip>
             <ExpenseTransactionForm
+              key={dialog.selectedTransaction?.id}
+              open={dialog.open}
               categories={categories ?? []}
               isPending={actions.isCreating || actions.isUpdating}
               onSubmit={(data) =>
