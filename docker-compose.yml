@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    ports:
+      - 3000:3000
+    env_file:
+      - .env.local
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./vite.config.ts:/app/vite.config.ts
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./package.json:/app/package.json
+      - ./pnpm-lock.yaml:/app/pnpm-lock.yaml
+      - ./.env.local:/app/.env.local:ro
+      - /app/node_modules
