@@ -61,7 +61,7 @@ export const ExpenseList = ({
             <p className="text-foreground text-base font-semibold capitalize">
               {expense.date}
             </p>
-            <p className="text-muted-foreground pr-4 text-base font-semibold">
+            <p className="text-muted-foreground pr-4 font-mono text-base font-semibold">
               {currencyFormatter.format(expense.totalAmount)}
             </p>
           </div>
