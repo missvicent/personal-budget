@@ -34,6 +34,7 @@ import {
 interface ExpenseTransactionFormProps {
   categories: Array<Category>
   isPending: boolean
+  open: boolean
   onSubmit: (data: ExpenseFormData) => void
   selectedTransaction: ExpenseTransaction | null
 }
@@ -41,17 +42,22 @@ export const ExpenseTransactionForm = ({
   categories,
   isPending,
   onSubmit,
+  open,
   selectedTransaction,
 }: ExpenseTransactionFormProps) => {
-  const form = useForm<ExpenseFormData>({
-    resolver: zodResolver(expenseSchema),
-    defaultValues: {
+  const defaultValues = useMemo(() => {
+    return {
       amount: 0,
       category_id: '',
       description: '',
       is_recurring: false,
-      transaction_date: undefined,
-    },
+      transaction_date: new Date(),
+    }
+  }, [])
+
+  const form = useForm<ExpenseFormData>({
+    resolver: zodResolver(expenseSchema),
+    defaultValues: defaultValues,
   })
 
   const handleSubmit = (data: ExpenseFormData) => {
@@ -81,15 +87,9 @@ export const ExpenseTransactionForm = ({
         transaction_date: new Date(selectedTransaction.transaction_date),
       })
     } else {
-      form.reset({
-        amount: 0,
-        category_id: '',
-        description: '',
-        is_recurring: false,
-        transaction_date: undefined,
-      })
+      form.reset(defaultValues)
     }
-  }, [selectedTransaction, form])
+  }, [selectedTransaction, form, open, defaultValues])
 
   return (
     <Form {...form}>

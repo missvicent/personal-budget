@@ -6,13 +6,11 @@ import { transactionsService } from '@/services/transactions.service'
 
 export const useCreateTransaction = () => {
   const queryClient = useQueryClient()
-  return useAuthMutation<
-    Transaction,
-    Omit<Transaction, 'id' | 'created_at' | 'updated_at'>,
-    Error
-  >(
-    (transaction, supabase) =>
-      transactionsService.create(transaction, supabase),
+  return useAuthMutation(
+    (
+      transaction: Omit<Transaction, 'id' | 'created_at' | 'updated_at'>,
+      supabase,
+    ) => transactionsService.create(transaction, supabase),
     {
       onSuccess: () => {
         queryClient.invalidateQueries({
