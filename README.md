@@ -121,13 +121,20 @@ src/
 
 ## Environment Variables
 
-Create a `.env` file with the following variables:
+Copy `.env.example` to `.env` and fill in your keys:
+
+```bash
+cp .env.example .env
+```
 
 ```env
 VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key
 VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 ```
+
+- **Supabase** (`VITE_SUPABASE_URL` + `VITE_SUPABASE_PUBLISHABLE_KEY`): Create a free project at https://supabase.com — find both values in your project's **Settings > API**.
+- **Clerk** (`VITE_CLERK_PUBLISHABLE_KEY`): Create a free app at https://dashboard.clerk.com — find the key in your app's **API Keys** section.
 
 ## License
 
