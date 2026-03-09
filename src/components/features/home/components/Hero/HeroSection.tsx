@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { SignInButton } from '@clerk/clerk-react'
 import { Button } from '@/components/ui/button'
 
 const fadeUpVariants = {
@@ -29,9 +30,9 @@ const heroContent: HeroContent = {
 // Reusable button styles
 const buttonStyles = {
   primary:
-    'py-7 px-12 text-lg  bg-gradient-to-l from-purple-600 via-purple-500 to-purple-400 text-white hover:opacity-90 rounded-full md:px-20',
+    'py-7 px-8 text-lg bg-gradient-to-l from-purple-600 via-purple-500 to-purple-400 text-white hover:opacity-90 rounded-full md:px-20',
   outline:
-    'py-7 px-12 text-lg bg-transparent border-2 border-purple-500 text-white hover:bg-purple-500 rounded-full transition-colors md:px-20',
+    'py-7 px-8 text-lg bg-transparent border-2 border-purple-500 text-white hover:bg-purple-500 rounded-full transition-colors md:px-20',
 } as const
 
 export default function HeroSection() {
@@ -84,12 +85,16 @@ export default function HeroSection() {
         animate="visible"
         custom={0.4}
       >
-        <Button className={buttonStyles.primary} size="lg">
-          Start Now
-        </Button>
-        <Button className={buttonStyles.outline} size="lg">
-          Learn More
-        </Button>
+        <SignInButton mode="modal">
+          <Button className={buttonStyles.primary} size="sm">
+            Start Now
+          </Button>
+        </SignInButton>
+        <a href="#how-it-works">
+          <Button className={buttonStyles.outline} size="sm">
+            Learn More
+          </Button>
+        </a>
       </motion.div>
     </section>
   )

@@ -17,12 +17,12 @@ export const AppSidebarHeader = () => {
         className="flex cursor-pointer items-center justify-center select-none"
       >
         <div className={cn('group-data-[collapsible=icon]:flex')}>
-          <img src="/logo.svg" alt="BudgetApp" className="h-12 w-12" />
+          <img src="/logo.svg" alt="Personal Budget" className="h-12 w-12" />
         </div>
 
         <div className="items-left flex flex-col gap-1 group-data-[collapsible=icon]:hidden">
           <span className="text-sm font-bold">Personal Budget</span>
-          <span className="text-muted-foreground text-xs">
+          <span className="text-muted-foreground text-[10px] font-medium tracking-wide">
             Budget friendly, life ready
           </span>
         </div>
