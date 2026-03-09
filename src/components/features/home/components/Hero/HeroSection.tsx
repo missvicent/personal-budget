@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { SignInButton } from '@clerk/clerk-react'
 import { Button } from '@/components/ui/button'
 
 const fadeUpVariants = {
@@ -29,16 +30,16 @@ const heroContent: HeroContent = {
 // Reusable button styles
 const buttonStyles = {
   primary:
-    'py-7 px-12 text-lg  bg-gradient-to-l from-purple-600 via-purple-500 to-purple-400 text-white hover:opacity-90 rounded-full md:px-20',
+    'py-7 px-8 text-lg bg-violet-600 text-white hover:bg-violet-500 rounded-full',
   outline:
-    'py-7 px-12 text-lg bg-transparent border-2 border-purple-500 text-white hover:bg-purple-500 rounded-full transition-colors md:px-20',
+    'py-7 px-8 text-lg bg-transparent border border-slate-600 text-slate-200 hover:bg-slate-800 hover:border-slate-500 rounded-full transition-colors',
 } as const
 
 export default function HeroSection() {
   return (
     <section className="min-h-content flex flex-col items-center justify-center p-8 md:p-6">
       <motion.span
-        className="text-2xl font-bold text-green-300 uppercase md:text-3xl"
+        className="text-2xl font-bold text-violet-400 uppercase md:text-3xl"
         variants={fadeUpVariants}
         initial="hidden"
         animate="visible"
@@ -58,7 +59,7 @@ export default function HeroSection() {
       </motion.h1>
 
       <motion.h2
-        className="bg-gradient-to-r from-purple-500 via-purple-400 to-purple-300 bg-clip-text pb-4 text-6xl font-bold text-transparent md:text-7xl"
+        className="bg-gradient-to-r from-violet-400 via-violet-300 to-slate-300 bg-clip-text pb-4 text-6xl font-bold text-transparent md:text-7xl"
         variants={fadeUpVariants}
         initial="hidden"
         animate="visible"
@@ -68,7 +69,7 @@ export default function HeroSection() {
       </motion.h2>
 
       <motion.p
-        className="mt-4 max-w-2xl text-center text-2xl font-semibold text-purple-300 opacity-90"
+        className="mt-4 max-w-2xl text-center text-2xl font-semibold text-slate-400 opacity-90"
         variants={fadeUpVariants}
         initial="hidden"
         animate="visible"
@@ -84,12 +85,16 @@ export default function HeroSection() {
         animate="visible"
         custom={0.4}
       >
-        <Button className={buttonStyles.primary} size="lg">
-          Start Now
-        </Button>
-        <Button className={buttonStyles.outline} size="lg">
-          Learn More
-        </Button>
+        <SignInButton mode="modal">
+          <Button className={buttonStyles.primary} size="sm">
+            Start Now
+          </Button>
+        </SignInButton>
+        <a href="#how-it-works">
+          <Button className={buttonStyles.outline} size="sm">
+            Learn More
+          </Button>
+        </a>
       </motion.div>
     </section>
   )

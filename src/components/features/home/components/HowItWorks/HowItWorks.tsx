@@ -19,7 +19,10 @@ export default function HowItWorks() {
   const steps = STEPS
 
   return (
-    <section className="flex flex-col items-center justify-center py-24">
+    <section
+      id="how-it-works"
+      className="flex flex-col items-center justify-center py-24 transition-all duration-300"
+    >
       <SectionHeader
         badge="How It Works"
         title="Three simple steps to"
@@ -33,7 +36,7 @@ export default function HowItWorks() {
             variants={slideVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.5 }}
+            viewport={{ once: false, amount: 0.5 }}
             custom={index % 2 === 0 ? -1 : 1}
           >
             <HowItWorksCard

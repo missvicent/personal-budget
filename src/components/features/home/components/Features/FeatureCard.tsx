@@ -13,10 +13,10 @@ export default function FeatureCard({ feature, Icon }: FeatureCardProps) {
   return (
     <Card
       key={id}
-      className="min-h-48 w-full rounded-2xl border border-purple-800/30 bg-linear-to-b from-purple-900 to-purple-950"
+      className="min-h-48 w-full rounded-2xl border border-slate-700/40 bg-slate-900/80"
     >
       <CardHeader>
-        <div className="mb-2 flex h-20 w-20 items-center justify-center rounded-2xl border-b border-purple-800 bg-purple-500">
+        <div className="mb-2 flex h-20 w-20 items-center justify-center rounded-2xl border-b border-violet-700/50 bg-violet-600">
           <Icon className="h-12 w-12 text-white" strokeWidth={1.5} />
         </div>
         <CardTitle>
