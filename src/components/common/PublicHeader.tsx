@@ -8,7 +8,7 @@ import { Link } from '@tanstack/react-router'
 
 export default function PublicHeader() {
   return (
-    <header className="relative flex w-full items-center justify-between bg-purple-950/30 px-6 py-5 text-white shadow-lg backdrop-blur-sm">
+    <header className="relative flex w-full items-center justify-between bg-slate-950/60 px-6 py-5 text-white shadow-lg backdrop-blur-sm">
       <Link to="/" className="z-10 flex shrink-0 items-center gap-4">
         <img
           src="/logo.svg"
@@ -19,7 +19,7 @@ export default function PublicHeader() {
           <h1 className="text-2xl font-extrabold tracking-tight">
             Personal Budget
           </h1>
-          <p className="text-xs font-medium tracking-wide text-purple-300/70">
+          <p className="text-xs font-medium tracking-wide text-slate-400/70">
             Budget friendly, life ready
           </p>
         </div>
@@ -29,7 +29,7 @@ export default function PublicHeader() {
         <SignedIn>
           <Link
             to="/dashboard"
-            className="rounded-full bg-purple-600 px-6 py-2 font-medium transition-colors hover:bg-purple-500"
+            className="rounded-full bg-violet-600 px-6 py-2 font-medium transition-colors hover:bg-violet-500"
           >
             Go to Dashboard
           </Link>
@@ -37,7 +37,7 @@ export default function PublicHeader() {
         </SignedIn>
         <SignedOut>
           <SignInButton mode="modal">
-            <button className="rounded-full bg-purple-600 px-6 py-2 font-medium transition-colors hover:bg-purple-500">
+            <button className="rounded-full bg-violet-600 px-6 py-2 font-medium transition-colors hover:bg-violet-500">
               Sign In
             </button>
           </SignInButton>

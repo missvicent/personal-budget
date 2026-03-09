@@ -13,16 +13,16 @@ export default function SectionHeader({
 }: SectionHeaderProps) {
   return (
     <div className="mb-4 text-center">
-      <p className="mb-4 text-sm font-semibold tracking-wider text-purple-400 uppercase">
+      <p className="mb-4 text-sm font-semibold tracking-wider text-violet-400 uppercase">
         {badge}
       </p>
       <h2 className="mb-6 text-3xl font-bold text-white lg:text-5xl">
         {title}
         <br />
-        <span className="text-purple-400">{highlight}</span>
+        <span className="text-violet-400">{highlight}</span>
       </h2>
       {description && (
-        <p className="mx-auto max-w-xl text-purple-300">{description}</p>
+        <p className="mx-auto max-w-xl text-slate-400">{description}</p>
       )}
     </div>
   )

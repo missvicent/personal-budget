@@ -11,7 +11,7 @@ export default function HowItWorksCard({
 }: HowItWorksCardProps) {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-4">
-      <div className="flex h-20 w-20 items-center justify-center rounded-full border border-purple-800/30 bg-linear-to-b from-purple-900 to-purple-950">
+      <div className="flex h-20 w-20 items-center justify-center rounded-full border border-slate-700/40 bg-slate-800">
         <p className="flex items-center justify-center p-5 text-4xl font-bold text-white">
           {number}
         </p>
