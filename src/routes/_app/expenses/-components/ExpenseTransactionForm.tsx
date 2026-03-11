@@ -100,7 +100,7 @@ export const ExpenseTransactionForm = ({
         >
           <DialogHeader>
             <DialogTitle>
-              {selectedTransaction ? 'Edit Expense' : 'Add Expense'}
+              {selectedTransaction ? 'Edit Expense' : 'Log an Expense'}
             </DialogTitle>
             <DialogDescription className="sr-only">
               Fill in the details to {selectedTransaction ? 'edit' : 'add'} a
@@ -113,7 +113,7 @@ export const ExpenseTransactionForm = ({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount</FormLabel>
+                  <FormLabel>How much did you spend?: </FormLabel>
                   <FormControl>
                     <CurrencyInput
                       id="amount"
@@ -136,7 +136,7 @@ export const ExpenseTransactionForm = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>What was it for?: </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -151,8 +151,7 @@ export const ExpenseTransactionForm = ({
                     />
                   </FormControl>
                   <FormDescription>
-                    Type a description and we&apos;ll guess the category for
-                    you.
+                    Describe it and we&apos;ll suggest a category automatically
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -163,7 +162,7 @@ export const ExpenseTransactionForm = ({
               name="category_id"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>Pick a category (optional):</FormLabel>
                   <FormControl>
                     <SelectField
                       items={categoryOptions}
@@ -190,7 +189,7 @@ export const ExpenseTransactionForm = ({
               name="transaction_date"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Date</FormLabel>
+                  <FormLabel>When did you spend it?:</FormLabel>
                   <FormControl>
                     <DatePickerInput
                       ref={field.ref}
@@ -233,7 +232,7 @@ export const ExpenseTransactionForm = ({
                     aria-haspopup="true"
                     aria-activedescendant="is-recurring-item-0"
                   />
-                  <FormLabel>Is Recurring</FormLabel>
+                  <FormLabel>Repeats regularly</FormLabel>
                   <FormMessage />
                 </FormItem>
               )}
@@ -271,7 +270,7 @@ export const ExpenseTransactionForm = ({
               aria-haspopup="true"
               aria-activedescendant="submit-item-0"
             >
-              {selectedTransaction ? 'Edit Expense' : 'Add Expense'}
+              {selectedTransaction ? 'Edit Expense' : 'Save Expense'}
             </Button>
           </DialogFooter>
         </form>

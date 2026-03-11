@@ -1,13 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { PlusIcon } from 'lucide-react'
+import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
+import { useBudgetDialog } from './-hooks/use-budget-dialog'
+import { BudgetCategoryForm } from './-components/BudgetCategoryForm'
 import type { BudgetSummaryCardItem } from '@/routes/_app/budget/-components/BudgetSummaryCard'
-import { Button } from '@/components/ui/button'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
-
 import { BudgetSummaryCard } from '@/routes/_app/budget/-components/BudgetSummaryCard'
 import { cn } from '@/lib/utils'
 
@@ -21,21 +16,28 @@ function RouteComponent() {
     { id: '2', title: 'Remaining', value: 0 },
   ]
 
+  const onAddCategory = () => {
+    console.log('add category')
+    dialog.onOpenChange(true)
+  }
+
+  const dialog = useBudgetDialog()
+
   return (
     <section className={cn('flex flex-col gap-4', 'px-4 py-4 md:p-8')}>
       <header className="flex flex-col items-center gap-2 md:flex-row lg:justify-end">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="outline" className="p-4">
-              <PlusIcon className="h-4 w-4" />
-              Add Category
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Add Category</p>
-          </TooltipContent>
-        </Tooltip>
-        <BudgetSummaryCard data={data} />
+        <Dialog open={dialog.open} onOpenChange={dialog.onOpenChange}>
+          <DialogTrigger asChild>
+            <BudgetSummaryCard data={data} onAddCategory={onAddCategory} />
+          </DialogTrigger>
+          <BudgetCategoryForm
+            open={dialog.open}
+            categories={[]}
+            isPending={false}
+            onSubmit={() => {}}
+            selectedCategory={null}
+          />
+        </Dialog>
       </header>
     </section>
   )
