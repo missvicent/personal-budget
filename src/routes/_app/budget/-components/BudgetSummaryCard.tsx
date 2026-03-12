@@ -1,3 +1,4 @@
+import { forwardRef } from 'react'
 import { PlusIcon } from 'lucide-react'
 import {
   Tooltip,
@@ -14,13 +15,12 @@ export interface BudgetSummaryCardItem {
 
 export interface BudgetSummaryCardProps {
   data: Array<BudgetSummaryCardItem>
-  onAddCategory: () => void
 }
 
-export const BudgetSummaryCard = ({
-  data,
-  onAddCategory,
-}: BudgetSummaryCardProps) => {
+export const BudgetSummaryCard = forwardRef<
+  HTMLDivElement,
+  BudgetSummaryCardProps
+>(({ data, ...props }: BudgetSummaryCardProps, ref) => {
   if (data.length < 2) return null
   const [, remaining] = data
   const getColor = (val: string) => {
@@ -29,7 +29,7 @@ export const BudgetSummaryCard = ({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div ref={ref} {...props} className="flex flex-col gap-2">
       <div
         role="group"
         className={cn(
@@ -63,7 +63,6 @@ export const BudgetSummaryCard = ({
         <button
           type="button"
           aria-label="Set a Budget"
-          onClick={onAddCategory}
           className="group border-input inline-flex h-8 min-w-8 cursor-pointer items-center justify-center gap-2 rounded-md border bg-transparent px-4 py-10 text-sm font-medium shadow-sm hover:bg-transparent"
         >
           <Tooltip>
@@ -78,4 +77,5 @@ export const BudgetSummaryCard = ({
       </div>
     </div>
   )
-}
+})
+BudgetSummaryCard.displayName = 'BudgetSummaryCard'

@@ -16,11 +16,6 @@ function RouteComponent() {
     { id: '2', title: 'Remaining', value: 0 },
   ]
 
-  const onAddCategory = () => {
-    console.log('add category')
-    dialog.onOpenChange(true)
-  }
-
   const dialog = useBudgetDialog()
 
   return (
@@ -28,7 +23,7 @@ function RouteComponent() {
       <header className="flex flex-col items-center gap-2 md:flex-row lg:justify-end">
         <Dialog open={dialog.open} onOpenChange={dialog.onOpenChange}>
           <DialogTrigger asChild>
-            <BudgetSummaryCard data={data} onAddCategory={onAddCategory} />
+            <BudgetSummaryCard data={data} />
           </DialogTrigger>
           <BudgetCategoryForm
             open={dialog.open}

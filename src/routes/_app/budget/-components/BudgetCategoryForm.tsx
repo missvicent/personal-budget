@@ -6,6 +6,7 @@ import type { BudgetFormData } from '@/lib/validations/budget.schema'
 import {
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -66,6 +67,9 @@ export const BudgetCategoryForm = ({
         >
           <DialogHeader>
             <DialogTitle className="mb-3">Set your Budget</DialogTitle>
+            <DialogDescription className="sr-only">
+              Set your budget for a new category
+            </DialogDescription>
           </DialogHeader>
           <FieldGroup>
             <FormField
