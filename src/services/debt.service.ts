@@ -1,4 +1,4 @@
-import type { CreateDebt, Debt, DebtPayment, UpdateDebt } from '@/types/database.types'
+import type { CreateDebt, Debt, UpdateDebt } from '@/types/database.types'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const debtService = {

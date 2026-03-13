@@ -1,10 +1,9 @@
-import { useQuery } from '@tanstack/react-db'
+import { useLiveQuery, eq } from '@tanstack/react-db'
 import { useDebtDB } from './use-debt-db'
 
 export function useDebts() {
-  const db = useDebtDB()
-  return useQuery({
-    collection: db.collections.debts,
-    filter: (debt) => debt.is_active,
-  })
+  const { debts } = useDebtDB()
+  return useLiveQuery((q) =>
+    q.from({ debts }).where(({ debts }) => eq(debts.is_active, true)),
+  )
 }

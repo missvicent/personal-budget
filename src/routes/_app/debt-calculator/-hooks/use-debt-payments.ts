@@ -1,10 +1,16 @@
-import { useQuery } from '@tanstack/react-db'
+import { useLiveQuery, eq } from '@tanstack/react-db'
 import { useDebtDB } from './use-debt-db'
 
 export function useDebtPayments(debtId?: string) {
-  const db = useDebtDB()
-  return useQuery({
-    collection: db.collections.debtPayments,
-    filter: debtId ? (payment) => payment.debt_id === debtId : undefined,
-  })
+  const { debtPayments } = useDebtDB()
+  return useLiveQuery(
+    (q) => {
+      const base = q.from({ debtPayments })
+      if (debtId) {
+        return base.where(({ debtPayments }) => eq(debtPayments.debt_id, debtId))
+      }
+      return base
+    },
+    [debtId],
+  )
 }

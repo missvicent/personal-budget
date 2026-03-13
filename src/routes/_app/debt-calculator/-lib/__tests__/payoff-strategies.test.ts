@@ -3,7 +3,6 @@ import {
   calculateSnowball,
   calculateAvalanche,
   type DebtInput,
-  type PayoffResult,
 } from '../payoff-strategies'
 
 const twoDebts: Array<DebtInput> = [

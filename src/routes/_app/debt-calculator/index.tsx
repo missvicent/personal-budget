@@ -15,6 +15,7 @@ import {
   PayoffComparison,
 } from './-components'
 import type { DebtFormData, DebtPaymentFormData } from '@/lib/validations/debt.schema'
+import type { Debt } from '@/types/database.types'
 
 export const Route = createFileRoute('/_app/debt-calculator/')({
   component: RouteComponent,
@@ -29,8 +30,8 @@ function RouteComponent() {
 }
 
 function DebtCalculatorPage() {
-  // TanStack DB's useQuery returns an array directly (not { data } like TanStack Query)
-  const debtList = useDebts() ?? []
+  const { data: rawDebts = [] } = useDebts()
+  const debtList = rawDebts as unknown as Array<Debt>
   const mutations = useDebtMutations()
   const dialog = useDebtDialog()
   const payoff = usePayoffCalculator(debtList)

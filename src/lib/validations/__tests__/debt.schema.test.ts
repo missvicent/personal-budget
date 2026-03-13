@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import {
-  debtSchema,
-  debtPaymentSchema,
-  toDebtPayload,
-  toDebtPaymentPayload,
-} from '../debt.schema'
+import { debtSchema, debtPaymentSchema, toDebtPayload } from '../debt.schema'
 
 describe('debtSchema', () => {
   it('validates a valid debt', () => {
