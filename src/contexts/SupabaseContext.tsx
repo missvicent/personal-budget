@@ -6,22 +6,22 @@ import { createSupabaseClient } from '@/lib/supabaseClient'
 const SupabaseContext = createContext<SupabaseClient | null>(null)
 
 export function SupabaseProvider({ children }: { children: React.ReactNode }) {
-    const { getToken } = useAuth()
+  const { getToken } = useAuth()
 
-    const supabase = useMemo(() => {
-        return createSupabaseClient(async () => getToken({ template: 'supabase' }))
-    }, [getToken])
+  const supabase = useMemo(() => {
+    return createSupabaseClient(async () => getToken({ template: 'supabase' }))
+  }, [getToken])
 
-    return (
-        <SupabaseContext.Provider value={supabase}>
-            {children}
-        </SupabaseContext.Provider>
-    )
+  return (
+    <SupabaseContext.Provider value={supabase}>
+      {children}
+    </SupabaseContext.Provider>
+  )
 }
 
 export function useSupabase(): SupabaseClient {
-    const supabase = useContext(SupabaseContext)
-    if (!supabase)
-        throw new Error('useSupabase must be used within a SupabaseProvider')
-    return supabase
+  const supabase = useContext(SupabaseContext)
+  if (!supabase)
+    throw new Error('useSupabase must be used within a SupabaseProvider')
+  return supabase
 }

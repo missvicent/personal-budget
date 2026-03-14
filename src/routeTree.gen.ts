@@ -18,6 +18,7 @@ import { Route as AppProfileIndexRouteImport } from './routes/_app/profile/index
 import { Route as AppIaInsightsIndexRouteImport } from './routes/_app/ia-insights/index'
 import { Route as AppGoalTrackerIndexRouteImport } from './routes/_app/goal-tracker/index'
 import { Route as AppExpensesIndexRouteImport } from './routes/_app/expenses/index'
+import { Route as AppDebtCalculatorIndexRouteImport } from './routes/_app/debt-calculator/index'
 import { Route as AppDashboardIndexRouteImport } from './routes/_app/dashboard/index'
 import { Route as AppBudgetIndexRouteImport } from './routes/_app/budget/index'
 
@@ -64,6 +65,11 @@ const AppExpensesIndexRoute = AppExpensesIndexRouteImport.update({
   path: '/expenses/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDebtCalculatorIndexRoute = AppDebtCalculatorIndexRouteImport.update({
+  id: '/debt-calculator/',
+  path: '/debt-calculator/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/budget': typeof AppBudgetIndexRoute
   '/dashboard': typeof AppDashboardIndexRoute
+  '/debt-calculator': typeof AppDebtCalculatorIndexRoute
   '/expenses': typeof AppExpensesIndexRoute
   '/goal-tracker': typeof AppGoalTrackerIndexRoute
   '/ia-insights': typeof AppIaInsightsIndexRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/budget': typeof AppBudgetIndexRoute
   '/dashboard': typeof AppDashboardIndexRoute
+  '/debt-calculator': typeof AppDebtCalculatorIndexRoute
   '/expenses': typeof AppExpensesIndexRoute
   '/goal-tracker': typeof AppGoalTrackerIndexRoute
   '/ia-insights': typeof AppIaInsightsIndexRoute
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/_public/': typeof PublicIndexRoute
   '/_app/budget/': typeof AppBudgetIndexRoute
   '/_app/dashboard/': typeof AppDashboardIndexRoute
+  '/_app/debt-calculator/': typeof AppDebtCalculatorIndexRoute
   '/_app/expenses/': typeof AppExpensesIndexRoute
   '/_app/goal-tracker/': typeof AppGoalTrackerIndexRoute
   '/_app/ia-insights/': typeof AppIaInsightsIndexRoute
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
     | '/'
     | '/budget'
     | '/dashboard'
+    | '/debt-calculator'
     | '/expenses'
     | '/goal-tracker'
     | '/ia-insights'
@@ -130,6 +140,7 @@ export interface FileRouteTypes {
     | '/'
     | '/budget'
     | '/dashboard'
+    | '/debt-calculator'
     | '/expenses'
     | '/goal-tracker'
     | '/ia-insights'
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/_public/'
     | '/_app/budget/'
     | '/_app/dashboard/'
+    | '/_app/debt-calculator/'
     | '/_app/expenses/'
     | '/_app/goal-tracker/'
     | '/_app/ia-insights/'
@@ -221,6 +233,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppExpensesIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/debt-calculator/': {
+      id: '/_app/debt-calculator/'
+      path: '/debt-calculator'
+      fullPath: '/debt-calculator'
+      preLoaderRoute: typeof AppDebtCalculatorIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard/': {
       id: '/_app/dashboard/'
       path: '/dashboard'
@@ -241,6 +260,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppBudgetIndexRoute: typeof AppBudgetIndexRoute
   AppDashboardIndexRoute: typeof AppDashboardIndexRoute
+  AppDebtCalculatorIndexRoute: typeof AppDebtCalculatorIndexRoute
   AppExpensesIndexRoute: typeof AppExpensesIndexRoute
   AppGoalTrackerIndexRoute: typeof AppGoalTrackerIndexRoute
   AppIaInsightsIndexRoute: typeof AppIaInsightsIndexRoute
@@ -250,6 +270,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppBudgetIndexRoute: AppBudgetIndexRoute,
   AppDashboardIndexRoute: AppDashboardIndexRoute,
+  AppDebtCalculatorIndexRoute: AppDebtCalculatorIndexRoute,
   AppExpensesIndexRoute: AppExpensesIndexRoute,
   AppGoalTrackerIndexRoute: AppGoalTrackerIndexRoute,
   AppIaInsightsIndexRoute: AppIaInsightsIndexRoute,

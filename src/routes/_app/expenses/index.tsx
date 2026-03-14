@@ -68,9 +68,7 @@ function RouteComponent() {
                   </Button>
                 </DialogTrigger>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>Add Expense</p>
-              </TooltipContent>
+              <TooltipContent>Log an Expense</TooltipContent>
             </Tooltip>
             <ExpenseTransactionForm
               key={dialog.selectedTransaction?.id}

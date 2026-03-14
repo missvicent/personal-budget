@@ -1,4 +1,10 @@
-import { Brain, ChartNoAxesCombined, ClipboardList, House } from 'lucide-react'
+import {
+  Brain,
+  Calculator,
+  ChartNoAxesCombined,
+  ClipboardList,
+  House,
+} from 'lucide-react'
 
 export const NAVIGATION_ITEMS = [
   {
@@ -19,7 +25,12 @@ export const NAVIGATION_ITEMS = [
     description: 'Set and monitor budget limits',
     icon: ChartNoAxesCombined,
   },
-
+  {
+    title: 'Debt Calculator',
+    url: '/debt-calculator',
+    description: 'Track debts and plan payoff strategies',
+    icon: Calculator,
+  },
   {
     title: 'AI Insights',
     url: '/ia-insights',

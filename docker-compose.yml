@@ -14,3 +14,12 @@ services:
       - ./pnpm-lock.yaml:/app/pnpm-lock.yaml
       - ./.env.local:/app/.env.local:ro
       - /app/node_modules
+
+  electric:
+    image: electricsql/electric:latest
+    ports:
+      - "3001:3000"
+    environment:
+      DATABASE_URL: "${SUPABASE_DB_URL}"
+    depends_on:
+      - app

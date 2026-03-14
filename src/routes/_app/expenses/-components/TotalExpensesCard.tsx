@@ -31,7 +31,7 @@ export const TotalExpensesCard = ({
             onClick={onAddExpense}
           >
             <PlusIcon className="h-4 w-4" />
-            Add Expense
+            Log an Expense
           </Button>
         </div>
       </CardContent>
