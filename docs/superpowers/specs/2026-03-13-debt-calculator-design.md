@@ -20,13 +20,13 @@ TanStack DB + ElectricSQL is scoped only to the debt calculator route. A `DebtDB
 
 The two systems are fully independent:
 
-| Concern | TanStack Query (existing) | TanStack DB (debt module) |
-|---|---|---|
-| Data | Budgets, expenses, transactions | Debts, debt payments |
-| Read path | Supabase REST via `useAuthQuery` | ElectricSQL HTTP shape stream |
-| Write path | Supabase REST via `useAuthMutation` | Supabase REST via `useSupabase()` |
-| Reactivity | `queryClient.invalidateQueries()` | Automatic via ElectricSQL WAL streaming |
-| Provider | Global `QueryClientProvider` | Route-scoped `DebtDBProvider` |
+| Concern    | TanStack Query (existing)           | TanStack DB (debt module)               |
+| ---------- | ----------------------------------- | --------------------------------------- |
+| Data       | Budgets, expenses, transactions     | Debts, debt payments                    |
+| Read path  | Supabase REST via `useAuthQuery`    | ElectricSQL HTTP shape stream           |
+| Write path | Supabase REST via `useAuthMutation` | Supabase REST via `useSupabase()`       |
+| Reactivity | `queryClient.invalidateQueries()`   | Automatic via ElectricSQL WAL streaming |
+| Provider   | Global `QueryClientProvider`        | Route-scoped `DebtDBProvider`           |
 
 No shared tables, no conflicts.
 
@@ -40,12 +40,13 @@ New service in `docker-compose.yml`:
 electric:
   image: electricsql/electric:latest
   ports:
-    - "3001:3000"
+    - '3001:3000'
   environment:
-    DATABASE_URL: "${SUPABASE_DB_URL}"
+    DATABASE_URL: '${SUPABASE_DB_URL}'
 ```
 
 Requires:
+
 - `SUPABASE_DB_URL` env var: direct Postgres connection string from Supabase dashboard
 - `VITE_ELECTRIC_URL=http://localhost:3001` env var for the client
 - Postgres logical replication publication for debt tables
@@ -58,7 +59,7 @@ ElectricSQL connects to Postgres via `DATABASE_URL` (service role), which bypass
 new ShapeStream({
   url: `${electricUrl}/v1/shape`,
   table: 'debts',
-  where: `user_id = '${userId}'`,  // Scoped to authenticated user
+  where: `user_id = '${userId}'`, // Scoped to authenticated user
 })
 ```
 
@@ -68,38 +69,39 @@ This ensures each client only receives rows belonging to the authenticated Clerk
 
 **`debts`**
 
-| Column | Type | Notes |
-|---|---|---|
-| id | UUID (PK) | `gen_random_uuid()` |
-| user_id | TEXT | Clerk user ID |
-| name | TEXT | e.g., "Chase Sapphire" |
-| type | TEXT | credit_card, personal_loan, auto_loan, student_loan, mortgage |
-| principal_amount | NUMERIC(12,2) | Original amount |
-| interest_rate | NUMERIC(5,3) | Annual rate |
-| current_balance | NUMERIC(12,2) | Current balance |
-| minimum_payment | NUMERIC(12,2) | Required monthly minimum |
-| start_date | DATE | When debt began |
-| is_active | BOOLEAN | Default true |
-| created_at | TIMESTAMPTZ | Auto |
-| updated_at | TIMESTAMPTZ | Auto |
+| Column           | Type          | Notes                                                         |
+| ---------------- | ------------- | ------------------------------------------------------------- |
+| id               | UUID (PK)     | `gen_random_uuid()`                                           |
+| user_id          | TEXT          | Clerk user ID                                                 |
+| name             | TEXT          | e.g., "Chase Sapphire"                                        |
+| type             | TEXT          | credit_card, personal_loan, auto_loan, student_loan, mortgage |
+| principal_amount | NUMERIC(12,2) | Original amount                                               |
+| interest_rate    | NUMERIC(5,3)  | Annual rate                                                   |
+| current_balance  | NUMERIC(12,2) | Current balance                                               |
+| minimum_payment  | NUMERIC(12,2) | Required monthly minimum                                      |
+| start_date       | DATE          | When debt began                                               |
+| is_active        | BOOLEAN       | Default true                                                  |
+| created_at       | TIMESTAMPTZ   | Auto                                                          |
+| updated_at       | TIMESTAMPTZ   | Auto                                                          |
 
 **`debt_payments`**
 
-| Column | Type | Notes |
-|---|---|---|
-| id | UUID (PK) | `gen_random_uuid()` |
-| debt_id | UUID (FK) | References debts.id, CASCADE |
-| user_id | TEXT | Clerk user ID |
-| amount_paid | NUMERIC(12,2) | Total payment |
-| principal_paid | NUMERIC(12,2) | Portion to principal |
-| interest_paid | NUMERIC(12,2) | Portion to interest |
-| payment_date | DATE | When payment was made |
-| notes | TEXT | Optional |
-| created_at | TIMESTAMPTZ | Auto |
+| Column         | Type          | Notes                        |
+| -------------- | ------------- | ---------------------------- |
+| id             | UUID (PK)     | `gen_random_uuid()`          |
+| debt_id        | UUID (FK)     | References debts.id, CASCADE |
+| user_id        | TEXT          | Clerk user ID                |
+| amount_paid    | NUMERIC(12,2) | Total payment                |
+| principal_paid | NUMERIC(12,2) | Portion to principal         |
+| interest_paid  | NUMERIC(12,2) | Portion to interest          |
+| payment_date   | DATE          | When payment was made        |
+| notes          | TEXT          | Optional                     |
+| created_at     | TIMESTAMPTZ   | Auto                         |
 
 RLS on both tables: `(auth.jwt()->>'sub') = user_id` for all operations.
 
 Logical replication publication:
+
 ```sql
 CREATE PUBLICATION electric_debt_pub FOR TABLE debts, debt_payments;
 ```
@@ -109,7 +111,12 @@ CREATE PUBLICATION electric_debt_pub FOR TABLE debts, debt_payments;
 Added to `src/types/database.types.ts`:
 
 ```typescript
-type DebtType = 'credit_card' | 'personal_loan' | 'auto_loan' | 'student_loan' | 'mortgage'
+type DebtType =
+  | 'credit_card'
+  | 'personal_loan'
+  | 'auto_loan'
+  | 'student_loan'
+  | 'mortgage'
 
 interface Debt {
   id: string
@@ -170,6 +177,7 @@ src/
 ```
 
 Key differences from existing modules:
+
 - No domain hooks in `src/hooks/` — TanStack DB logic is route-scoped
 - No query keys — TanStack DB uses live queries
 - New `-lib/` folder for pure calculation functions
@@ -179,11 +187,29 @@ Key differences from existing modules:
 ```typescript
 const debtSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100),
-  type: z.enum(['credit_card', 'personal_loan', 'auto_loan', 'student_loan', 'mortgage']),
-  principal_amount: z.number().min(0.01, 'Amount must be greater than 0').max(10_000_000),
-  interest_rate: z.number().min(0, 'Rate cannot be negative').max(100, 'Rate cannot exceed 100%'),
-  current_balance: z.number().min(0, 'Balance cannot be negative').max(10_000_000),
-  minimum_payment: z.number().min(0, 'Payment cannot be negative').max(1_000_000),
+  type: z.enum([
+    'credit_card',
+    'personal_loan',
+    'auto_loan',
+    'student_loan',
+    'mortgage',
+  ]),
+  principal_amount: z
+    .number()
+    .min(0.01, 'Amount must be greater than 0')
+    .max(10_000_000),
+  interest_rate: z
+    .number()
+    .min(0, 'Rate cannot be negative')
+    .max(100, 'Rate cannot exceed 100%'),
+  current_balance: z
+    .number()
+    .min(0, 'Balance cannot be negative')
+    .max(10_000_000),
+  minimum_payment: z
+    .number()
+    .min(0, 'Payment cannot be negative')
+    .max(1_000_000),
   start_date: z.string().min(1, 'Start date is required'),
 })
 
@@ -212,6 +238,7 @@ function createDebtDB(electricUrl: string, userId: string): TanStackDB {
 ```
 
 **Lifecycle** (managed by `DebtDBProvider`):
+
 - On mount: create instance via `createDebtDB(electricUrl, userId)`, starts shape streams
 - On unmount: call `db.close()` to stop shape streams and clean up
 - On userId change (logout/login): recreate instance with new userId scope
@@ -219,6 +246,7 @@ function createDebtDB(electricUrl: string, userId: string): TanStackDB {
 ## UI Layout
 
 **Side-by-side layout:**
+
 - Top: `DebtSummary` bar (total owed, weighted avg rate, total monthly minimums)
 - Left: `DebtList` grid of `DebtCard` components
 - Right: `PayoffComparison` panel (sticky, always visible)
@@ -226,6 +254,7 @@ function createDebtDB(electricUrl: string, userId: string): TanStackDB {
 **Responsive behavior:** On mobile viewports (< 768px), the layout stacks vertically: summary → debt cards (single column) → payoff comparison. Follows the same responsive patterns used by existing route modules.
 
 **DebtCard design** — Icon + Stats Grid:
+
 - Header: debt type icon + name on left, balance on right
 - Footer: 3-column stat grid (APR, min payment, % paid off)
 - Actions: edit, record payment, delete
@@ -235,6 +264,7 @@ function createDebtDB(electricUrl: string, userId: string): TanStackDB {
 ### Pure Functions (`payoff-strategies.ts`)
 
 **Inputs:**
+
 - Array of debts (balance, interest rate, minimum payment)
 - Extra monthly payment amount (default $0)
 
@@ -243,6 +273,7 @@ function createDebtDB(electricUrl: string, userId: string): TanStackDB {
 **Avalanche:** Sort by interest rate descending → pay minimums on all → apply extra to highest rate → roll freed payments into next highest rate.
 
 **Edge cases:**
+
 - 0% interest rate debts: treated normally, just no interest accumulation
 - Minimum payment exceeds current balance: cap payment at current balance
 - Extra payment of $0: equivalent to minimum-only payoff timeline
@@ -250,6 +281,7 @@ function createDebtDB(electricUrl: string, userId: string): TanStackDB {
 - Loop termination: cap at 360 months (30 years). If payoff exceeds this, show "payoff exceeds 30 years" message
 
 **Output per strategy:**
+
 ```typescript
 interface PayoffResult {
   strategy: 'snowball' | 'avalanche'
@@ -275,6 +307,7 @@ interface PayoffResult {
 ## Payment Recording
 
 **Flow:**
+
 1. User clicks "Record Payment" on a debt card
 2. `PaymentForm` opens, pre-filled with minimum payment
 3. User enters: amount, date, optional notes
@@ -299,6 +332,7 @@ interface DebtMutations {
 ```
 
 Each mutation follows this pattern:
+
 1. Generate a temp ID (for creates) and apply change to the TanStack DB collection via its local mutation API
 2. Send write to Supabase via `debtService`
 3. ElectricSQL syncs the confirmed row back from Postgres WAL, replacing the optimistic entry
@@ -326,6 +360,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 ## Navigation
 
 Add to `src/config/navigation.ts`:
+
 ```typescript
 {
   title: 'Debt Calculator',

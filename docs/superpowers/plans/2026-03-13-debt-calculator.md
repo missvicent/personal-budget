@@ -16,35 +16,35 @@
 
 ### New Files
 
-| File | Responsibility |
-|------|---------------|
-| `src/types/database.types.ts` | Add `Debt`, `DebtPayment`, `DebtType` types (modify existing) |
-| `src/lib/validations/debt.schema.ts` | Zod schemas for debt + payment forms, payload transforms |
-| `src/lib/tanstack-db.ts` | TanStack DB instance factory with ElectricSQL shape streams |
-| `src/services/debt.service.ts` | Supabase CRUD + RPC calls for debts and payments |
-| `src/routes/_app/debt-calculator/index.tsx` | Route entry, wraps content with DebtDBProvider |
-| `src/routes/_app/debt-calculator/-hooks/use-debt-db.ts` | DebtDBProvider context + useDebtDB hook |
-| `src/routes/_app/debt-calculator/-hooks/use-debts.ts` | Live query for debts collection |
-| `src/routes/_app/debt-calculator/-hooks/use-debt-payments.ts` | Live query for debt payments collection |
-| `src/routes/_app/debt-calculator/-hooks/use-debt-mutations.ts` | Async writes via Supabase (ElectricSQL syncs back; optimistic updates deferred) |
-| `src/routes/_app/debt-calculator/-hooks/use-debt-dialog.ts` | Dialog state (open, selected debt, mode) |
-| `src/routes/_app/debt-calculator/-hooks/use-payoff-calculator.ts` | useMemo wrapper for payoff strategy functions |
-| `src/routes/_app/debt-calculator/-lib/payoff-strategies.ts` | Pure snowball/avalanche calculation functions |
-| `src/routes/_app/debt-calculator/-components/DebtForm.tsx` | Create/edit debt dialog form |
-| `src/routes/_app/debt-calculator/-components/DebtCard.tsx` | Individual debt card (icon + stats grid) |
-| `src/routes/_app/debt-calculator/-components/DebtList.tsx` | Grid of DebtCards |
-| `src/routes/_app/debt-calculator/-components/DebtSummary.tsx` | Aggregate stats bar |
-| `src/routes/_app/debt-calculator/-components/PayoffComparison.tsx` | Snowball vs avalanche side-by-side |
-| `src/routes/_app/debt-calculator/-components/PaymentForm.tsx` | Record payment dialog |
-| `src/routes/_app/debt-calculator/-components/index.ts` | Barrel export |
+| File                                                               | Responsibility                                                                  |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| `src/types/database.types.ts`                                      | Add `Debt`, `DebtPayment`, `DebtType` types (modify existing)                   |
+| `src/lib/validations/debt.schema.ts`                               | Zod schemas for debt + payment forms, payload transforms                        |
+| `src/lib/tanstack-db.ts`                                           | TanStack DB instance factory with ElectricSQL shape streams                     |
+| `src/services/debt.service.ts`                                     | Supabase CRUD + RPC calls for debts and payments                                |
+| `src/routes/_app/debt-calculator/index.tsx`                        | Route entry, wraps content with DebtDBProvider                                  |
+| `src/routes/_app/debt-calculator/-hooks/use-debt-db.ts`            | DebtDBProvider context + useDebtDB hook                                         |
+| `src/routes/_app/debt-calculator/-hooks/use-debts.ts`              | Live query for debts collection                                                 |
+| `src/routes/_app/debt-calculator/-hooks/use-debt-payments.ts`      | Live query for debt payments collection                                         |
+| `src/routes/_app/debt-calculator/-hooks/use-debt-mutations.ts`     | Async writes via Supabase (ElectricSQL syncs back; optimistic updates deferred) |
+| `src/routes/_app/debt-calculator/-hooks/use-debt-dialog.ts`        | Dialog state (open, selected debt, mode)                                        |
+| `src/routes/_app/debt-calculator/-hooks/use-payoff-calculator.ts`  | useMemo wrapper for payoff strategy functions                                   |
+| `src/routes/_app/debt-calculator/-lib/payoff-strategies.ts`        | Pure snowball/avalanche calculation functions                                   |
+| `src/routes/_app/debt-calculator/-components/DebtForm.tsx`         | Create/edit debt dialog form                                                    |
+| `src/routes/_app/debt-calculator/-components/DebtCard.tsx`         | Individual debt card (icon + stats grid)                                        |
+| `src/routes/_app/debt-calculator/-components/DebtList.tsx`         | Grid of DebtCards                                                               |
+| `src/routes/_app/debt-calculator/-components/DebtSummary.tsx`      | Aggregate stats bar                                                             |
+| `src/routes/_app/debt-calculator/-components/PayoffComparison.tsx` | Snowball vs avalanche side-by-side                                              |
+| `src/routes/_app/debt-calculator/-components/PaymentForm.tsx`      | Record payment dialog                                                           |
+| `src/routes/_app/debt-calculator/-components/index.ts`             | Barrel export                                                                   |
 
 ### Modified Files
 
-| File | Change |
-|------|--------|
+| File                          | Change                                                        |
+| ----------------------------- | ------------------------------------------------------------- |
 | `src/types/database.types.ts` | Add Debt, DebtPayment, DebtType, CreateDebt, UpdateDebt types |
-| `src/config/navigation.ts` | Add Debt Calculator nav entry |
-| `docker-compose.yml` | Add ElectricSQL service |
+| `src/config/navigation.ts`    | Add Debt Calculator nav entry                                 |
+| `docker-compose.yml`          | Add ElectricSQL service                                       |
 
 ---
 
@@ -53,6 +53,7 @@
 ### Task 1: Install Dependencies
 
 **Files:**
+
 - Modify: `package.json`
 
 - [ ] **Step 1: Install TanStack DB and ElectricSQL packages**
@@ -78,6 +79,7 @@ git commit -m "feat: add TanStack DB and ElectricSQL dependencies"
 ### Task 2: Add TypeScript Types
 
 **Files:**
+
 - Modify: `src/types/database.types.ts`
 
 - [ ] **Step 1: Add Debt and DebtPayment types**
@@ -119,8 +121,13 @@ export interface DebtPayment {
   created_at: string
 }
 
-export type CreateDebt = Omit<Debt, 'id' | 'user_id' | 'created_at' | 'updated_at'>
-export type UpdateDebt = Partial<Omit<Debt, 'id' | 'user_id' | 'created_at' | 'updated_at'>>
+export type CreateDebt = Omit<
+  Debt,
+  'id' | 'user_id' | 'created_at' | 'updated_at'
+>
+export type UpdateDebt = Partial<
+  Omit<Debt, 'id' | 'user_id' | 'created_at' | 'updated_at'>
+>
 ```
 
 - [ ] **Step 2: Verify types compile**
@@ -140,6 +147,7 @@ git commit -m "feat: add Debt and DebtPayment type definitions"
 ### Task 3: Create Validation Schemas
 
 **Files:**
+
 - Create: `src/lib/validations/debt.schema.ts`
 
 Reference pattern: `src/lib/validations/budget.schema.ts`
@@ -150,7 +158,12 @@ Create `src/lib/validations/__tests__/debt.schema.test.ts`:
 
 ```typescript
 import { describe, expect, it } from 'vitest'
-import { debtSchema, debtPaymentSchema, toDebtPayload, toDebtPaymentPayload } from '../debt.schema'
+import {
+  debtSchema,
+  debtPaymentSchema,
+  toDebtPayload,
+  toDebtPaymentPayload,
+} from '../debt.schema'
 
 describe('debtSchema', () => {
   it('validates a valid debt', () => {
@@ -300,9 +313,7 @@ export function toDebtPayload(data: DebtFormData) {
 }
 
 export const debtPaymentSchema = z.object({
-  amount_paid: z
-    .number()
-    .min(0.01, 'Payment must be greater than 0'),
+  amount_paid: z.number().min(0.01, 'Payment must be greater than 0'),
   payment_date: z.string().min(1, 'Date is required'),
   notes: z.string().max(500).nullable().optional(),
 })
@@ -347,6 +358,7 @@ git commit -m "feat: add Zod validation schemas for debt and payment forms"
 ### Task 4: Create Debt Service
 
 **Files:**
+
 - Create: `src/services/debt.service.ts`
 
 Reference pattern: `src/services/budget.service.ts`
@@ -356,7 +368,12 @@ Reference pattern: `src/services/budget.service.ts`
 Create `src/services/debt.service.ts`:
 
 ```typescript
-import type { CreateDebt, Debt, DebtPayment, UpdateDebt } from '@/types/database.types'
+import type {
+  CreateDebt,
+  Debt,
+  DebtPayment,
+  UpdateDebt,
+} from '@/types/database.types'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const debtService = {
@@ -370,10 +387,7 @@ export const debtService = {
     return data
   },
 
-  create: async (
-    debt: CreateDebt,
-    supabase: SupabaseClient,
-  ): Promise<Debt> => {
+  create: async (debt: CreateDebt, supabase: SupabaseClient): Promise<Debt> => {
     const { data, error } = await supabase
       .from('debts')
       .insert(debt)
@@ -399,10 +413,7 @@ export const debtService = {
   },
 
   delete: async (id: string, supabase: SupabaseClient): Promise<void> => {
-    const { error } = await supabase
-      .from('debts')
-      .delete()
-      .eq('id', id)
+    const { error } = await supabase.from('debts').delete().eq('id', id)
     if (error) throw new Error(`Failed to delete debt: ${error.message}`)
   },
 
@@ -418,8 +429,7 @@ export const debtService = {
     supabase: SupabaseClient,
   ): Promise<void> => {
     const { error } = await supabase.rpc('record_debt_payment', params)
-    if (error)
-      throw new Error(`Failed to record payment: ${error.message}`)
+    if (error) throw new Error(`Failed to record payment: ${error.message}`)
   },
 }
 ```
@@ -441,6 +451,7 @@ git commit -m "feat: add debt service with CRUD and payment RPC"
 ### Task 5: Update Infrastructure (Docker + Navigation)
 
 **Files:**
+
 - Modify: `docker-compose.yml`
 - Modify: `src/config/navigation.ts`
 
@@ -449,14 +460,14 @@ git commit -m "feat: add debt service with CRUD and payment RPC"
 Add after the `app` service in `docker-compose.yml`:
 
 ```yaml
-  electric:
-    image: electricsql/electric:latest
-    ports:
-      - "3001:3000"
-    environment:
-      DATABASE_URL: "${SUPABASE_DB_URL}"
-    depends_on:
-      - app
+electric:
+  image: electricsql/electric:latest
+  ports:
+    - '3001:3000'
+  environment:
+    DATABASE_URL: '${SUPABASE_DB_URL}'
+  depends_on:
+    - app
 ```
 
 - [ ] **Step 2: Add Debt Calculator to navigation**
@@ -498,6 +509,7 @@ git commit -m "feat: add ElectricSQL docker service and debt calculator navigati
 ### Task 6: Write Payoff Strategy Functions
 
 **Files:**
+
 - Create: `src/routes/_app/debt-calculator/-lib/payoff-strategies.ts`
 - Create: `src/routes/_app/debt-calculator/-lib/__tests__/payoff-strategies.test.ts`
 
@@ -857,6 +869,7 @@ git commit -m "feat: add snowball and avalanche payoff strategy calculations"
 ### Task 7: Create TanStack DB Configuration
 
 **Files:**
+
 - Create: `src/lib/tanstack-db.ts`
 
 - [ ] **Step 1: Write TanStack DB factory**
@@ -923,6 +936,7 @@ git commit -m "feat: add TanStack DB factory with ElectricSQL shape streams"
 ### Task 8: Create DebtDB Provider and Hooks
 
 **Files:**
+
 - Create: `src/routes/_app/debt-calculator/-hooks/use-debt-db.ts`
 - Create: `src/routes/_app/debt-calculator/-hooks/use-debts.ts`
 - Create: `src/routes/_app/debt-calculator/-hooks/use-debt-payments.ts`
@@ -1059,6 +1073,7 @@ git commit -m "feat: add DebtDB provider, live query hooks, and dialog state"
 ### Task 9: Create Debt Mutations Hook
 
 **Files:**
+
 - Create: `src/routes/_app/debt-calculator/-hooks/use-debt-mutations.ts`
 
 - [ ] **Step 1: Write the mutations hook**
@@ -1071,8 +1086,14 @@ Create `src/routes/_app/debt-calculator/-hooks/use-debt-mutations.ts`:
 import { useState } from 'react'
 import { useSupabase } from '@/contexts/SupabaseContext'
 import { debtService } from '@/services/debt.service'
-import type { DebtFormData, DebtPaymentFormData } from '@/lib/validations/debt.schema'
-import { toDebtPayload, toDebtPaymentPayload } from '@/lib/validations/debt.schema'
+import type {
+  DebtFormData,
+  DebtPaymentFormData,
+} from '@/lib/validations/debt.schema'
+import {
+  toDebtPayload,
+  toDebtPaymentPayload,
+} from '@/lib/validations/debt.schema'
 import { toast } from 'sonner'
 
 export function useDebtMutations() {
@@ -1127,7 +1148,12 @@ export function useDebtMutations() {
   ) => {
     setIsPending(true)
     try {
-      const payload = toDebtPaymentPayload(data, debtId, currentBalance, annualRate)
+      const payload = toDebtPaymentPayload(
+        data,
+        debtId,
+        currentBalance,
+        annualRate,
+      )
       await debtService.recordPayment(
         {
           p_debt_id: payload.debt_id,
@@ -1169,6 +1195,7 @@ git commit -m "feat: add debt mutations hook with Supabase writes"
 ### Task 10: Create Payoff Calculator Hook
 
 **Files:**
+
 - Create: `src/routes/_app/debt-calculator/-hooks/use-payoff-calculator.ts`
 
 - [ ] **Step 1: Write the calculator hook**
@@ -1241,6 +1268,7 @@ git commit -m "feat: add payoff calculator hook with snowball/avalanche comparis
 ### Task 11: Create DebtCard and DebtList Components
 
 **Files:**
+
 - Create: `src/routes/_app/debt-calculator/-components/DebtCard.tsx`
 - Create: `src/routes/_app/debt-calculator/-components/DebtList.tsx`
 
@@ -1251,7 +1279,16 @@ Create `src/routes/_app/debt-calculator/-components/DebtCard.tsx`:
 ```tsx
 import type { Debt } from '@/types/database.types'
 import { cn } from '@/lib/utils'
-import { CreditCard, Car, GraduationCap, Home, Banknote, Pencil, Trash2, CircleDollarSign } from 'lucide-react'
+import {
+  CreditCard,
+  Car,
+  GraduationCap,
+  Home,
+  Banknote,
+  Pencil,
+  Trash2,
+  CircleDollarSign,
+} from 'lucide-react'
 
 const DEBT_TYPE_CONFIG = {
   credit_card: { icon: CreditCard, label: 'Credit Card' },
@@ -1399,7 +1436,9 @@ export function DebtList({
     return (
       <div className="text-muted-foreground flex flex-col items-center justify-center py-12 text-center">
         <p className="text-lg font-medium">No debts tracked yet</p>
-        <p className="text-sm">Add your first debt to start planning your payoff strategy.</p>
+        <p className="text-sm">
+          Add your first debt to start planning your payoff strategy.
+        </p>
       </div>
     )
   }
@@ -1438,6 +1477,7 @@ git commit -m "feat: add DebtCard and DebtList components"
 ### Task 12: Create DebtSummary and PayoffComparison Components
 
 **Files:**
+
 - Create: `src/routes/_app/debt-calculator/-components/DebtSummary.tsx`
 - Create: `src/routes/_app/debt-calculator/-components/PayoffComparison.tsx`
 
@@ -1548,7 +1588,7 @@ export function PayoffComparison({
       </div>
 
       {!hasDebts ? (
-        <p className="text-muted-foreground text-center text-sm py-4">
+        <p className="text-muted-foreground py-4 text-center text-sm">
           Add debts to see payoff strategies
         </p>
       ) : (
@@ -1661,6 +1701,7 @@ git commit -m "feat: add DebtSummary and PayoffComparison components"
 ### Task 13: Create DebtForm and PaymentForm Components
 
 **Files:**
+
 - Create: `src/routes/_app/debt-calculator/-components/DebtForm.tsx`
 - Create: `src/routes/_app/debt-calculator/-components/PaymentForm.tsx`
 
@@ -1671,7 +1712,12 @@ Create `src/routes/_app/debt-calculator/-components/DebtForm.tsx`:
 ```tsx
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { debtSchema, type DebtFormData } from '@/lib/validations/debt.schema'
 import type { Debt } from '@/types/database.types'
 
@@ -1726,7 +1772,9 @@ export function DebtForm({ onSubmit, selectedDebt, isPending }: DebtFormProps) {
             placeholder="e.g., Chase Sapphire"
           />
           {errors.name && (
-            <p className="text-destructive mt-1 text-xs">{errors.name.message}</p>
+            <p className="text-destructive mt-1 text-xs">
+              {errors.name.message}
+            </p>
           )}
         </div>
 
@@ -1843,8 +1891,16 @@ Create `src/routes/_app/debt-calculator/-components/PaymentForm.tsx`:
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { debtPaymentSchema, type DebtPaymentFormData } from '@/lib/validations/debt.schema'
+import {
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
+  debtPaymentSchema,
+  type DebtPaymentFormData,
+} from '@/lib/validations/debt.schema'
 import type { Debt } from '@/types/database.types'
 
 interface PaymentFormProps {
@@ -1979,6 +2035,7 @@ git commit -m "feat: add DebtForm and PaymentForm dialog components"
 ### Task 14: Create Barrel Export and Route Entry
 
 **Files:**
+
 - Create: `src/routes/_app/debt-calculator/-components/index.ts`
 - Create: `src/routes/_app/debt-calculator/index.tsx`
 
@@ -2016,7 +2073,10 @@ import {
   PaymentForm,
   PayoffComparison,
 } from './-components'
-import type { DebtFormData, DebtPaymentFormData } from '@/lib/validations/debt.schema'
+import type {
+  DebtFormData,
+  DebtPaymentFormData,
+} from '@/lib/validations/debt.schema'
 
 export const Route = createFileRoute('/_app/debt-calculator/')({
   component: RouteComponent,
@@ -2138,6 +2198,7 @@ git commit -m "feat: assemble debt calculator route with all components and hook
 ### Task 15: Create SQL Migration
 
 **Files:**
+
 - Create migration via: `npx supabase migration new create_debt_tables` (generates timestamped file in `supabase/migrations/`)
 - Or run directly in the Supabase SQL editor
 
@@ -2266,6 +2327,7 @@ Expected: No errors
 Run: `npm run dev`
 
 Verify in browser:
+
 1. Navigate to `/debt-calculator` — page renders with empty state
 2. Click "Add Debt" — form dialog opens
 3. Fill in a test debt (e.g., Chase Sapphire, Credit Card, $12000 original, $8240 balance, 19.99% rate, $165 min)

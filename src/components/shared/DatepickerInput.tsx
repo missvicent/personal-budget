@@ -34,10 +34,11 @@ function isValidDate(date: Date | undefined) {
   return !isNaN(date.getTime())
 }
 
-export interface DatePickerInputProps extends Omit<
-  React.ComponentPropsWithoutRef<'div'>,
-  'id' | 'value' | 'onChange' | 'onBlur'
-> {
+export interface DatePickerInputProps
+  extends Omit<
+    React.ComponentPropsWithoutRef<'div'>,
+    'id' | 'value' | 'onChange' | 'onBlur'
+  > {
   id: string
   placeholder: string
   value: Date | undefined
