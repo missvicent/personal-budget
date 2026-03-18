@@ -21,7 +21,6 @@ export const BudgetOverview = () => {
             <BudgetSummaryCard data={data} />
           </DialogTrigger>
           <BudgetCategoryForm
-            open={dialog.open}
             categories={[]}
             isPending={false}
             onSubmit={() => {}}

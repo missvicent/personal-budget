@@ -30,7 +30,6 @@ interface BudgetCategoryFormProps {
   categories: Array<Category>
   isPending: boolean
   onSubmit: (data: BudgetFormData) => void
-  open: boolean
   selectedCategory: Category | null
 }
 
@@ -38,7 +37,6 @@ export const BudgetCategoryForm = ({
   categories,
   isPending,
   onSubmit,
-  open,
   selectedCategory,
 }: BudgetCategoryFormProps) => {
   const defaultValues = useMemo(() => {
@@ -46,7 +44,7 @@ export const BudgetCategoryForm = ({
       category_id: '',
       amount: 0,
       alert_enabled: false,
-      period: 'monthly' as 'weekly' | 'monthly' | 'yearly',
+      period: 'monthly' as 'monthly' | 'yearly',
     }
   }, [])
 
@@ -115,7 +113,7 @@ export const BudgetCategoryForm = ({
                   <FormLabel>How often (Optional): </FormLabel>
                   <FormControl>
                     <SelectField
-                      items={['Weekly', 'Monthly', 'Yearly'].map((period) => ({
+                      items={['Monthly', 'Yearly'].map((period) => ({
                         label: period,
                         value: period,
                       }))}

@@ -26,7 +26,7 @@ function RouteComponent() {
         </p>
       </CreateCard>
       <Dialog open={dialog.open} onOpenChange={dialog.onOpenChange}>
-        <NewBudget onSubmit={handleCreateBudget} open={dialog.open} />
+        <NewBudget onSubmit={handleCreateBudget} />
       </Dialog>
     </section>
   )

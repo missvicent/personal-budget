@@ -25,10 +25,8 @@ import { DatePickerInput } from '@/components/shared/DatepickerInput'
 
 export const NewBudget = ({
   onSubmit,
-  open,
 }: {
   onSubmit: (data: NewBudgetFormData) => void
-  open: boolean
 }) => {
   const form = useForm<NewBudgetFormData>({
     resolver: zodResolver(newBudgetSchema),

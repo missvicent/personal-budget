@@ -5,6 +5,7 @@ export const budgetSchema = z.object({
   amount: z.number().min(1, 'Amount is required'),
   alert_enabled: z.boolean().optional(),
   category_name: z.string().min(1, 'Category name is required'),
+  period: z.enum(['monthly', 'yearly']).optional(),
 })
 
 export type BudgetFormData = z.infer<typeof budgetSchema>
