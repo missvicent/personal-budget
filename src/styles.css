@@ -81,8 +81,8 @@ body {
   --grey-300: oklch(0.9 0.01 280);
   --grey-400: oklch(0.708 0 0);
   --grey-500: oklch(0.556 0 0);
-  --grey-800: oklch(0.205 0 0);
-  --grey-900: oklch(0.145 0 0);
+  --grey-800: oklch(0.3 0 0);
+  --grey-900: oklch(0.32 0 0);
 
   /* Base purple palette */
   --purple-bright: oklch(0.65 0.25 295);
@@ -93,7 +93,7 @@ body {
   /* App colors */
   --app-bg: var(--grey-50);
   --background: oklch(0.98 0.01 300);
-  --foreground: oklch(0.2 0.02 280);
+  --foreground: oklch(0.37 0.02 280);
   --card: var(--white);
   --card-foreground: var(--grey-900);
   --card-border: var(--grey-300);
@@ -129,7 +129,7 @@ body {
 
   /* Sidebar active item */
   --sidebar-item-active-bg: oklch(0.94 0.04 290);
-  --sidebar-item-active-text: oklch(0.45 0.2 290);
+  --sidebar-item-active-text: oklch(0.5 0.2 290);
   --sidebar-item-active-border: var(--purple-bright);
 
   /* Content */
@@ -205,6 +205,11 @@ body {
    ================================= */
 [data-slot='sidebar-wrapper'] [data-slot='sidebar-content'] {
   padding: 0.25rem;
+}
+
+/* Toggle check indicator */
+[data-state='on'] > .toggle-check {
+  opacity: 1;
 }
 
 @layer base {

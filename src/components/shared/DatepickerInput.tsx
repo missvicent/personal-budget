@@ -96,6 +96,7 @@ export const DatePickerInput = React.forwardRef<
         onBlur={onBlur}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        onClick={() => setOpen(true)}
         autoComplete="off"
         aria-label="Select date"
         aria-describedby="select-date-description"
