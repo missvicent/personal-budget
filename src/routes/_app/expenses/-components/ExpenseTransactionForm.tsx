@@ -2,10 +2,10 @@ import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Category } from '@/types/database.types'
-import type { ExpenseFormData } from '@/lib/validations/expense.schema'
+import type { ExpenseFormData } from '@/lib/schemas/expenses/expense.schema'
 import type { ExpenseTransaction } from './ExpenseList'
 import { Checkbox } from '@/components/ui/checkbox'
-import { expenseSchema } from '@/lib/validations/expense.schema'
+import { expenseSchema } from '@/lib/schemas/expenses/expense.schema'
 import { SelectField } from '@/components/shared/SelectField'
 import { Button } from '@/components/ui/button'
 import {
@@ -147,7 +147,7 @@ export const ExpenseTransactionForm = ({
                       aria-describedby="description-description"
                       aria-autocomplete="list"
                       aria-controls="description-list"
-                      className="rounded-full"
+                      className="rounded-md"
                     />
                   </FormControl>
                   <FormDescription>

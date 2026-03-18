@@ -56,19 +56,34 @@ export interface Transaction {
 }
 
 export interface Budget {
-  alert_enabled: boolean
-  alert_threshold: number
-  amount: number
-  category_id: string
   created_at: string
   end_date: string | null
   id: string
   is_active: boolean
   name: string
-  period: 'weekly' | 'monthly' | 'yearly'
+  period: 'monthly' | 'yearly'
   start_date: string
   updated_at: string
   user_id: string
+}
+
+export interface BudgetWithProgress {
+  budget_id: string
+  budget_name: string
+  period: 'monthly' | 'yearly'
+  start_date: string
+  end_date: string | null
+  is_active: boolean
+  item_id: string
+  category_id: string
+  amount: number
+  alert_enabled: boolean
+  alert_threshold: number
+  category_name: string
+  category_type: string
+  category_color: string
+  category_icon: string
+  progress: number
 }
 
 // Helper types for create/update operations

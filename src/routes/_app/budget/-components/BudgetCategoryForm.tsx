@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Category } from '@/types/database.types'
-import type { BudgetFormData } from '@/lib/validations/budget.schema'
+import type { BudgetFormData } from '@/lib/schemas/budget/budget.schema'
 import {
   DialogClose,
   DialogContent,
@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { budgetSchema } from '@/lib/validations/budget.schema'
+import { budgetSchema } from '@/lib/schemas/budget/budget.schema'
 import { FieldGroup } from '@/components/ui/field'
 import {
   Form,
@@ -19,6 +19,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from '@/components/ui/form'
 import { SelectField } from '@/components/shared/SelectField'
 import { CurrencyInput } from '@/components/shared/CurrencyInput'
@@ -142,6 +143,10 @@ export const BudgetCategoryForm = ({
                     updates, reminders, and the stuff that actually matters to
                     you.
                   </FormLabel>
+                  <FormMessage>
+                    The app will automatically calculate the end date based on
+                    the start date and the period.
+                  </FormMessage>
                 </FormItem>
               )}
             />
