@@ -1,29 +1,45 @@
 import * as React from 'react'
 
 import { cn } from '@/lib/utils'
+import { cva } from 'class-variance-authority'
+import type { VariantProps } from 'class-variance-authority'
 
-function Card({ className, ...props }: React.ComponentProps<'div'>) {
+const cardVariants = cva(
+  'flex flex-col gap-2 rounded-xl py-6 text-card-foreground backdrop-blur-xl transition-all duration-300',
+  {
+    variants: {
+      variant: {
+        default: [
+          'bg-white/60 border border-white/80',
+          'shadow-glass hover:shadow-glass-hover',
+          'hover:-translate-y-0.5 hover:border-white/90',
+          'dark:bg-[#7c6af0]/[0.08] dark:border-[#7c6af0]/[0.15]',
+          'dark:shadow-glass-dark dark:hover:shadow-glass-dark-hover',
+          'dark:hover:bg-[#7c6af0]/[0.12] dark: hover: border - [#7c6af0] / [0.25]',
+        ],
+        dashed: [
+          'bg-white/60 border-2 border-dashed border-brand/45 text-brand',
+          'shadow-glass hover:shadow-glass-hover',
+          'hover:-translate-y-0.5 hover:border-primary/50',
+          'dark:bg-[#7c6af0]/[0.08]',
+          'dark:shadow-glass-dark dark:hover:shadow-glass-dark-hover',
+        ],
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  }
+)
+
+interface CardProps extends React.ComponentProps<'div'>, VariantProps<typeof cardVariants> { }
+
+function Card({ className, variant, ...props }: CardProps) {
+
   return (
     <div
       data-slot="card"
-      className={cn(
-        'bg-white/60 text-card-foreground',
-        'flex flex-col gap-2 rounded-xl py-6',
-        'border border-white/80',
-        'backdrop-blur-xl',
-        'shadow-[0_8px_32px_rgba(0,0,0,0.08)]',
-        'transition-all duration-300',
-        'hover:-translate-y-0.5',
-        'hover:shadow-[0_8px_32px_rgba(124,106,240,0.12)]',
-        'hover:border-white/90',
-        'dark:bg-[#7c6af0]/[0.08]',
-        'dark:border-[#7c6af0]/[0.15]',
-        'dark:shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(124,106,240,0.1)]',
-        'dark:hover:bg-[#7c6af0]/[0.12]',
-        'dark:hover:border-[#7c6af0]/[0.25]',
-        'dark:hover:shadow-[0_8px_32px_rgba(124,106,240,0.25),inset_0_1px_0_rgba(124,106,240,0.15)]',
-        className,
-      )}
+      className={cn(cardVariants({ variant, className }))}
       {...props}
     />
   )
