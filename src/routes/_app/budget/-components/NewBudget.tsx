@@ -23,7 +23,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { DatePickerInput } from '@/components/shared/DatepickerInput'
 
-export const NewBudget = ({
+export const NewBudgetDialog = ({
   onSubmit,
 }: {
   onSubmit: (data: NewBudgetFormData) => void

@@ -18,8 +18,8 @@ services:
   electric:
     image: electricsql/electric:latest
     ports:
-      - "3001:3000"
+      - '3001:3000'
     environment:
-      DATABASE_URL: "${SUPABASE_DB_URL}"
+      DATABASE_URL: '${SUPABASE_DB_URL}'
     depends_on:
       - app

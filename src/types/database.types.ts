@@ -162,5 +162,10 @@ export interface DebtPayment {
   created_at: string
 }
 
-export type CreateDebt = Omit<Debt, 'id' | 'user_id' | 'created_at' | 'updated_at'>
-export type UpdateDebt = Partial<Omit<Debt, 'id' | 'user_id' | 'created_at' | 'updated_at'>>
+export type CreateDebt = Omit<
+  Debt,
+  'id' | 'user_id' | 'created_at' | 'updated_at'
+>
+export type UpdateDebt = Partial<
+  Omit<Debt, 'id' | 'user_id' | 'created_at' | 'updated_at'>
+>

@@ -1,9 +1,15 @@
 import { useState } from 'react'
+import { toast } from 'sonner'
+import type {
+  DebtFormData,
+  DebtPaymentFormData,
+} from '@/lib/validations/debt.schema'
 import { useSupabase } from '@/contexts/SupabaseContext'
 import { debtService } from '@/services/debt.service'
-import type { DebtFormData, DebtPaymentFormData } from '@/lib/validations/debt.schema'
-import { toDebtPayload, toDebtPaymentPayload } from '@/lib/validations/debt.schema'
-import { toast } from 'sonner'
+import {
+  toDebtPayload,
+  toDebtPaymentPayload,
+} from '@/lib/validations/debt.schema'
 
 export function useDebtMutations() {
   const supabase = useSupabase()
@@ -56,7 +62,12 @@ export function useDebtMutations() {
   ) => {
     setIsPending(true)
     try {
-      const payload = toDebtPaymentPayload(data, debtId, currentBalance, annualRate)
+      const payload = toDebtPaymentPayload(
+        data,
+        debtId,
+        currentBalance,
+        annualRate,
+      )
       await debtService.recordPayment(
         {
           p_debt_id: payload.debt_id,

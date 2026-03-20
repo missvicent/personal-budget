@@ -1,5 +1,5 @@
 import type { Debt } from '@/types/database.types'
-import { cn } from '@/lib/utils'
+import { Card } from '@/components/ui/card'
 
 interface DebtSummaryProps {
   debts: Array<Debt>
@@ -31,18 +31,13 @@ export function DebtSummary({ debts }: DebtSummaryProps) {
   ]
 
   return (
-    <div
-      className={cn(
-        'grid grid-cols-2 gap-4 rounded-lg border p-4 md:grid-cols-4',
-        'bg-card text-card-foreground',
-      )}
-    >
+    <Card className="grid grid-cols-2 gap-4 p-4 md:grid-cols-4">
       {stats.map((stat) => (
         <div key={stat.label} className="text-center">
           <p className="text-muted-foreground text-xs">{stat.label}</p>
           <p className="text-lg font-bold">{stat.value}</p>
         </div>
       ))}
-    </div>
+    </Card>
   )
 }

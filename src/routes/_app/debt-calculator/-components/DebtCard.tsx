@@ -1,6 +1,15 @@
+import {
+  Banknote,
+  Car,
+  CircleDollarSign,
+  CreditCard,
+  GraduationCap,
+  Home,
+  Pencil,
+  Trash2,
+} from 'lucide-react'
 import type { Debt } from '@/types/database.types'
-import { cn } from '@/lib/utils'
-import { CreditCard, Car, GraduationCap, Home, Banknote, Pencil, Trash2, CircleDollarSign } from 'lucide-react'
+import { Card } from '@/components/ui/card'
 
 const DEBT_TYPE_CONFIG = {
   credit_card: { icon: CreditCard, label: 'Credit Card' },
@@ -44,13 +53,7 @@ export function DebtCard({
   })
 
   return (
-    <div
-      className={cn(
-        'rounded-lg border p-4',
-        'bg-card text-card-foreground',
-        'flex flex-col gap-3',
-      )}
-    >
+    <Card className="gap-3 p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-lg">
@@ -116,6 +119,6 @@ export function DebtCard({
           <Trash2 className="h-4 w-4" />
         </button>
       </div>
-    </div>
+    </Card>
   )
 }

@@ -1,9 +1,15 @@
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { debtPaymentSchema, type DebtPaymentFormData } from '@/lib/validations/debt.schema'
 import type { Debt } from '@/types/database.types'
+import type { DebtPaymentFormData } from '@/lib/validations/debt.schema'
+import {
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { debtPaymentSchema } from '@/lib/validations/debt.schema'
 
 interface PaymentFormProps {
   debt: Debt
@@ -48,8 +54,11 @@ export function PaymentForm({ debt, onSubmit, isPending }: PaymentFormProps) {
       </DialogHeader>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <div>
-          <label className="text-sm font-medium">Payment Amount</label>
+          <label htmlFor="payment-amount" className="text-sm font-medium">
+            Payment Amount
+          </label>
           <input
+            id="payment-amount"
             {...register('amount_paid', { valueAsNumber: true })}
             type="number"
             step="0.01"
@@ -83,8 +92,11 @@ export function PaymentForm({ debt, onSubmit, isPending }: PaymentFormProps) {
         </div>
 
         <div>
-          <label className="text-sm font-medium">Payment Date</label>
+          <label htmlFor="payment-date" className="text-sm font-medium">
+            Payment Date
+          </label>
           <input
+            id="payment-date"
             {...register('payment_date')}
             type="date"
             className="border-input bg-background mt-1 w-full rounded-md border px-3 py-2 text-sm"
@@ -97,8 +109,11 @@ export function PaymentForm({ debt, onSubmit, isPending }: PaymentFormProps) {
         </div>
 
         <div>
-          <label className="text-sm font-medium">Notes (optional)</label>
+          <label htmlFor="payment-notes" className="text-sm font-medium">
+            Notes (optional)
+          </label>
           <input
+            id="payment-notes"
             {...register('notes')}
             className="border-input bg-background mt-1 w-full rounded-md border px-3 py-2 text-sm"
             placeholder="Optional note"
