@@ -62,8 +62,7 @@ function DebtCalculatorPage() {
 
   return (
     <section className={cn('flex flex-col gap-4', 'px-4 py-4 md:p-8')}>
-      <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Debt Calculator</h1>
+      <header className="flex items-center justify-end">
         <button
           onClick={() => dialog.openDebtForm()}
           className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium"
