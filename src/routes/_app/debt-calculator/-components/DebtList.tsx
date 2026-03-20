@@ -1,5 +1,5 @@
-import type { Debt } from '@/types/database.types'
 import { DebtCard } from './DebtCard'
+import type { Debt } from '@/types/database.types'
 
 interface DebtListProps {
   debts: Array<Debt>
@@ -20,7 +20,9 @@ export function DebtList({
     return (
       <div className="text-muted-foreground flex flex-col items-center justify-center py-12 text-center">
         <p className="text-lg font-medium">No debts tracked yet</p>
-        <p className="text-sm">Add your first debt to start planning your payoff strategy.</p>
+        <p className="text-sm">
+          Add your first debt to start planning your payoff strategy.
+        </p>
       </div>
     )
   }

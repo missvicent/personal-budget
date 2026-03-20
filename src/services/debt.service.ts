@@ -12,10 +12,7 @@ export const debtService = {
     return data
   },
 
-  create: async (
-    debt: CreateDebt,
-    supabase: SupabaseClient,
-  ): Promise<Debt> => {
+  create: async (debt: CreateDebt, supabase: SupabaseClient): Promise<Debt> => {
     const { data, error } = await supabase
       .from('debts')
       .insert(debt)
@@ -41,10 +38,7 @@ export const debtService = {
   },
 
   delete: async (id: string, supabase: SupabaseClient): Promise<void> => {
-    const { error } = await supabase
-      .from('debts')
-      .delete()
-      .eq('id', id)
+    const { error } = await supabase.from('debts').delete().eq('id', id)
     if (error) throw new Error(`Failed to delete debt: ${error.message}`)
   },
 
@@ -60,7 +54,6 @@ export const debtService = {
     supabase: SupabaseClient,
   ): Promise<void> => {
     const { error } = await supabase.rpc('record_debt_payment', params)
-    if (error)
-      throw new Error(`Failed to record payment: ${error.message}`)
+    if (error) throw new Error(`Failed to record payment: ${error.message}`)
   },
 }

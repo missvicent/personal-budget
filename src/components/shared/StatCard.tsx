@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader } from '../ui/card'
 import { Badge } from '../ui/badge'
 import { cn } from '@/lib/utils'
 import { currencyFormatter, percentFormatter } from '@/lib/format'
+import { spendingColors } from '@/lib/colors'
 
 export interface StatCardProps {
   amountSpent: number
@@ -19,10 +20,11 @@ export const StatCard = ({
   symbol,
   title,
 }: StatCardProps) => {
-  const badgeColor =
+  const colors =
     badgeType === 'positive'
-      ? 'text-green-500 bg-green-500/10'
-      : 'text-red-500 bg-red-500/10'
+      ? spendingColors['under-budget']
+      : spendingColors['over-budget']
+  const badgeColor = `${colors.text} ${colors.bg}`
 
   const formattedAmount =
     symbol === '%'

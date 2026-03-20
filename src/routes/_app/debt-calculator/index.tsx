@@ -1,7 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Dialog } from '@/components/ui/dialog'
 import { Plus } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { DebtDBProvider } from './-hooks/use-debt-db'
 import { useDebts } from './-hooks/use-debts'
 import { useDebtMutations } from './-hooks/use-debt-mutations'
@@ -14,8 +12,13 @@ import {
   PaymentForm,
   PayoffComparison,
 } from './-components'
-import type { DebtFormData, DebtPaymentFormData } from '@/lib/validations/debt.schema'
+import type {
+  DebtFormData,
+  DebtPaymentFormData,
+} from '@/lib/validations/debt.schema'
 import type { Debt } from '@/types/database.types'
+import { cn } from '@/lib/utils'
+import { Dialog } from '@/components/ui/dialog'
 
 export const Route = createFileRoute('/_app/debt-calculator/')({
   component: RouteComponent,
@@ -59,8 +62,7 @@ function DebtCalculatorPage() {
 
   return (
     <section className={cn('flex flex-col gap-4', 'px-4 py-4 md:p-8')}>
-      <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Debt Calculator</h1>
+      <header className="flex items-center justify-end">
         <button
           onClick={() => dialog.openDebtForm()}
           className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium"

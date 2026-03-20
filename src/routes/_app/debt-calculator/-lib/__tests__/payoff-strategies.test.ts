@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import {
-  calculateSnowball,
-  calculateAvalanche,
-  type DebtInput,
-} from '../payoff-strategies'
+import { calculateAvalanche, calculateSnowball } from '../payoff-strategies'
+import type { DebtInput } from '../payoff-strategies'
 
 const twoDebts: Array<DebtInput> = [
   {
@@ -43,12 +40,20 @@ describe('calculateSnowball', () => {
     const withoutExtra = calculateSnowball(twoDebts, 0)
     const withExtra = calculateSnowball(twoDebts, 200)
     expect(withExtra.totalMonths).toBeLessThan(withoutExtra.totalMonths)
-    expect(withExtra.totalInterestPaid).toBeLessThan(withoutExtra.totalInterestPaid)
+    expect(withExtra.totalInterestPaid).toBeLessThan(
+      withoutExtra.totalInterestPaid,
+    )
   })
 
   it('handles single debt', () => {
     const single: Array<DebtInput> = [
-      { debtId: 'only', name: 'Only Debt', balance: 1000, interestRate: 10, minimumPayment: 100 },
+      {
+        debtId: 'only',
+        name: 'Only Debt',
+        balance: 1000,
+        interestRate: 10,
+        minimumPayment: 100,
+      },
     ]
     const result = calculateSnowball(single, 0)
     expect(result.debtPayoffOrder).toHaveLength(1)
@@ -57,7 +62,13 @@ describe('calculateSnowball', () => {
 
   it('handles 0% interest rate', () => {
     const zeroRate: Array<DebtInput> = [
-      { debtId: 'free', name: 'Interest Free', balance: 1200, interestRate: 0, minimumPayment: 100 },
+      {
+        debtId: 'free',
+        name: 'Interest Free',
+        balance: 1200,
+        interestRate: 0,
+        minimumPayment: 100,
+      },
     ]
     const result = calculateSnowball(zeroRate, 0)
     expect(result.totalMonths).toBe(12)
@@ -67,7 +78,13 @@ describe('calculateSnowball', () => {
 
   it('caps at 360 months', () => {
     const tiny: Array<DebtInput> = [
-      { debtId: 'huge', name: 'Huge Debt', balance: 1_000_000, interestRate: 25, minimumPayment: 1 },
+      {
+        debtId: 'huge',
+        name: 'Huge Debt',
+        balance: 1_000_000,
+        interestRate: 25,
+        minimumPayment: 1,
+      },
     ]
     const result = calculateSnowball(tiny, 0)
     expect(result.totalMonths).toBe(360)
@@ -75,7 +92,13 @@ describe('calculateSnowball', () => {
 
   it('handles minimum payment exceeding balance', () => {
     const small: Array<DebtInput> = [
-      { debtId: 'tiny', name: 'Tiny Debt', balance: 50, interestRate: 15, minimumPayment: 100 },
+      {
+        debtId: 'tiny',
+        name: 'Tiny Debt',
+        balance: 50,
+        interestRate: 15,
+        minimumPayment: 100,
+      },
     ]
     const result = calculateSnowball(small, 0)
     expect(result.totalMonths).toBe(1)
@@ -106,11 +129,25 @@ describe('calculateAvalanche', () => {
 
   it('avalanche pays less total interest than snowball for high-rate debts', () => {
     const debts: Array<DebtInput> = [
-      { debtId: 'low-balance-high-rate', name: 'High Rate Card', balance: 8000, interestRate: 24, minimumPayment: 160 },
-      { debtId: 'high-balance-low-rate', name: 'Low Rate Loan', balance: 3000, interestRate: 4, minimumPayment: 100 },
+      {
+        debtId: 'low-balance-high-rate',
+        name: 'High Rate Card',
+        balance: 8000,
+        interestRate: 24,
+        minimumPayment: 160,
+      },
+      {
+        debtId: 'high-balance-low-rate',
+        name: 'Low Rate Loan',
+        balance: 3000,
+        interestRate: 4,
+        minimumPayment: 100,
+      },
     ]
     const snowball = calculateSnowball(debts, 100)
     const avalanche = calculateAvalanche(debts, 100)
-    expect(avalanche.totalInterestPaid).toBeLessThanOrEqual(snowball.totalInterestPaid)
+    expect(avalanche.totalInterestPaid).toBeLessThanOrEqual(
+      snowball.totalInterestPaid,
+    )
   })
 })

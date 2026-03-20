@@ -1,5 +1,5 @@
 import { Progress } from '../ui/progress'
-import { getCategoryStyles } from '@/lib/colors'
+import { getCategoryStyles, getSpendingStatus } from '@/lib/colors'
 
 export interface BudgetCategoryCardProps {
   amountBudget: number
@@ -17,6 +17,13 @@ export const BudgetCategoryCard = ({
 }: BudgetCategoryCardProps) => {
   const progressValue = (amountSpent / amountBudget) * 100
   const { bg, progress } = getCategoryStyles(color)
+  const status = getSpendingStatus(amountSpent, amountBudget)
+  const progressBarClass =
+    status === 'over-budget'
+      ? '[&>div]:bg-red-500'
+      : status === 'near-limit'
+        ? '[&>div]:bg-amber-500'
+        : '[&>div]:bg-(--progress-color)'
   return (
     <div className="w-full space-y-2 py-3">
       <div className="flex items-center justify-between">
@@ -41,11 +48,7 @@ export const BudgetCategoryCard = ({
             '--progress-color': progress.backgroundColor,
           } as React.CSSProperties
         }
-        className={
-          progressValue > 100
-            ? '[&>div]:bg-destructive'
-            : '[&>div]:bg-(--progress-color)'
-        }
+        className={progressBarClass}
       />
     </div>
   )

@@ -1,4 +1,5 @@
 import type { PayoffResult } from '../-lib/payoff-strategies'
+import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
 interface PayoffComparisonProps {
@@ -26,14 +27,18 @@ export function PayoffComparison({
   const hasDebts = snowball.debtPayoffOrder.length > 0
 
   return (
-    <div className="bg-card text-card-foreground sticky top-4 flex flex-col gap-4 rounded-lg border p-4">
+    <Card className="sticky top-4 gap-4 p-4">
       <h3 className="text-sm font-semibold">Payoff Comparison</h3>
 
       <div>
-        <label className="text-muted-foreground mb-1 block text-xs">
+        <label
+          htmlFor="extra-monthly-payment"
+          className="text-muted-foreground mb-1 block text-xs"
+        >
           Extra Monthly Payment
         </label>
         <input
+          id="extra-monthly-payment"
           type="number"
           min={0}
           step={50}
@@ -45,7 +50,7 @@ export function PayoffComparison({
       </div>
 
       {!hasDebts ? (
-        <p className="text-muted-foreground text-center text-sm py-4">
+        <p className="text-muted-foreground py-4 text-center text-sm">
           Add debts to see payoff strategies
         </p>
       ) : (
@@ -76,7 +81,7 @@ export function PayoffComparison({
           )}
         </>
       )}
-    </div>
+    </Card>
   )
 }
 
