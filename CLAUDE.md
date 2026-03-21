@@ -30,6 +30,17 @@ npm run test         # Run tests with Vitest
 npm run check        # Fix all lint/format issues (prettier --write . && eslint --fix)
 ```
 
+### Supabase Migrations
+
+```bash
+npx supabase login                              # Login to Supabase CLI
+npx supabase link --project-ref <ref>           # Link to your Supabase project
+npx supabase migration list                     # Show local vs remote migration status
+npx supabase db push                            # Push pending migrations to remote
+npx supabase migration repair <version> --status applied   # Mark a migration as already applied
+npx supabase gen types typescript --linked > src/types/database.types.ts  # Regenerate TS types
+```
+
 ## Project Architecture
 
 ### Provider Tree

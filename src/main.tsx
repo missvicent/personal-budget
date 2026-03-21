@@ -2,7 +2,6 @@ import { StrictMode } from 'react'
 import { ClerkProvider } from '@clerk/clerk-react'
 import ReactDOM from 'react-dom/client'
 
-import { Toaster } from 'sonner'
 import { SupabaseProvider } from './contexts/SupabaseContext.tsx'
 import { AppRouter } from './Router.tsx'
 import { UserSync } from './components/user/UserSync.tsx'
@@ -10,6 +9,7 @@ import { UserSync } from './components/user/UserSync.tsx'
 import { ThemeProvider } from './contexts/ThemeContext.tsx'
 import './styles.css'
 import { TanstackQueryClientProvider } from './contexts/QueryClientContext.tsx'
+import { Toaster } from '@/components/ui/sonner'
 
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
