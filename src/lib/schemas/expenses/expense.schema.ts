@@ -36,6 +36,6 @@ export function toTransactionPayload(data: ExpenseFormData) {
     description,
     is_recurring: is_recurring ?? false,
     transaction_date: transaction_date.toISOString().split('T')[0],
-    type: 'expense',
+    type: 'expense' as const,
   }
 }
