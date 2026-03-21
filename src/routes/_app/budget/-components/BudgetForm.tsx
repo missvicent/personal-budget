@@ -1,8 +1,9 @@
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNewBudgetActions } from '../-hooks/use-new-budget-actions'
+import { useBudgetActions } from '../-hooks/use-budget-actions'
 import { PeriodSelector } from './PeriodSelector'
-import type { NewBudgetFormData } from '@/lib/schemas/budget/new-budget.schema'
+import type { BudgetItemFormData } from '@/lib/schemas/budget/budget-item.schema'
 import {
   Form,
   FormControl,
@@ -12,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { newBudgetSchema } from '@/lib/schemas/budget/new-budget.schema'
+import { BudgetItemSchema } from '@/lib/schemas/budget/budget-item.schema'
 import {
   DialogClose,
   DialogContent,
@@ -22,21 +23,35 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { DatePickerInput } from '@/components/shared/DatepickerInput'
+import { Input } from '@/components/ui/input'
+import { CurrencyInput } from '@/components/shared/CurrencyInput'
 
-export const NewBudgetDialog = ({
+export const BudgetForm = ({
+  open,
   onSubmit,
+  isPending,
 }: {
-  onSubmit: (data: NewBudgetFormData) => void
+  open: boolean
+  isPending: boolean
+  onSubmit: (data: BudgetItemFormData) => void
 }) => {
-  const form = useForm<NewBudgetFormData>({
-    resolver: zodResolver(newBudgetSchema),
+  const form = useForm<BudgetItemFormData>({
+    resolver: zodResolver(BudgetItemSchema),
     defaultValues: {
       period: 'monthly',
       start_date: '',
+      name: '',
+      amount: 0,
     },
   })
 
-  const { handlePeriodChange, selectedPeriod } = useNewBudgetActions()
+  const { handlePeriodChange, selectedPeriod } = useBudgetActions(() => {})
+
+  useEffect(() => {
+    if (!open) {
+      form.reset()
+    }
+  }, [open, form])
 
   return (
     <Form {...form}>
@@ -51,6 +66,34 @@ export const NewBudgetDialog = ({
               Set Up Your Budget for a new period
             </DialogDescription>
           </DialogHeader>
+
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Budget Name:</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="amount"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Budget Amount:</FormLabel>
+                <FormControl>
+                  <CurrencyInput {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <FormField
             control={form.control}
@@ -96,8 +139,8 @@ export const NewBudgetDialog = ({
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" className="w-2/3 p-5">
-              Create Budget
+            <Button type="submit" className="w-2/3 p-5" disabled={isPending}>
+              {isPending ? 'Creating...' : 'Create Budget'}
             </Button>
           </div>
         </form>
