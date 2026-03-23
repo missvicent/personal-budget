@@ -1,114 +1,162 @@
-# Remove ElectricSQL Sync Layer — Design Spec
+# Secure ElectricSQL Deployment — Design Spec
 
 ## Problem
 
-ElectricSQL connects directly to the Supabase dev database without a hub to mask the connection, exposing credentials and creating security vulnerabilities. The real-time sync must be removed while preserving the debt-calculator feature and TanStack DB usage.
+ElectricSQL connects directly to the Supabase dev database with `ELECTRIC_INSECURE=true` and no authentication. The Electric endpoint is publicly accessible, allowing anyone to query shapes and potentially abuse the database connection. This needs to be secured without removing ElectricSQL or TanStack DB.
 
 ## Decision
 
-Replace ElectricSQL sync backend with TanStack Query (Approach B). TanStack Query owns server state fetching/caching via the existing 3-tier pattern. TanStack DB collections remain as the client-side query layer. This matches every other feature in the app.
-
-## Scope
-
-### What Gets Removed
-
-- `@tanstack/electric-db-collection` package dependency
-- `electricCollectionOptions` usage in `src/lib/tanstack-db.ts`
-- `VITE_ELECTRIC_URL` env var and Electric URL config in `DebtDBProvider`
-- `docker-compose.yml` electric service
-- `useLiveQuery` imports in route-colocated `use-debts.ts` and `use-debt-payments.ts`
-- `CREATE PUBLICATION electric_debt_pub` from migration file
-- Route-colocated `use-debt-mutations.ts` (replaced by domain hooks)
-- `SUPABASE_DB_URL` from `.env.local`
-- ElectricSQL references from `README.md`
-
-### What Stays
-
-- `@tanstack/db`, `@tanstack/react-db`, `@electric-sql/client` dependencies (for future re-enablement)
-- TanStack DB collections (debts, debtPayments) with schemas
-- `DebtDBProvider` context (rewired to hydrate from TanStack Query)
-- All debt-calculator components (unchanged)
-- `debt.service.ts` (already handles all Supabase calls)
-- `debts` and `debt_payments` tables and RLS policies
+Deploy the Electric hub behind an authenticated reverse proxy on Fly.io (free tier). Caddy validates Clerk JWTs and enforces user_id scoping before forwarding requests to Electric. Three independent security layers protect the database.
 
 ## Architecture
 
-### Data Flow (Before)
+```
+Browser (React app on AWS CloudFront/S3)
+  |
+  |  HTTPS + Clerk JWT in Authorization header
+  v
+Fly.io (single machine, 256MB free tier)
+  +-- Caddy (reverse proxy, port 443, publicly exposed)
+  |     +-- Validates Clerk JWT signature via JWKS
+  |     +-- Extracts user_id from JWT sub claim
+  |     +-- Validates where param user_id matches JWT sub
+  |     +-- Rate limiting
+  |     +-- Forwards valid requests to Electric
+  +-- Electric Hub (port 3000, internal only)
+        +-- Connects to Supabase via DATABASE_URL
+        +-- Serves shapes only for published tables
+```
+
+### Data Flow
 
 ```
-ElectricSQL shape sync --> TanStack DB collections --> useLiveQuery --> components
-Supabase (mutations) <-- debt.service <-- use-debt-mutations (manual useState)
+Client request (JWT + shape params)
+  -> Caddy validates JWT (Layer 1)
+  -> Caddy validates user_id in where param matches JWT sub (Layer 1)
+  -> Electric serves shape for published tables only (Layer 2)
+  -> Supabase RLS enforces row-level user_id check (Layer 3)
+  -> Response
 ```
 
-### Data Flow (After)
+## Security Model — Three Independent Layers
 
-```
-Supabase --> debt.service --> useAuthQuery --> DebtDBProvider syncs into collection --> @tanstack/react-db useQuery --> components
-Supabase <-- debt.service <-- useAuthMutation (with optimistic updates + cache invalidation)
-```
+### Layer 1: Caddy Proxy (network level)
 
-### New Domain Hooks (`src/hooks/debt/`)
+- Validates Clerk JWT signature against JWKS endpoint
+- Rejects expired or malformed tokens
+- Extracts `sub` claim from JWT (Clerk user_id)
+- Validates that the `where` parameter's `user_id` matches the JWT `sub`
+- Rejects requests with mismatched, missing, or tampered `where` clauses (e.g., `1=1`)
+- Rate limiting to prevent abuse
 
-Following the existing 3-tier pattern used by budgets, transactions, and categories:
+### Layer 2: Electric Publication (table level)
 
-| File                     | Purpose                                                       |
-| ------------------------ | ------------------------------------------------------------- |
-| `use-debt-query-keys.ts` | Query key factory for `debts` and `debt_payments`             |
-| `use-debts.ts`           | `useAuthQuery` wrapping `debtService.getAll()`                |
-| `use-debt-payments.ts`   | `useAuthQuery` wrapping `debtService.getPayments()`           |
-| `use-create-debt.ts`     | `useAuthMutation` with optimistic update + cache invalidation |
-| `use-update-debt.ts`     | `useAuthMutation` with optimistic update + cache invalidation |
-| `use-delete-debt.ts`     | `useAuthMutation` with optimistic update + cache invalidation |
-| `use-record-payment.ts`  | `useAuthMutation` wrapping `debtService.recordPayment()`      |
+- PostgreSQL publication restricts Electric to only `debts` and `debt_payments` tables
+- Requests for any other table (e.g., `profiles`, `transactions`) are rejected by Electric
+- No raw SQL accepted — clients can only request predefined shapes
 
-### Service Addition
+### Layer 3: Supabase RLS (row level)
 
-Add `getPayments(debtId?: string)` to `debt.service.ts` (currently only `recordPayment` exists for payments).
+- Existing RLS policies enforce `auth.uid() = user_id` on every row
+- Even if proxy and Electric are bypassed, unauthorized data access is blocked
+- No changes needed — already in place
 
-### TanStack DB Collection Changes (`src/lib/tanstack-db.ts`)
+### What This Prevents
 
-- Remove `electricCollectionOptions` import
-- Remove `electricUrl` parameter from `createDebtCollections`
-- Collections created with plain options: `id`, `schema`, `getKey` (no sync backend)
-- Schemas unchanged
+| Threat                         | Blocked By                                       |
+| ------------------------------ | ------------------------------------------------ |
+| Unauthenticated access         | Layer 1 (Caddy JWT validation)                   |
+| Changing `where` to `1=1`      | Layer 1 (Caddy user_id enforcement)              |
+| Requesting another user's data | Layer 1 (JWT sub mismatch) + Layer 3 (RLS)       |
+| Accessing non-debt tables      | Layer 2 (publication restricts to 2 tables)      |
+| SQL injection                  | Electric only accepts shape params, not raw SQL  |
+| DDoS                           | Fly.io built-in protection + Caddy rate limiting |
 
-### DebtDBProvider Changes (`use-debt-db.tsx`)
+## Fly.io Setup Requirements
 
-- Remove `VITE_ELECTRIC_URL`
-- Collections hydrated via `useEffect` that syncs TanStack Query data into them on fetch
-- Pattern: domain hook fetches from Supabase -> data pushed into collection -> components read from collection
-- After mutations: `useAuthMutation` invalidates query keys -> refetch -> collection re-synced
+### Account and CLI
 
-### Component Read Path
+- Create Fly.io account (free, no credit card required for free tier)
+- Install `flyctl`: `brew install flyctl`
+- Login: `fly auth login`
 
-- Components still import from collections via `useDebtDB()`
-- Replace `useLiveQuery` with `useQuery` from `@tanstack/react-db` for client-side filtering
-- No component logic changes needed
+### App Configuration
 
-## Documentation
+- Create app: `fly launch`
+- Region: pick closest to your Supabase project region (check Supabase dashboard -> Project Settings -> General -> Region)
+- Machine size: `shared-cpu-1x`, 256MB RAM (free tier)
 
-Before any code is removed, create `docs/electric-sql-setup.md` containing:
+### Secrets
 
-- Full ElectricSQL architecture explanation
-- Code snapshots of all removed/modified files
-- Docker compose electric service config
-- Environment variables (`VITE_ELECTRIC_URL`, `SUPABASE_DB_URL`)
-- Migration publication SQL
-- Step-by-step re-enablement guide
+| Secret           | Where to Find                                                                                    |
+| ---------------- | ------------------------------------------------------------------------------------------------ |
+| `DATABASE_URL`   | Supabase dashboard -> Project Settings -> Database -> Connection string (use `?sslmode=require`) |
+| `CLERK_JWKS_URL` | Clerk dashboard -> API Keys -> JWKS URL (`https://<your-clerk-domain>/.well-known/jwks.json`)    |
 
-## Cleanup Checklist
+### Networking
 
-- [ ] Write `docs/electric-sql-setup.md` (before any removals)
-- [ ] Remove `@tanstack/electric-db-collection` from `package.json`
-- [ ] Rewrite `src/lib/tanstack-db.ts` (plain collection options)
-- [ ] Add `getPayments()` to `debt.service.ts`
-- [ ] Create domain hooks in `src/hooks/debt/`
-- [ ] Rewrite `DebtDBProvider` (hydrate from TanStack Query)
-- [ ] Update route-colocated hooks to use domain hooks
-- [ ] Remove route-colocated `use-debt-mutations.ts`, `use-debts.ts`, `use-debt-payments.ts`
-- [ ] Update `debt-calculator/index.tsx` to use new hooks
-- [ ] Remove `CREATE PUBLICATION` from migration
-- [ ] Remove electric service from `docker-compose.yml`
-- [ ] Clean env vars from `.env.local`
-- [ ] Update `README.md`
-- [ ] Run `npm run build` and `npm run test` to verify
+- Fly.io auto-provisions HTTPS with certificate on `<app-name>.fly.dev`
+- No custom domain needed
+- Internal port 3000 for Electric (not exposed)
+- External port 443 for Caddy (exposed via Fly.io)
+- CORS configured in Caddy to allow your CloudFront domain
+
+## Codebase Changes
+
+### Modified Files
+
+| File                                                     | Change                                                              |
+| -------------------------------------------------------- | ------------------------------------------------------------------- |
+| `docker-compose.yml`                                     | Remove `ELECTRIC_INSECURE=true`, keep for local dev only            |
+| `.env.local`                                             | `VITE_ELECTRIC_URL=http://localhost:3001` (dev only)                |
+| `.env.production`                                        | `VITE_ELECTRIC_URL=https://<app-name>.fly.dev`                      |
+| `src/routes/_app/debt-calculator/-hooks/use-debt-db.tsx` | Add Clerk token to Electric shape requests via Authorization header |
+| `src/lib/tanstack-db.ts`                                 | Pass auth token through to shape request headers                    |
+
+### New Files
+
+| File                              | Purpose                                                          |
+| --------------------------------- | ---------------------------------------------------------------- |
+| `fly/Dockerfile`                  | Multi-service container: Electric + Caddy                        |
+| `fly/Caddyfile`                   | Reverse proxy config with JWT validation and user_id enforcement |
+| `fly/fly.toml`                    | Fly.io deployment configuration                                  |
+| `docs/electric-sql-deployment.md` | Full deployment and security documentation                       |
+
+### Unchanged
+
+- All debt-calculator components
+- `debt.service.ts`
+- All hooks using `useLiveQuery`
+- `src/routes/_app/debt-calculator/-hooks/use-debts.ts`
+- `src/routes/_app/debt-calculator/-hooks/use-debt-payments.ts`
+- `src/routes/_app/debt-calculator/-hooks/use-debt-mutations.ts`
+- Supabase migrations (publication stays)
+- TanStack DB collections and schemas
+
+## Cost
+
+| Component            | Service                     | Cost         |
+| -------------------- | --------------------------- | ------------ |
+| Electric hub + Caddy | Fly.io shared-cpu-1x, 256MB | Free         |
+| HTTPS certificate    | Fly.io auto-provisioned     | Free         |
+| Container image      | Fly.io built-in registry    | Free         |
+| **Total**            |                             | **$0/month** |
+
+## Implementation Checklist
+
+- [ ] Create Fly.io account and install CLI
+- [ ] Create `fly/Dockerfile` (Electric + Caddy multi-service)
+- [ ] Create `fly/Caddyfile` (JWT validation + user_id enforcement + CORS + rate limiting)
+- [ ] Create `fly/fly.toml` (deployment config)
+- [ ] Update `src/lib/tanstack-db.ts` to pass auth headers to shape requests
+- [ ] Update `use-debt-db.tsx` to inject Clerk token into collection config
+- [ ] Update `docker-compose.yml` (remove `ELECTRIC_INSECURE=true`)
+- [ ] Add `.env.production` with Fly.io URL
+- [ ] Deploy to Fly.io (`fly deploy`)
+- [ ] Set secrets (`fly secrets set DATABASE_URL=... CLERK_JWKS_URL=...`)
+- [ ] Test: unauthenticated request returns 401
+- [ ] Test: request with tampered user_id returns 403
+- [ ] Test: request for unpublished table returns error
+- [ ] Test: valid authenticated request returns correct data
+- [ ] Update `README.md` with deployment instructions
+- [ ] Write `docs/electric-sql-deployment.md`
