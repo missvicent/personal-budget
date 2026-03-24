@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { toast } from 'sonner'
 import type { UseFormReturn } from 'react-hook-form'
 
 import type { Budget } from '@/types/database.types'
@@ -23,16 +24,29 @@ export const useBudgetActions = (onSuccess: () => void) => {
   ) => {
     if (selectedBudget) {
       updateBudget(
-        { ...toBudgetItemRequestBody(data), id: selectedBudget.id },
-        { onSuccess },
+        { ...toBudgetItemRequestBody({ ...data, id: selectedBudget.id }) },
+        {
+          onSuccess: () => {
+            toast.success('Budget updated successfully')
+            onSuccess()
+          },
+        },
       )
     } else {
-      createBudget(toBudgetItemRequestBody(data), { onSuccess })
+      createBudget(toBudgetItemRequestBody(data), {
+        onSuccess: () => {
+          toast.success('Budget created successfully')
+          onSuccess()
+        },
+      })
     }
   }
 
-  const onDelete = (id: string, onDeleteSuccess: () => void) =>
-    deleteBudget(id, { onSuccess: onDeleteSuccess })
+  const onDelete = (id: string) => {
+    deleteBudget(id, {
+      onSuccess: () => toast.success('Budget deleted successfully'),
+    })
+  }
 
   const getBudgets = () => {
     return budgets ?? []
