@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useBudgetActions } from '../-hooks/use-budget-actions'
+import { usePeriodSelector } from '../-hooks/use-period-selector'
 import { PeriodSelector } from './PeriodSelector'
 import type { BudgetItemFormData } from '@/lib/schemas/budget/budget-item.schema'
 import type { Budget } from '@/types/database.types'
@@ -48,7 +48,7 @@ export const BudgetForm = ({
     },
   })
 
-  const { handlePeriodChange, selectedPeriod } = useBudgetActions(() => {})
+  const { handlePeriodChange, selectedPeriod } = usePeriodSelector()
 
   const submitButtonText = selectedBudget ? 'Update Budget' : 'Create Budget'
 
