@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useBudgetActions } from '../-hooks/use-budget-actions'
 import { PeriodSelector } from './PeriodSelector'
 import type { BudgetItemFormData } from '@/lib/schemas/budget/budget-item.schema'
+import type { Budget } from '@/types/database.types'
 import {
   Form,
   FormControl,
@@ -21,19 +22,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
+import { CurrencyInput } from '@/components/shared/CurrencyInput'
 import { DatePickerInput } from '@/components/shared/DatepickerInput'
 import { Input } from '@/components/ui/input'
-import { CurrencyInput } from '@/components/shared/CurrencyInput'
+import { Button } from '@/components/ui/button'
 
 export const BudgetForm = ({
-  open,
-  onSubmit,
   isPending,
+  onSubmit,
+  open,
+  selectedBudget,
 }: {
   open: boolean
   isPending: boolean
   onSubmit: (data: BudgetItemFormData) => void
+  selectedBudget: Budget | null
 }) => {
   const form = useForm<BudgetItemFormData>({
     resolver: zodResolver(BudgetItemSchema),
@@ -47,11 +50,21 @@ export const BudgetForm = ({
 
   const { handlePeriodChange, selectedPeriod } = useBudgetActions(() => {})
 
+  const submitButtonText = selectedBudget ? 'Update Budget' : 'Create Budget'
+
   useEffect(() => {
-    if (!open) {
+    if (selectedBudget) {
+      form.reset({
+        id: selectedBudget.id,
+        name: selectedBudget.name,
+        amount: selectedBudget.amount,
+        period: selectedBudget.period,
+        start_date: selectedBudget.start_date,
+      })
+    } else {
       form.reset()
     }
-  }, [open, form])
+  }, [open, form, selectedBudget])
 
   return (
     <Form {...form}>
@@ -140,7 +153,7 @@ export const BudgetForm = ({
               </Button>
             </DialogClose>
             <Button type="submit" className="w-2/3 p-5" disabled={isPending}>
-              {isPending ? 'Creating...' : 'Create Budget'}
+              {isPending ? 'Saving...' : submitButtonText}
             </Button>
           </div>
         </form>
