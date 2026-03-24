@@ -17,6 +17,7 @@ ElectricSQL connects to Supabase using the `postgres` superuser with no connecti
 - **Supabase JS client**: Uses REST API via `VITE_SUPABASE_URL` (already pooled through Supavisor) — not the problem
 - **ElectricSQL**: Connects directly to PostgreSQL on port `5432` using `SUPABASE_DB_URL` with `postgres` superuser credentials — the problem
 - **ElectricSQL config**: `ELECTRIC_INSECURE: true`, no connection limits, no healthcheck
+- **Existing publication**: `electric_debt_pub` for tables `debts` and `debt_payments` (created in `20260313_create_debt_tables.sql`)
 
 ## Design
 
@@ -24,27 +25,31 @@ ElectricSQL connects to Supabase using the `postgres` superuser with no connecti
 
 Create a new PostgreSQL role `electric_user` with enforced connection limits.
 
-**Supabase migration:**
+**Manual step (Supabase Dashboard):** Supabase's managed PostgreSQL does not allow `CREATE ROLE` in migrations. The `electric_user` role must be created via the Supabase Dashboard under Database > Roles:
+
+- **Name:** `electric_user`
+- **Password:** Generate a secure password
+- **Connection limit:** 15
+- **Attributes:** `LOGIN`, `REPLICATION`, `BYPASSRLS`
+
+**Why created via Dashboard:** Supabase restricts `CREATE ROLE` and `ALTER ROLE ... REPLICATION` to platform-level operations. Migrations run as the `postgres` role which lacks `CREATEROLE` on managed Supabase.
+
+**Why `BYPASSRLS`:** The `debts` and `debt_payments` tables have RLS policies that check `auth.jwt()->>'sub'`. ElectricSQL connects as a regular PostgreSQL role without a Supabase JWT, so `auth.jwt()` returns `null` and RLS would block all reads. ElectricSQL's logical replication operates at the WAL level (bypasses RLS), but its HTTP shape endpoint bootstraps data via direct SQL queries that are subject to RLS. `BYPASSRLS` ensures both paths work. This is safe because ElectricSQL already filters rows via `WHERE` clauses in its shape definitions, and the Electric API is only accessible locally in development.
+
+**Supabase migration (grants only):**
 
 ```sql
--- Create dedicated role for ElectricSQL
-CREATE ROLE electric_user WITH
-  LOGIN
-  PASSWORD '<secure-password>'
-  CONNECTION LIMIT 10
-  REPLICATION;
-
--- Grant minimal required access
+-- Grant minimal required access to electric_user (role created via Dashboard)
 GRANT USAGE ON SCHEMA public TO electric_user;
 GRANT SELECT ON debts TO electric_user;
 GRANT SELECT ON debt_payments TO electric_user;
 ```
 
-**Why `CONNECTION LIMIT 10`:** ElectricSQL needs a few connections for logical replication and shape serving. 10 provides headroom for multiple shapes while leaving 190 connections for everything else. This is the hard guard — even if ElectricSQL leaks, it cannot exhaust the pool.
+**Why `CONNECTION LIMIT 15`:** ElectricSQL maintains one replication connection plus additional connections per active shape subscription. With two shapes (`debts` and `debt_payments`), typical usage is 3-5 connections. 15 provides headroom for multiple browser tabs and shape reconnections while leaving 185 connections for everything else. If the debt-calculator route shows empty data, this limit may need increasing — check with: `SELECT COUNT(*) FROM pg_stat_activity WHERE usename = 'electric_user';`
 
-**Why `SELECT` only:** ElectricSQL only reads data via logical replication for shape subscriptions. All writes go through the Supabase JS client (which uses the REST API).
+**Why `SELECT` only:** ElectricSQL only reads data for shape subscriptions. All writes go through the Supabase JS client (REST API).
 
-**Why `REPLICATION`:** ElectricSQL requires logical replication to stream changes to shape subscribers.
+**Why `REPLICATION`:** ElectricSQL requires logical replication to stream changes. It creates its own replication slots against the existing `electric_debt_pub` publication (created in `20260313_create_debt_tables.sql`). ElectricSQL names its slots with an `electric_` prefix, which the cleanup functions (Section 2) use for filtering.
 
 ### 2. Stale Connection & Replication Slot Cleanup
 
@@ -99,24 +104,30 @@ BEGIN
   RETURN dropped;
 END;
 $$;
+
+-- Restrict cleanup functions to postgres role only
+REVOKE EXECUTE ON FUNCTION terminate_idle_electric_connections(INTERVAL) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION drop_inactive_electric_replication_slots() FROM PUBLIC;
 ```
 
-These functions can be called manually via the Supabase SQL editor or scheduled via `pg_cron` if needed. They are a safety net — the connection limit on the role is the primary guard.
+`SECURITY DEFINER` is required because `pg_terminate_backend` and `pg_drop_replication_slot` are superuser-level operations. `REVOKE EXECUTE FROM PUBLIC` ensures only the `postgres` role (owner) can call them — prevents any authenticated database user from terminating connections.
+
+These functions can be called manually via the Supabase SQL editor when needed. They are a safety net — the connection limit on the role is the primary guard.
 
 ### 3. Environment Configuration
 
 Separate ElectricSQL credentials from the admin superuser connection.
 
-**New `.env` variable:**
+**Add to `.env.local`:**
 
 ```
-ELECTRIC_DB_URL=postgresql://electric_user:<password>@db.<ref>.supabase.co:5432/postgres
+ELECTRIC_DB_URL=postgresql://electric_user:<password>@db.qedjccrexwvmcbzvcejh.supabase.co:5432/postgres
 ```
 
-**Keep existing:**
+**Keep existing in `.env.local`:**
 
 ```
-SUPABASE_DB_URL=postgresql://postgres:<password>@db.<ref>.supabase.co:5432/postgres
+SUPABASE_DB_URL=postgresql://postgres:<password>@db.qedjccrexwvmcbzvcejh.supabase.co:5432/postgres
 ```
 
 `SUPABASE_DB_URL` remains for Supabase CLI migrations only — not used at runtime by the app or ElectricSQL.
@@ -133,8 +144,6 @@ electric:
   environment:
     DATABASE_URL: '${ELECTRIC_DB_URL}'
     ELECTRIC_INSECURE: 'true'
-  depends_on:
-    - app
   healthcheck:
     test: ['CMD', 'curl', '-f', 'http://localhost:3000/v1/health']
     interval: 30s
@@ -147,31 +156,59 @@ electric:
 **Changes:**
 
 - `DATABASE_URL` uses `ELECTRIC_DB_URL` (dedicated role) instead of `SUPABASE_DB_URL` (superuser)
-- `healthcheck` detects unresponsive ElectricSQL and triggers restart
-- `restart: unless-stopped` ensures automatic recovery
+- Removed `depends_on: - app` — ElectricSQL depends on the external Supabase database, not the Vite dev server. The previous dependency was logically incorrect and added unnecessary startup delay.
+- `healthcheck` detects unresponsive ElectricSQL and triggers restart via `restart: unless-stopped`
+- `restart: unless-stopped` ensures automatic recovery from crashes
 
-### 5. `.env.example` Update
+## Immediate Remediation
 
-Add `ELECTRIC_DB_URL` to `.env.example` so future setup includes the dedicated role.
+Before implementing the full solution, clear the current connection exhaustion by running in the Supabase SQL Editor:
+
+```sql
+-- Check current connection state
+SELECT usename, state, COUNT(*)
+FROM pg_stat_activity
+GROUP BY usename, state
+ORDER BY count DESC;
+
+-- Terminate all idle connections (emergency fix)
+SELECT pg_terminate_backend(pid)
+FROM pg_stat_activity
+WHERE state = 'idle'
+  AND pid <> pg_backend_pid();
+
+-- Drop stale replication slots
+SELECT slot_name, active FROM pg_replication_slots;
+-- For each inactive slot:
+-- SELECT pg_drop_replication_slot('<slot_name>');
+```
+
+## Prerequisites
+
+1. **Create `electric_user` role via Supabase Dashboard** (Database > Roles) before running the migration
+2. **Stop the ElectricSQL Docker container** before changing credentials
+3. **Clear existing stale connections** using the immediate remediation queries above
 
 ## Files Changed
 
-| File                                                       | Change                                           |
-| ---------------------------------------------------------- | ------------------------------------------------ |
-| `supabase/migrations/<timestamp>_create_electric_user.sql` | New migration: role, grants, cleanup functions   |
-| `.env`                                                     | Add `ELECTRIC_DB_URL`                            |
-| `.env.example` (if exists)                                 | Add `ELECTRIC_DB_URL` template                   |
-| `docker-compose.yml`                                       | Use `ELECTRIC_DB_URL`, add healthcheck + restart |
+| File                                                       | Change                                                                |
+| ---------------------------------------------------------- | --------------------------------------------------------------------- |
+| `supabase/migrations/<timestamp>_electric_user_grants.sql` | New migration: grants and cleanup functions                           |
+| `.env.local`                                               | Add `ELECTRIC_DB_URL`                                                 |
+| `docker-compose.yml`                                       | Use `ELECTRIC_DB_URL`, remove `depends_on`, add healthcheck + restart |
 
 ## Out of Scope
 
 - Removing ElectricSQL entirely (separate initiative, see existing spec)
 - Supavisor configuration changes (app queries already go through REST API)
 - Production deployment changes (this targets the development environment)
+- Changes to the existing `electric_debt_pub` publication
 
 ## Success Criteria
 
-- ElectricSQL connects with `electric_user` role limited to 10 connections
+- `electric_user` role exists with `CONNECTION LIMIT 15` and `REPLICATION` + `BYPASSRLS`
+- ElectricSQL connects with `electric_user` instead of `postgres` superuser
 - Running the dev environment for extended periods no longer triggers error 53300
 - Container restarts cleanly reconnect without leaking connections
-- Cleanup functions available for manual use when needed
+- Cleanup functions available for manual use via SQL editor
+- `SELECT COUNT(*) FROM pg_stat_activity WHERE usename = 'electric_user'` stays under 15
