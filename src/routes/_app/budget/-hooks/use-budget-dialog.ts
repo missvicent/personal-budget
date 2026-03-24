@@ -18,9 +18,9 @@ export const useBudgetDialog = () => {
         setSelectedBudget(null)
       }
     },
-    onEdit: (budget: BudgetOverview, budget_id: string) => {
+    onEdit: (budget: BudgetOverview) => {
       setSelectedBudget({
-        id: budget_id,
+        id: budget.budget_id,
         amount: budget.budget_amount,
         name: budget.budget_name,
         period: budget.period,
