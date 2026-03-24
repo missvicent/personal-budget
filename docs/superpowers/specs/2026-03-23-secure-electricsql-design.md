@@ -6,7 +6,7 @@ ElectricSQL connects directly to the Supabase dev database with `ELECTRIC_INSECU
 
 ## Decision
 
-Deploy the Electric hub behind an authenticated reverse proxy on Fly.io (free tier). Caddy validates Clerk JWTs and enforces user_id scoping before forwarding requests to Electric. Three independent security layers protect the database.
+Deploy the Electric hub behind an authenticated reverse proxy on Fly.io (free tier). Caddy validates Clerk JWTs and enforces user_id scoping before forwarding requests to Electric. Security is enforced through layered defenses with different scopes (see Security Model).
 
 ## Architecture
 
@@ -42,7 +42,9 @@ Client request (JWT + shape params)
   -> Response
 ```
 
-## Security Model — Three Independent Layers
+## Security Model — Layered Defenses
+
+Each layer mitigates a different scope of threat. Layers 1 and 2 are fully independent. Layer 3 provides read-only + table restriction but does NOT independently scope by user_id (see Layer 3 notes). User isolation is enforced by Layer 1 (Caddy).
 
 ### Layer 1: Caddy Proxy (network level)
 
@@ -50,7 +52,7 @@ Client request (JWT + shape params)
 - Rejects expired or malformed tokens
 - Extracts `sub` claim from JWT (Clerk user_id)
 - Validates `where` parameter via strict regex (see Where Parameter Validation below)
-- Rate limiting to prevent abuse
+- Rate limiting to prevent abuse (requires `caddy-ratelimit` plugin — custom Caddy build in Dockerfile, e.g., 60 req/min per IP)
 - Structured logging of all requests and auth failures
 
 #### Where Parameter Validation
@@ -75,6 +77,8 @@ After regex extraction, the captured user_id is compared against the JWT `sub` c
 
 **Multiple `where` params**: If the client sends multiple `where` query parameters, Caddy rejects the request (only one is allowed).
 
+**Client-proxy coupling**: The exact `where` format in `tanstack-db.ts` (`"user_id" = '${userId}'`) must match the Caddy regex. Add a code comment in `tanstack-db.ts` referencing this constraint so future changes don't silently break proxy validation.
+
 ### Layer 2: Electric Publication (table level)
 
 - Electric is configured with `ELECTRIC_PUBLICATION=electric_debt_pub`
@@ -98,11 +102,15 @@ CREATE ROLE electric_reader WITH LOGIN PASSWORD '<secure_password>' REPLICATION;
 GRANT USAGE ON SCHEMA public TO electric_reader;
 GRANT SELECT ON debts, debt_payments TO electric_reader;
 -- RLS applies automatically since electric_reader is not a superuser
+
+-- Grant publication access for logical replication
+-- (verify exact grants needed against your Supabase PostgreSQL version)
+GRANT pg_read_all_data TO electric_reader;  -- may be needed for replication slot access
 ```
 
 RLS policies already enforce `(auth.jwt()->>'sub') = user_id`. However, since Electric connects as `electric_reader` (not through Supabase auth), the RLS policies need adjustment for this role. Options:
 
-**Option A (recommended)**: Add a separate RLS policy for `electric_reader` that allows SELECT on all rows (since Layer 1 already filters by user_id). This is safe because Electric only serves shapes, and Caddy enforces the user_id filter before the request reaches Electric.
+**Option A (recommended)**: Add a separate RLS policy for `electric_reader` that allows SELECT on all rows. Caddy enforces user_id filtering before requests reach Electric.
 
 ```sql
 CREATE POLICY "Electric reader access" ON debts
@@ -113,7 +121,12 @@ CREATE POLICY "Electric reader access" ON debt_payments
 
 **Option B**: Skip RLS for Electric entirely (the `electric_reader` role is read-only and publication-restricted). Layer 1 and Layer 2 provide the isolation.
 
-With either option, the `electric_reader` role cannot modify data, cannot access unpublished tables, and Layer 1 ensures only the authenticated user's data is returned in the shape.
+**Important trade-off**: With either option, Layer 3 does NOT independently scope by user_id — it only restricts to read-only access on published tables. User-level data isolation depends entirely on Layer 1 (Caddy's JWT + regex validation). This is acceptable because:
+
+- `electric_reader` is read-only (no data modification possible)
+- Only 2 tables are accessible (publication restriction)
+- Caddy's strict regex makes bypass extremely difficult
+- If stronger isolation is needed in the future, investigate whether Electric supports PostgreSQL session variables (`SET request.jwt.sub = ...`) to enable per-user RLS
 
 ### What This Prevents
 
@@ -123,7 +136,7 @@ With either option, the `electric_reader` role cannot modify data, cannot access
 | Changing `where` to `1=1`      | Layer 1 (strict regex rejects non-matching patterns)         |
 | Adding `OR 1=1` to `where`     | Layer 1 (regex allows only single equality, no operators)    |
 | Multiple `where` params        | Layer 1 (Caddy rejects duplicate params)                     |
-| Requesting another user's data | Layer 1 (JWT sub must match where user_id)                   |
+| Requesting another user's data | Layer 1 (JWT sub must match where user_id) — primary defense |
 | Accessing non-debt tables      | Layer 2 (publication + Electric config restrict to 2 tables) |
 | SQL injection                  | Electric only accepts shape params, not raw SQL              |
 | DDoS                           | Fly.io built-in protection + Caddy rate limiting             |
@@ -133,28 +146,42 @@ With either option, the `electric_reader` role cannot modify data, cannot access
 
 Electric uses SSE (Server-Sent Events) for long-lived shape subscriptions. When the Clerk JWT expires mid-stream:
 
-- The `@tanstack/electric-db-collection` `shapeOptions` accepts a `headers` function (not just a static object)
-- `tanstack-db.ts` will accept a `getToken` callback instead of a static auth token
-- On each shape request/reconnection, the callback fetches a fresh Clerk token via `clerk.session.getToken()`
+**Prerequisites (verify before implementation):**
+
+- Confirm `@tanstack/electric-db-collection` `shapeOptions` accepts a `headers` function (not just a static object). Check the library source/docs. If only static objects are supported, use an alternative approach: wrap the underlying fetch, or recreate collections on token refresh.
+- `clerk.session.getToken()` returns `Promise<string | null>` (async). If `headers` must be synchronous, implement a proactive token cache: refresh the token before expiry and serve from cache synchronously.
+
+**Approach (assuming `headers` supports async or function):**
+
+- `tanstack-db.ts` accepts a `getToken` async callback instead of a static auth token
+- On each shape request/reconnection, the callback fetches a fresh Clerk token
 - If the token expires during an active SSE stream, Electric's client library automatically reconnects, triggering a new request with a fresh token from the callback
 
 ```ts
 // Pseudocode for tanstack-db.ts change
 shapeOptions: {
   url: `${electricUrl}/v1/shape`,
-  headers: () => ({ Authorization: `Bearer ${getToken()}` }),
+  headers: async () => ({
+    Authorization: `Bearer ${await getToken()}`,
+  }),
   params: { table: 'debts', where: `"user_id" = '${userId}'` },
 }
 ```
+
+**Fallback (if `headers` only accepts static objects):**
+
+- Cache the Clerk token in a ref, refresh proactively before expiry
+- Recreate collections when the token changes
+- This is more complex but achieves the same result
 
 ## Fly.io Setup Requirements
 
 ### Account and CLI
 
-- Create Fly.io account (free, no credit card required for free tier)
+- Create Fly.io account (credit card may be required even for free tier — verify at signup)
 - Install `flyctl`: `brew install flyctl`
 - Login: `fly auth login`
-- Free tier limits (as of 2026-03): 3 shared VMs, 256MB each — verify at https://fly.io/docs/about/pricing/
+- Free tier limits (as of 2026-03): 3 shared VMs, 256MB each — verify current terms at https://fly.io/docs/about/pricing/ as these change periodically
 
 ### App Configuration
 
@@ -282,9 +309,12 @@ If the deployment fails or causes issues:
 
 ## Implementation Checklist
 
+- [ ] **Prerequisites (before any implementation)**
+- [ ] Verify `@tanstack/electric-db-collection` `shapeOptions.headers` supports a function (not just static object)
 - [ ] Rotate credentials if `.env` files were committed to git history
 - [ ] Verify `.env` and `.env.local` are in `.gitignore`
 - [ ] Create `electric_reader` PostgreSQL role via new Supabase migration
+- [ ] Test `electric_reader` role can access replication slot and publication (adjust grants if needed)
 - [ ] Create Fly.io account and install CLI
 - [ ] Set Fly.io secrets BEFORE first deploy (`fly secrets set DATABASE_URL=... CLERK_JWKS_URL=... CLOUDFRONT_ORIGIN=...`)
 - [ ] Create `fly/Dockerfile` (Electric + Caddy + s6-overlay)
