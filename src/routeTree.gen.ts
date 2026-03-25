@@ -21,6 +21,7 @@ import { Route as AppExpensesIndexRouteImport } from './routes/_app/expenses/ind
 import { Route as AppDebtCalculatorIndexRouteImport } from './routes/_app/debt-calculator/index'
 import { Route as AppDashboardIndexRouteImport } from './routes/_app/dashboard/index'
 import { Route as AppBudgetIndexRouteImport } from './routes/_app/budget/index'
+import { Route as AppBudgetBudgetIdRouteImport } from './routes/_app/budget/$budgetId'
 
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
@@ -80,11 +81,17 @@ const AppBudgetIndexRoute = AppBudgetIndexRouteImport.update({
   path: '/budget/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppBudgetBudgetIdRoute = AppBudgetBudgetIdRouteImport.update({
+  id: '/budget/$budgetId',
+  path: '/budget/$budgetId',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/': typeof PublicIndexRoute
+  '/budget/$budgetId': typeof AppBudgetBudgetIdRoute
   '/budget': typeof AppBudgetIndexRoute
   '/dashboard': typeof AppDashboardIndexRoute
   '/debt-calculator': typeof AppDebtCalculatorIndexRoute
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/': typeof PublicIndexRoute
+  '/budget/$budgetId': typeof AppBudgetBudgetIdRoute
   '/budget': typeof AppBudgetIndexRoute
   '/dashboard': typeof AppDashboardIndexRoute
   '/debt-calculator': typeof AppDebtCalculatorIndexRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/_public/': typeof PublicIndexRoute
+  '/_app/budget/$budgetId': typeof AppBudgetBudgetIdRoute
   '/_app/budget/': typeof AppBudgetIndexRoute
   '/_app/dashboard/': typeof AppDashboardIndexRoute
   '/_app/debt-calculator/': typeof AppDebtCalculatorIndexRoute
@@ -126,6 +135,7 @@ export interface FileRouteTypes {
     | '/auth/sign-in'
     | '/auth/sign-up'
     | '/'
+    | '/budget/$budgetId'
     | '/budget'
     | '/dashboard'
     | '/debt-calculator'
@@ -138,6 +148,7 @@ export interface FileRouteTypes {
     | '/auth/sign-in'
     | '/auth/sign-up'
     | '/'
+    | '/budget/$budgetId'
     | '/budget'
     | '/dashboard'
     | '/debt-calculator'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/auth/sign-in'
     | '/auth/sign-up'
     | '/_public/'
+    | '/_app/budget/$budgetId'
     | '/_app/budget/'
     | '/_app/dashboard/'
     | '/_app/debt-calculator/'
@@ -254,10 +266,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBudgetIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/budget/$budgetId': {
+      id: '/_app/budget/$budgetId'
+      path: '/budget/$budgetId'
+      fullPath: '/budget/$budgetId'
+      preLoaderRoute: typeof AppBudgetBudgetIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppBudgetBudgetIdRoute: typeof AppBudgetBudgetIdRoute
   AppBudgetIndexRoute: typeof AppBudgetIndexRoute
   AppDashboardIndexRoute: typeof AppDashboardIndexRoute
   AppDebtCalculatorIndexRoute: typeof AppDebtCalculatorIndexRoute
@@ -268,6 +288,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppBudgetBudgetIdRoute: AppBudgetBudgetIdRoute,
   AppBudgetIndexRoute: AppBudgetIndexRoute,
   AppDashboardIndexRoute: AppDashboardIndexRoute,
   AppDebtCalculatorIndexRoute: AppDebtCalculatorIndexRoute,

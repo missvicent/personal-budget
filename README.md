@@ -168,3 +168,7 @@ Detailed references are in `.claude/`:
 ## License
 
 MIT
+
+POSTHOG
+SENTRY
+ray

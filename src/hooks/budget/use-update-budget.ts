@@ -3,6 +3,7 @@ import { useAuthMutation } from '../auth/use-auth-mutation'
 import { useBudgetQueryKeys } from './use-budget-query-keys'
 import type { Budget, BudgetOverview } from '@/types/database.types'
 import { budgetService } from '@/services/budget.service'
+import { toBudgetOverview } from '@/lib/mappers/budget'
 
 export const useUpdateBudget = () => {
   const queryClient = useQueryClient()
@@ -18,15 +19,7 @@ export const useUpdateBudget = () => {
         queryClient.setQueryData(queryKey, (old: Array<BudgetOverview>) =>
           old.map((old_budget) =>
             old_budget.budget_id === budget.id
-              ? {
-                  ...old_budget,
-                  budget_name: budget.name,
-                  budget_amount: budget.amount,
-                  period: budget.period,
-                  start_date: budget.start_date,
-                  end_date: budget.end_date,
-                  is_active: budget.is_active,
-                }
+              ? toBudgetOverview(budget, old_budget)
               : old_budget,
           ),
         )

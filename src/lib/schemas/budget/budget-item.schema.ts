@@ -8,13 +8,15 @@ export const BudgetItemSchema = z.object({
   start_date: z.string().min(1, 'You must choose a date'),
   name: z.string().min(1, 'You must choose a name'),
   is_active: z.boolean().optional(),
+  id: z.string().optional(),
 })
 
 export type BudgetItemFormData = z.infer<typeof BudgetItemSchema>
 
 export function toBudgetItemRequestBody(data: BudgetItemFormData): Budget {
-  const { amount, period, start_date, name, is_active } = data
+  const { amount, period, start_date, name, is_active, id } = data
   return {
+    id: id ?? undefined,
     amount,
     name,
     period,
