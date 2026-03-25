@@ -62,6 +62,7 @@ export const BudgetForm = ({
         start_date: selectedBudget.start_date,
       })
     } else {
+      console.log('resetting form')
       form.reset()
     }
   }, [open, form, selectedBudget])
