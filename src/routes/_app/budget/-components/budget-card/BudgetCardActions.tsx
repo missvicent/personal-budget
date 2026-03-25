@@ -14,16 +14,24 @@ export const BudgetCardActions = ({
     <Button
       variant="ghost"
       size="icon"
-      className="hover:bg-primary/20 hover:text-primary/70"
-      onClick={onEdit}
+      className="hover:bg-primary/20 hover:text-primary/70 z-10"
+      onClick={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        onEdit()
+      }}
     >
       <PencilIcon className="h-4 w-4" />
     </Button>
     <Button
       variant="ghost"
       size="icon"
-      className="hover:bg-destructive/20 hover:text-destructive/70"
-      onClick={onDelete}
+      className="hover:bg-destructive/20 hover:text-destructive/70 z-10"
+      onClick={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        onDelete()
+      }}
     >
       <Trash2Icon className="h-4 w-4" />
     </Button>

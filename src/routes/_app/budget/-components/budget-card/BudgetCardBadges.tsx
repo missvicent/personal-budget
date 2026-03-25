@@ -16,7 +16,7 @@ export const BudgetCardBadges = ({ badges }: BudgetCardBadgesProps) => (
           badge.color.text,
           badge.color.bg,
           badge.color.border,
-          'border-1',
+          'border',
         )}
       >
         {badge.label}
