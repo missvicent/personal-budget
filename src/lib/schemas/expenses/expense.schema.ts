@@ -31,8 +31,8 @@ export function toTransactionPayload(data: ExpenseFormData) {
   } = data
   return {
     amount,
-    budget_id,
-    category_id,
+    budget_id: budget_id ?? null,
+    category_id: category_id ?? null,
     description,
     is_recurring: is_recurring ?? false,
     transaction_date: transaction_date.toISOString().split('T')[0],

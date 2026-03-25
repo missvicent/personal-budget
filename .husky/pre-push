@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+echo "Pre-push: validating build..."
+
+# Fast fail if lockfile is out of sync
+pnpm install --frozen-lockfile || {
+  echo "pnpm-lock.yaml is out of sync with package.json. Run 'pnpm install' first."
+  exit 1
+}
+
+# Full production build (vite build + tsc)
+npm run build || {
+  echo "Build failed. Fix errors before pushing."
+  exit 1
+}
+
+echo "All checks passed."

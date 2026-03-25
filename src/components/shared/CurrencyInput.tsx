@@ -2,8 +2,10 @@ import * as React from 'react'
 import { DollarSign } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 
-export interface CurrencyInputProps
-  extends Omit<React.ComponentProps<'input'>, 'value' | 'onChange'> {
+export interface CurrencyInputProps extends Omit<
+  React.ComponentProps<'input'>,
+  'value' | 'onChange'
+> {
   value: number
   onChange: (value: number) => void
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Budget, BudgetOverview, Category } from '@/types/database.types'
+import { toBudget } from '@/lib/mappers/budget'
 
 export const useBudgetDialog = () => {
   const [open, setOpen] = useState(false)
@@ -19,15 +20,7 @@ export const useBudgetDialog = () => {
       }
     },
     onEdit: (budget: BudgetOverview) => {
-      setSelectedBudget({
-        id: budget.budget_id,
-        amount: budget.budget_amount,
-        name: budget.budget_name,
-        period: budget.period,
-        start_date: budget.start_date,
-        end_date: budget.end_date,
-        is_active: budget.is_active,
-      })
+      setSelectedBudget(toBudget(budget))
       setOpen(true)
     },
     selectedCategory,
