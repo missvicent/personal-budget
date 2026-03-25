@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { usePeriodSelector } from '../-hooks/use-period-selector'
 import { PeriodSelector } from './PeriodSelector'
 import type { BudgetItemFormData } from '@/lib/schemas/budget/budget-item.schema'
 import type { Budget } from '@/types/database.types'
@@ -48,11 +47,11 @@ export const BudgetForm = ({
     },
   })
 
-  const { handlePeriodChange, selectedPeriod } = usePeriodSelector()
-
   const submitButtonText = selectedBudget ? 'Update Budget' : 'Create Budget'
 
   useEffect(() => {
+    if (!open) return
+
     if (selectedBudget) {
       form.reset({
         id: selectedBudget.id,
@@ -62,7 +61,6 @@ export const BudgetForm = ({
         start_date: selectedBudget.start_date,
       })
     } else {
-      console.log('resetting form')
       form.reset()
     }
   }, [open, form, selectedBudget])
@@ -112,12 +110,12 @@ export const BudgetForm = ({
           <FormField
             control={form.control}
             name="period"
-            render={() => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Billing Period:</FormLabel>
                 <PeriodSelector
-                  value={selectedPeriod ?? 'monthly'}
-                  onValueChange={handlePeriodChange(form)}
+                  value={field.value ?? 'monthly'}
+                  onValueChange={field.onChange}
                 />
                 <FormMessage />
               </FormItem>
