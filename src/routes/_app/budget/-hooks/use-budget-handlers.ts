@@ -3,7 +3,10 @@ import { toast } from 'sonner'
 import { useBudgetMutations } from './use-budget-mutations'
 import type { Budget } from '@/types/database.types'
 import type { BudgetItemFormData } from '@/lib/schemas/budget/budget-item.schema'
-import { toBudgetItemRequestBody } from '@/lib/schemas/budget/budget-item.schema'
+import {
+  toBudgetItemRequestBody,
+  toUpdateRequestBody,
+} from '@/lib/schemas/budget/budget-item.schema'
 
 export const useBudgetHandlers = (
   selectedBudget: Budget | null,
@@ -11,10 +14,16 @@ export const useBudgetHandlers = (
 ) => {
   const mutations = useBudgetMutations()
 
-  const handleSubmit = (data: BudgetItemFormData) => {
-    const body = toBudgetItemRequestBody({ ...data, id: selectedBudget?.id })
-    const action = selectedBudget ? mutations.update : mutations.create
-    const message = selectedBudget
+  const handleSubmit = (
+    data: BudgetItemFormData,
+    dirtyFields: Partial<Record<keyof BudgetItemFormData, boolean>>,
+  ) => {
+    const isUpdate = !!selectedBudget
+    const body = isUpdate
+      ? toUpdateRequestBody({ ...data, id: selectedBudget.id }, dirtyFields)
+      : toBudgetItemRequestBody(data)
+    const action = isUpdate ? mutations.update : mutations.create
+    const message = isUpdate
       ? 'Budget updated successfully'
       : 'Budget created successfully'
 
