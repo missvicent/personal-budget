@@ -28,3 +28,23 @@ export function toBudgetItemRequestBody(data: BudgetItemFormData): Budget {
     is_active: is_active ?? true,
   }
 }
+
+export function toUpdateRequestBody(
+  data: BudgetItemFormData,
+  dirtyFields: Partial<Record<keyof BudgetItemFormData, boolean>>,
+): Budget {
+  const { amount, period, start_date, name, is_active, id } = data
+  const shouldRecalculateEndDate = dirtyFields.start_date || dirtyFields.period
+
+  return {
+    id,
+    amount,
+    name,
+    period,
+    start_date,
+    end_date: shouldRecalculateEndDate
+      ? calculatePeriod(new Date(start_date), period ?? 'monthly').toISOString()
+      : undefined,
+    is_active: is_active ?? true,
+  }
+}

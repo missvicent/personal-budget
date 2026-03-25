@@ -34,7 +34,10 @@ export const BudgetForm = ({
 }: {
   open: boolean
   isPending: boolean
-  onSubmit: (data: BudgetItemFormData) => void
+  onSubmit: (
+    data: BudgetItemFormData,
+    dirtyFields: Partial<Record<keyof BudgetItemFormData, boolean>>,
+  ) => void
   selectedBudget: Budget | null
 }) => {
   const form = useForm<BudgetItemFormData>({
@@ -69,7 +72,9 @@ export const BudgetForm = ({
     <Form {...form}>
       <DialogContent>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit((data) =>
+            onSubmit(data, form.formState.dirtyFields),
+          )}
           className="flex flex-col gap-4"
         >
           <DialogHeader>

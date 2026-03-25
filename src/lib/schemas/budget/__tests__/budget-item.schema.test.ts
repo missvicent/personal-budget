@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { BudgetItemSchema } from '../budget-item.schema'
+import {
+  BudgetItemSchema,
+  toBudgetItemRequestBody,
+  toUpdateRequestBody,
+} from '../budget-item.schema'
 
 describe('BudgetItemSchema', () => {
   it('validates a valid budget', () => {
@@ -42,5 +46,71 @@ describe('BudgetItemSchema', () => {
     if (result.success) {
       expect(result.data.period).toBeUndefined()
     }
+  })
+})
+
+describe('toBudgetItemRequestBody', () => {
+  it('calculates end_date for new budgets', () => {
+    const result = toBudgetItemRequestBody({
+      name: 'Test',
+      amount: 500,
+      period: 'monthly',
+      start_date: '2026-03-01T00:00:00.000Z',
+    })
+    expect(result.end_date).toBe('2026-04-01T00:00:00.000Z')
+  })
+
+  it('calculates yearly end_date correctly', () => {
+    const result = toBudgetItemRequestBody({
+      name: 'Test',
+      amount: 500,
+      period: 'yearly',
+      start_date: '2026-03-01T00:00:00.000Z',
+    })
+    expect(result.end_date).toBe('2027-03-01T00:00:00.000Z')
+  })
+})
+
+describe('toUpdateRequestBody', () => {
+  it('omits end_date when start_date is not dirty', () => {
+    const result = toUpdateRequestBody(
+      {
+        id: '123',
+        name: 'Updated name',
+        amount: 500,
+        period: 'monthly',
+        start_date: '2026-03-01T00:00:00.000Z',
+      },
+      { name: true },
+    )
+    expect(result.end_date).toBeUndefined()
+  })
+
+  it('recalculates end_date when start_date is dirty', () => {
+    const result = toUpdateRequestBody(
+      {
+        id: '123',
+        name: 'Test',
+        amount: 500,
+        period: 'monthly',
+        start_date: '2026-05-01T00:00:00.000Z',
+      },
+      { start_date: true },
+    )
+    expect(result.end_date).toBe('2026-06-01T00:00:00.000Z')
+  })
+
+  it('recalculates end_date when period is dirty', () => {
+    const result = toUpdateRequestBody(
+      {
+        id: '123',
+        name: 'Test',
+        amount: 500,
+        period: 'yearly',
+        start_date: '2026-03-01T00:00:00.000Z',
+      },
+      { period: true },
+    )
+    expect(result.end_date).toBe('2027-03-01T00:00:00.000Z')
   })
 })
