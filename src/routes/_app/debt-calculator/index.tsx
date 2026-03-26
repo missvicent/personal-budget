@@ -17,10 +17,15 @@ import type {
   DebtPaymentFormData,
 } from '@/lib/validations/debt.schema'
 import type { Debt } from '@/types/database.types'
+import { staticToolbarMeta } from '@/lib/toolbar'
 import { cn } from '@/lib/utils'
 import { Dialog } from '@/components/ui/dialog'
 
 export const Route = createFileRoute('/_app/debt-calculator/')({
+  beforeLoad: staticToolbarMeta({
+    title: 'Debt Calculator',
+    description: 'Track debts and plan payoff strategies',
+  }),
   component: RouteComponent,
 })
 
