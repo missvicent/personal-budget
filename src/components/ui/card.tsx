@@ -10,19 +10,17 @@ const cardVariants = cva(
     variants: {
       variant: {
         default: [
-          'bg-white/60 border border-white/80',
-          'shadow-glass hover:shadow-glass-hover',
-          'hover:-translate-y-0.5 hover:border-white/90',
+          'bg-white/90 border border-gray-200',
+          'shadow-sm hover:shadow-md',
+          'hover:-translate-y-0.5 hover:border-gray-300',
           'dark:bg-[#7c6af0]/[0.08] dark:border-[#7c6af0]/[0.15]',
-          'dark:shadow-glass-dark dark:hover:shadow-glass-dark-hover',
-          'dark:hover:bg-[#7c6af0]/[0.12] dark: hover: border - [#7c6af0] / [0.25]',
+          'dark:hover:bg-[#7c6af0]/[0.12] dark:hover:border-[#7c6af0]/[0.25]',
         ],
         dashed: [
-          'bg-white/60 border-2 border-dashed border-brand/45 text-brand',
-          'shadow-glass hover:shadow-glass-hover',
+          'bg-white/90 border-2 border-dashed border-brand/60 text-brand',
+          'shadow-sm hover:shadow-md',
           'hover:-translate-y-0.5 hover:border-primary/50',
           'dark:bg-[#7c6af0]/[0.08]',
-          'dark:shadow-glass-dark dark:hover:shadow-glass-dark-hover',
         ],
       },
     },

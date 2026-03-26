@@ -34,10 +34,10 @@ function RouteComponent() {
           />
         ))}
       <CreateCard onClick={() => dialog.setOpen(true)}>
-        <p className="text-muted-foreground/50 group-hover:text-primary/50 text-sm leading-tight font-medium">
+        <p className="text-muted-foreground group-hover:text-primary/50 text-sm leading-tight font-medium">
           New Budget
         </p>
-        <p className="text-muted-foreground/30 text-xs leading-tight">
+        <p className="text-muted-foreground/70 text-xs leading-tight">
           Add a new monthly or yearly period
         </p>
       </CreateCard>

@@ -7,6 +7,7 @@ export const AppToolbar = () => {
   const { pathname } = useLocation()
   const itemData = NAVIGATION_ITEMS.find((item) => item.url === pathname)
   const { description } = itemData ?? { description: '' }
+  const pathnameParts = pathname.split('/').pop()
 
   return (
     <header
@@ -24,7 +25,7 @@ export const AppToolbar = () => {
         <div className="flex w-full items-center justify-between gap-2 px-4">
           <div className="flex flex-col items-start justify-center">
             <p className="text-foreground text-lg leading-tight font-semibold capitalize md:text-lg">
-              {pathname.split('/').pop()}
+              {pathnameParts}
             </p>
             <span className="text-muted-foreground text-xs leading-tight md:text-sm">
               {description}
