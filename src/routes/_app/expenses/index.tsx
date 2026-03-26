@@ -7,6 +7,7 @@ import { ExpenseList } from './-components/ExpenseList'
 import { useExpenseActions } from './-hooks/use-expense-actions'
 import { useExpenseDialog } from './-hooks/use-expense-dialog'
 import { useExpenseFilters } from './-hooks/use-expense-filters'
+import { staticToolbarMeta } from '@/lib/toolbar'
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -22,6 +23,11 @@ import { useCategories } from '@/hooks/categories/use-categories'
 import { useGetTransactionsWithCategories } from '@/hooks/transactions/use-transaction-with-categories'
 
 export const Route = createFileRoute('/_app/expenses/')({
+  beforeLoad: staticToolbarMeta({
+    title: 'Expenses',
+    description: 'Track and manage your spending',
+    balance: { label: 'Balance', value: '$0.00' },
+  }),
   component: RouteComponent,
 })
 
