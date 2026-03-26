@@ -28,9 +28,11 @@ export const BudgetItem = ({ budget, onEdit, onDelete }: BudgetItemProps) => {
   const { progressValue, status, badges, daysLeft } =
     useBudgetItemDisplay(budget)
 
+  const url = `/budget/${budget.budget_id}`
+
   return (
-    <Link to="/budget/$budgetId" params={{ budgetId: budget.budget_id }}>
-      <Card className="bg-card/50 group h-full backdrop-blur-sm">
+    <Link to={url}>
+      <Card className="group h-full backdrop-blur-sm">
         <CardHeader className="py-2">
           <CardTitle className="text-lg font-bold">{budget_name}</CardTitle>
           <CardDescription className="text-muted-foreground text-xs">
