@@ -1,5 +1,6 @@
 import { parseISO } from 'date-fns'
 import { createFileRoute, redirect } from '@tanstack/react-router'
+import { BudgetOverview } from './-components/budget-item/BudgetOverview'
 import type { ToolbarMeta } from '@/routes/__root'
 import { budgetService } from '@/services/budget.service'
 import { formatDateRange } from '@/lib/dates/formatDate'
@@ -33,5 +34,5 @@ export const Route = createFileRoute('/_app/budget/$budgetId')({
 })
 
 function RouteComponent() {
-  return <div>BudgetPage</div>
+  return <BudgetOverview />
 }

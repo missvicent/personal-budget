@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import {
-  BudgetItemSchema,
-  toBudgetItemRequestBody,
+  budgetSchema,
+  toBudgetRequestBody,
   toUpdateRequestBody,
-} from '../budget-item.schema'
+} from '../budget.schema'
 
-describe('BudgetItemSchema', () => {
+describe('budgetSchema', () => {
   it('validates a valid budget', () => {
-    const result = BudgetItemSchema.safeParse({
+    const result = budgetSchema.safeParse({
       name: 'Monthly groceries',
       amount: 500,
       period: 'monthly',
@@ -17,7 +17,7 @@ describe('BudgetItemSchema', () => {
   })
 
   it('rejects empty name', () => {
-    const result = BudgetItemSchema.safeParse({
+    const result = budgetSchema.safeParse({
       name: '',
       amount: 500,
       period: 'monthly',
@@ -27,7 +27,7 @@ describe('BudgetItemSchema', () => {
   })
 
   it('rejects zero amount', () => {
-    const result = BudgetItemSchema.safeParse({
+    const result = budgetSchema.safeParse({
       name: 'Test',
       amount: 0,
       period: 'monthly',
@@ -37,7 +37,7 @@ describe('BudgetItemSchema', () => {
   })
 
   it('defaults period to undefined when omitted', () => {
-    const result = BudgetItemSchema.safeParse({
+    const result = budgetSchema.safeParse({
       name: 'Test',
       amount: 100,
       start_date: '2026-03-01',
@@ -49,9 +49,9 @@ describe('BudgetItemSchema', () => {
   })
 })
 
-describe('toBudgetItemRequestBody', () => {
+describe('toBudgetRequestBody', () => {
   it('calculates end_date for new budgets', () => {
-    const result = toBudgetItemRequestBody({
+    const result = toBudgetRequestBody({
       name: 'Test',
       amount: 500,
       period: 'monthly',
@@ -61,7 +61,7 @@ describe('toBudgetItemRequestBody', () => {
   })
 
   it('calculates yearly end_date correctly', () => {
-    const result = toBudgetItemRequestBody({
+    const result = toBudgetRequestBody({
       name: 'Test',
       amount: 500,
       period: 'yearly',

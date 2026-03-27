@@ -2,6 +2,8 @@
 
 @plugin 'tailwindcss-animate';
 @import '@fontsource-variable/dm-sans';
+@import '@fontsource/dm-mono';
+@import '@fontsource/dm-mono/500.css';
 
 @custom-variant dark (&:is(.dark *));
 

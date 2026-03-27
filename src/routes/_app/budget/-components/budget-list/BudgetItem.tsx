@@ -2,10 +2,10 @@ import { parseISO } from 'date-fns'
 
 import { Link } from '@tanstack/react-router'
 
-import { useBudgetItemDisplay } from '../-hooks/use-budget-item-display'
-import { BudgetCardBadges } from './budget-card/BudgetCardBadges'
-import { BudgetCardProgress } from './budget-card/BudgetCardProgress'
-import { BudgetCardActions } from './budget-card/BudgetCardActions'
+import { useBudgetItemDisplay } from '../../-hooks/use-budget-item-display'
+import { BudgetCardBadges } from '../budget-card/BudgetCardBadges'
+import { BudgetCardProgress } from '../budget-card/BudgetCardProgress'
+import { BudgetCardActions } from '../budget-card/BudgetCardActions'
 import type { BudgetOverview } from '@/types/database.types'
 import { formatDateRange, formatYear } from '@/lib/dates/formatDate'
 import {

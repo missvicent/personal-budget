@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { PeriodSelector } from './PeriodSelector'
-import type { BudgetItemFormData } from '@/lib/schemas/budget/budget-item.schema'
 import type { Budget } from '@/types/database.types'
+import type { BudgetFormData } from '@/lib/schemas/budget/budget.schema'
 import {
   Form,
   FormControl,
@@ -13,7 +13,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { BudgetItemSchema } from '@/lib/schemas/budget/budget-item.schema'
+import {
+  budgetFormDefaults,
+  budgetSchema,
+} from '@/lib/schemas/budget/budget.schema'
 import {
   DialogClose,
   DialogContent,
@@ -35,19 +38,14 @@ export const BudgetForm = ({
   open: boolean
   isPending: boolean
   onSubmit: (
-    data: BudgetItemFormData,
-    dirtyFields: Partial<Record<keyof BudgetItemFormData, boolean>>,
+    data: BudgetFormData,
+    dirtyFields: Partial<Record<keyof BudgetFormData, boolean>>,
   ) => void
   selectedBudget: Budget | null
 }) => {
-  const form = useForm<BudgetItemFormData>({
-    resolver: zodResolver(BudgetItemSchema),
-    defaultValues: {
-      period: 'monthly',
-      start_date: '',
-      name: '',
-      amount: 0,
-    },
+  const form = useForm<BudgetFormData>({
+    resolver: zodResolver(budgetSchema),
+    defaultValues: budgetFormDefaults,
   })
 
   const submitButtonText = selectedBudget ? 'Update Budget' : 'Create Budget'
@@ -64,7 +62,7 @@ export const BudgetForm = ({
         start_date: selectedBudget.start_date,
       })
     } else {
-      form.reset()
+      form.reset(budgetFormDefaults)
     }
   }, [open, form, selectedBudget])
 

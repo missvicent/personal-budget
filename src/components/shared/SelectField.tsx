@@ -13,7 +13,7 @@ export interface SelectFieldProps extends Omit<
   'value' | 'onChange'
 > {
   placeholder?: string
-  items: Array<{ label: string; value: string }>
+  items: Array<{ label: string; value: string; disabled?: boolean }>
   value: string
   onChange: (value: { label: string; value: string }) => void
 }
@@ -38,7 +38,11 @@ export const SelectField = ({
       <SelectContent className="max-h-94 overflow-y-auto">
         <SelectGroup>
           {items.map((item) => (
-            <SelectItem key={item.value} value={item.value}>
+            <SelectItem
+              key={item.value}
+              value={item.value}
+              disabled={item.disabled}
+            >
               {item.label}
             </SelectItem>
           ))}

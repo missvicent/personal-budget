@@ -1,8 +1,7 @@
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import type { Category } from '@/types/database.types'
-import type { BudgetFormData } from '@/lib/schemas/budget/budget.schema'
+import type { BudgetItemFormData } from '@/lib/schemas/budget/budget-item.schema'
 import {
   DialogClose,
   DialogContent,
@@ -11,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { budgetSchema } from '@/lib/schemas/budget/budget.schema'
+import { budgetItemSchema } from '@/lib/schemas/budget/budget-item.schema'
 import { FieldGroup } from '@/components/ui/field'
 import {
   Form,
@@ -19,41 +18,57 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from '@/components/ui/form'
 import { SelectField } from '@/components/shared/SelectField'
 import { CurrencyInput } from '@/components/shared/CurrencyInput'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
+import { useCategories } from '@/hooks/categories/use-categories'
+import { toSelectOptions } from '@/lib/utils'
 
 interface BudgetCategoryFormProps {
-  categories: Array<Category>
   isPending: boolean
-  onSubmit: (data: BudgetFormData) => void
-  selectedCategory: Category | null
+  onSubmit: (data: BudgetItemFormData) => void
+  selectedBudgetItem: BudgetItemFormData | null
+  usedCategoryIds: Array<string>
 }
 
 export const BudgetCategoryForm = ({
-  categories,
   isPending,
   onSubmit,
-  selectedCategory,
+  selectedBudgetItem,
+  usedCategoryIds,
 }: BudgetCategoryFormProps) => {
+  const { data: categories } = useCategories()
+
+  const categoryOptions = useMemo(
+    () =>
+      toSelectOptions(
+        { label: 'Select a category', value: 'select' },
+        (categories ?? []).filter((c) => c.category_type === 'expense'),
+        (c) => `${c.icon} ${c.name}`,
+        (c) => c.id,
+      ).map((option) => ({
+        ...option,
+        disabled: usedCategoryIds.includes(option.value),
+      })),
+    [categories, usedCategoryIds],
+  )
+
   const defaultValues = useMemo(() => {
     return {
       category_id: '',
       amount: 0,
       alert_enabled: false,
-      period: 'monthly' as 'monthly' | 'yearly',
     }
   }, [])
 
-  const form = useForm<BudgetFormData>({
-    resolver: zodResolver(budgetSchema),
+  const form = useForm<BudgetItemFormData>({
+    resolver: zodResolver(budgetItemSchema),
     defaultValues: defaultValues,
   })
 
-  const handleSubmit = (data: BudgetFormData) => {
+  const handleSubmit = (data: BudgetItemFormData) => {
     onSubmit(data)
   }
 
@@ -79,12 +94,19 @@ export const BudgetCategoryForm = ({
                   <FormLabel>What&apos;s this for?: </FormLabel>
                   <FormControl>
                     <SelectField
-                      items={categories.map((category) => ({
-                        label: category.name,
-                        value: category.id,
-                      }))}
+                      items={categoryOptions}
                       onChange={(selected) => field.onChange(selected.value)}
                       value={field.value}
+                      placeholder="Select a category"
+                      aria-label="Category"
+                      aria-describedby="category-description"
+                      aria-required="true"
+                      aria-invalid="false"
+                      aria-autocomplete="list"
+                      aria-controls="category-list"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-activedescendant="category-item-0"
                     />
                   </FormControl>
                 </FormItem>
@@ -107,25 +129,6 @@ export const BudgetCategoryForm = ({
             />
             <FormField
               control={form.control}
-              name="period"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>How often (Optional): </FormLabel>
-                  <FormControl>
-                    <SelectField
-                      items={['Monthly', 'Yearly'].map((period) => ({
-                        label: period,
-                        value: period,
-                      }))}
-                      onChange={(selected) => field.onChange(selected.value)}
-                      value={field.value || 'monthly'}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="alert_enabled"
               render={({ field }) => (
                 <FormItem className="mb-2 flex flex-row items-center gap-2">
@@ -141,10 +144,6 @@ export const BudgetCategoryForm = ({
                     updates, reminders, and the stuff that actually matters to
                     you.
                   </FormLabel>
-                  <FormMessage>
-                    The app will automatically calculate the end date based on
-                    the start date and the period.
-                  </FormMessage>
                 </FormItem>
               )}
             />
@@ -154,7 +153,7 @@ export const BudgetCategoryForm = ({
               <Button variant="outline">Cancel</Button>
             </DialogClose>
             <Button type="submit" disabled={isPending}>
-              {selectedCategory ? 'Edit Category' : 'Save Category'}
+              {selectedBudgetItem ? 'Update' : 'Save'}
             </Button>
           </DialogFooter>
         </form>

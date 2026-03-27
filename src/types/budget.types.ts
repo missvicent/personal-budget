@@ -40,3 +40,18 @@ export interface BudgetOverview {
   is_active: boolean
   total_spent: number
 }
+
+export interface BudgetItem {
+  id: string
+  budget_id: string
+  budget_name: string
+  budget_amount: number
+  amount: number
+  category_name: string
+  category_icon: string
+  category_color: string
+  created_at: string
+  updated_at: string
+  alert_enabled: boolean
+  alert_threshold: number
+}

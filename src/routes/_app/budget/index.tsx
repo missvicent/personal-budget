@@ -1,10 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { BudgetForm } from './-components/BudgetForm'
+import { BudgetForm } from './-components/budget-list/BudgetForm'
 import { useBudgetHandlers } from './-hooks/use-budget-handlers'
 import { useBudgetDialog } from './-hooks/use-budget-dialog'
 
-import { BudgetItem } from './-components/BudgetItem'
+import { BudgetItem } from './-components/budget-list/BudgetItem'
 import { staticToolbarMeta } from '@/lib/toolbar'
 import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
 import { CreateCard } from '@/components/shared/CreateCard'
