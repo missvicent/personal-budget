@@ -7,10 +7,10 @@ import { ExpenseList } from './-components/ExpenseList'
 import { useExpenseActions } from './-hooks/use-expense-actions'
 import { useExpenseDialog } from './-hooks/use-expense-dialog'
 import { useExpenseFilters } from './-hooks/use-expense-filters'
-import { staticToolbarMeta } from '@/lib/toolbar'
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { staticToolbarMeta } from '@/lib/toolbar'
 import { SearchInput } from '@/components/common/SearchInput'
 import { SelectField } from '@/components/shared/SelectField'
 import {

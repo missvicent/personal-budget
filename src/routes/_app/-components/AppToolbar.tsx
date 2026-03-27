@@ -1,13 +1,20 @@
-import { useLocation } from '@tanstack/react-router'
+import { useMatches } from '@tanstack/react-router'
+import type { ToolbarMeta } from '@/routes/__root'
 import { cn } from '@/lib/utils'
 import { SidebarTrigger } from '@/components/ui/sidebar'
-import { NAVIGATION_ITEMS } from '@/config/navigation'
 
 export const AppToolbar = () => {
-  const { pathname } = useLocation()
-  const itemData = NAVIGATION_ITEMS.find((item) => item.url === pathname)
-  const { description } = itemData ?? { description: '' }
-  const pathnameParts = pathname.split('/').pop()
+  const matches = useMatches()
+
+  const toolbarMeta = [...matches]
+    .reverse()
+    .reduce<
+      ToolbarMeta | undefined
+    >((found, { context }) => found ?? (context as { toolbarMeta?: ToolbarMeta }).toolbarMeta, undefined)
+
+  const title = toolbarMeta?.title
+  const description = toolbarMeta?.description
+  const balance = toolbarMeta?.balance
 
   return (
     <header
@@ -25,20 +32,22 @@ export const AppToolbar = () => {
         <div className="flex w-full items-center justify-between gap-2 px-4">
           <div className="flex flex-col items-start justify-center">
             <p className="text-foreground text-lg leading-tight font-semibold capitalize md:text-lg">
-              {pathnameParts}
+              {title}
             </p>
             <span className="text-muted-foreground text-xs leading-tight md:text-sm">
               {description}
             </span>
           </div>
-          <div className="flex flex-col items-end justify-center">
-            <p className="text-muted-foreground text-xs leading-tight uppercase md:text-base">
-              Balance
-            </p>
-            <span className="text-foreground font-mono text-xl leading-tight font-semibold md:text-base">
-              $4418.26
-            </span>
-          </div>
+          {balance && (
+            <div className="flex flex-col items-end justify-center">
+              <p className="text-muted-foreground text-xs leading-tight uppercase md:text-base">
+                {balance.label}
+              </p>
+              <span className="text-foreground font-mono text-xl leading-tight font-semibold md:text-base">
+                {balance.value}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </header>
