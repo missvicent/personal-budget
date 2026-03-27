@@ -22,8 +22,8 @@ export const Route = createFileRoute('/_app/budget/$budgetId')({
           )
         : undefined,
       balance: {
-        label: 'Spent',
-        value: `$${budget.total_spent.toFixed(2)} of $${budget.budget_amount.toFixed(2)}`,
+        label: 'Budget',
+        value: `$${budget.budget_amount.toFixed(2)}`,
       },
     }
 

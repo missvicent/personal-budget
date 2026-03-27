@@ -3,8 +3,14 @@ import { BudgetOverview, RecentActivity, SummaryGrid } from './-components'
 import type { SummaryGridProps } from './-components/SummaryGrid'
 import type { BudgetOverviewProps } from './-components/BudgetOverview'
 import type { RecentActivityItem } from './-components/RecentActivity'
+import { staticToolbarMeta } from '@/lib/toolbar'
 
 export const Route = createFileRoute('/_app/dashboard/')({
+  beforeLoad: staticToolbarMeta({
+    title: 'Dashboard',
+    description: 'Overview of your financial health',
+    balance: { label: 'Balance', value: '$0.00' },
+  }),
   component: RouteComponent,
 })
 

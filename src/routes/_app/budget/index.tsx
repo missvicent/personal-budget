@@ -5,11 +5,17 @@ import { useBudgetHandlers } from './-hooks/use-budget-handlers'
 import { useBudgetDialog } from './-hooks/use-budget-dialog'
 
 import { BudgetItem } from './-components/BudgetItem'
+import { staticToolbarMeta } from '@/lib/toolbar'
 import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
 import { CreateCard } from '@/components/shared/CreateCard'
 import { Dialog } from '@/components/ui/dialog'
 
 export const Route = createFileRoute('/_app/budget/')({
+  beforeLoad: staticToolbarMeta({
+    title: 'Budgets',
+    description: 'Set and monitor budget limits',
+    balance: { label: 'Balance', value: '$0.00' },
+  }),
   component: RouteComponent,
 })
 
