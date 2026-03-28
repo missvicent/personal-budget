@@ -5,16 +5,21 @@ import { useBudgetDialog } from '../../-hooks/use-budget-dialog'
 import { BudgetCategoryForm } from './BudgetCategoryForm'
 import { BudgetOverviewSkeleton } from './BudgetOverviewSkeleton'
 import { BudgetItemCard } from './BudgetItemCard'
+import type { BudgetItemFormData } from '@/lib/schemas/budget/budget-item.schema'
 import type { BudgetWithProgress } from '@/types/budget.types'
 import { cn } from '@/lib/utils'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { useBudgetItems } from '@/hooks/budget/use-budget-item'
+import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
+import { useCategories } from '@/hooks/categories/use-categories'
 
 export const BudgetOverview = () => {
   const dialog = useBudgetDialog()
+  const { data: categories } = useCategories()
   const { budgetId } = useParams({ from: '/_app/budget/$budgetId' })
   const { data: budgetItems, isLoading } = useBudgetItems(budgetId)
+  const { data: budgetOverviews } = useBudgetOverview()
 
   const usedCategoryIds = useMemo(
     () =>
@@ -24,8 +29,20 @@ export const BudgetOverview = () => {
     [budgetItems, budgetId],
   )
 
+  const remainingBudget = useMemo(() => {
+    const overview = budgetOverviews?.find((b) => b.budget_id === budgetId)
+    const totalBudget = overview?.budget_amount ?? 0
+    const allocatedAmount =
+      budgetItems?.reduce((sum, item) => sum + item.amount, 0) ?? 0
+    return Math.max(0, totalBudget - allocatedAmount)
+  }, [budgetOverviews, budgetId, budgetItems])
+
   if (isLoading) {
     return <BudgetOverviewSkeleton />
+  }
+
+  const handleSubmit = (data: BudgetItemFormData) => {
+    console.log(data)
   }
 
   return (
@@ -40,9 +57,8 @@ export const BudgetOverview = () => {
           </DialogTrigger>
           <BudgetCategoryForm
             isPending={false}
-            onSubmit={(data) => {
-              console.log(data)
-            }}
+            onSubmit={(data) => console.log(data)}
+            remainingBudget={remainingBudget}
             selectedBudgetItem={null}
             usedCategoryIds={usedCategoryIds}
           />
