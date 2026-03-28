@@ -5,18 +5,15 @@ import { useBudgetDialog } from '../../-hooks/use-budget-dialog'
 import { BudgetCategoryForm } from './BudgetCategoryForm'
 import { BudgetOverviewSkeleton } from './BudgetOverviewSkeleton'
 import { BudgetItemCard } from './BudgetItemCard'
-import type { BudgetItemFormData } from '@/lib/schemas/budget/budget-item.schema'
 import type { BudgetWithProgress } from '@/types/budget.types'
 import { cn } from '@/lib/utils'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { useBudgetItems } from '@/hooks/budget/use-budget-item'
 import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
-import { useCategories } from '@/hooks/categories/use-categories'
 
 export const BudgetOverview = () => {
   const dialog = useBudgetDialog()
-  const { data: categories } = useCategories()
   const { budgetId } = useParams({ from: '/_app/budget/$budgetId' })
   const { data: budgetItems, isLoading } = useBudgetItems(budgetId)
   const { data: budgetOverviews } = useBudgetOverview()
@@ -41,10 +38,6 @@ export const BudgetOverview = () => {
     return <BudgetOverviewSkeleton />
   }
 
-  const handleSubmit = (data: BudgetItemFormData) => {
-    console.log(data)
-  }
-
   return (
     <section className={cn('flex flex-col gap-4', 'px-4 py-4 md:p-8')}>
       <header className="flex flex-col justify-end gap-2 md:flex-row">
@@ -57,7 +50,7 @@ export const BudgetOverview = () => {
           </DialogTrigger>
           <BudgetCategoryForm
             isPending={false}
-            onSubmit={(data) => console.log(data)}
+            onSubmit={() => {}}
             remainingBudget={remainingBudget}
             selectedBudgetItem={null}
             usedCategoryIds={usedCategoryIds}
