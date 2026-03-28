@@ -9,10 +9,16 @@ export const budgetItemSchema = z.object({
   id: z.string().optional(),
 })
 
+export const createBudgetItemSchema = (remainingBudget: number) =>
+  budgetItemSchema.refine((data) => data.amount <= remainingBudget, {
+    message: `Amount cannot exceed the remaining budget ($${remainingBudget.toFixed(2)})`,
+    path: ['amount'],
+  })
+
 export type BudgetItemFormData = z.infer<typeof budgetItemSchema>
 
 export function toBudgetItemPayload(data: BudgetItemFormData) {
-  const { category_id, amount, alert_enabled, category_name, budget_id, id } =
+  const { category_id, category_name, amount, alert_enabled, budget_id, id } =
     data
   return {
     alert_enabled: alert_enabled ?? false,
