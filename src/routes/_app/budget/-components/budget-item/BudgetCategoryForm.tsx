@@ -1,7 +1,11 @@
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import type { BudgetItemFormData } from '@/lib/schemas/budget/budget-item.schema'
+import type {BudgetItemFormData} from '@/lib/schemas/budget/budget-item.schema';
+import {
+  
+  createBudgetItemSchema
+} from '@/lib/schemas/budget/budget-item.schema'
 import {
   DialogClose,
   DialogContent,
@@ -10,14 +14,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { budgetItemSchema } from '@/lib/schemas/budget/budget-item.schema'
 import { FieldGroup } from '@/components/ui/field'
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from '@/components/ui/form'
 import { SelectField } from '@/components/shared/SelectField'
 import { CurrencyInput } from '@/components/shared/CurrencyInput'
@@ -29,6 +34,7 @@ import { toSelectOptions } from '@/lib/utils'
 interface BudgetCategoryFormProps {
   isPending: boolean
   onSubmit: (data: BudgetItemFormData) => void
+  remainingBudget: number
   selectedBudgetItem: BudgetItemFormData | null
   usedCategoryIds: Array<string>
 }
@@ -36,6 +42,7 @@ interface BudgetCategoryFormProps {
 export const BudgetCategoryForm = ({
   isPending,
   onSubmit,
+  remainingBudget,
   selectedBudgetItem,
   usedCategoryIds,
 }: BudgetCategoryFormProps) => {
@@ -55,6 +62,11 @@ export const BudgetCategoryForm = ({
     [categories, usedCategoryIds],
   )
 
+  const schema = useMemo(
+    () => createBudgetItemSchema(remainingBudget),
+    [remainingBudget],
+  )
+
   const defaultValues = useMemo(() => {
     return {
       category_id: '',
@@ -64,19 +76,15 @@ export const BudgetCategoryForm = ({
   }, [])
 
   const form = useForm<BudgetItemFormData>({
-    resolver: zodResolver(budgetItemSchema),
+    resolver: zodResolver(schema),
     defaultValues: defaultValues,
   })
-
-  const handleSubmit = (data: BudgetItemFormData) => {
-    onSubmit(data)
-  }
 
   return (
     <Form {...form}>
       <DialogContent>
         <form
-          onSubmit={form.handleSubmit(handleSubmit)}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4"
         >
           <DialogHeader>
@@ -124,6 +132,10 @@ export const BudgetCategoryForm = ({
                       onChange={field.onChange}
                     />
                   </FormControl>
+                  <FormDescription>
+                    Remaining budget: ${remainingBudget.toFixed(2)}
+                  </FormDescription>
+                  <FormMessage />
                 </FormItem>
               )}
             />
