@@ -1,6 +1,5 @@
 import { parseISO } from 'date-fns'
-import { createFileRoute, redirect } from '@tanstack/react-router'
-import { BudgetOverview } from './-components/budget-item/BudgetOverview'
+import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
 import type { ToolbarMeta } from '@/routes/__root'
 import { budgetService } from '@/services/budget.service'
 import { formatDateRange } from '@/lib/dates/formatDate'
@@ -12,7 +11,7 @@ export const Route = createFileRoute('/_app/budget/$budgetId')({
       queryFn: () => budgetService.getOverview(context.supabase),
     })
     const budget = overviews.find((b) => b.budget_id === params.budgetId)
-    if (!budget) throw redirect({ to: '/budget' })
+    if (!budget) throw redirect({ to: '/budget/overview' })
 
     const toolbarMeta: ToolbarMeta = {
       title: budget.budget_name,
@@ -30,9 +29,9 @@ export const Route = createFileRoute('/_app/budget/$budgetId')({
 
     return { toolbarMeta }
   },
-  component: RouteComponent,
+  component: BudgetLayout,
 })
 
-function RouteComponent() {
-  return <BudgetOverview />
+function BudgetLayout() {
+  return <Outlet />
 }
