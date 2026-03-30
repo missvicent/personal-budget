@@ -44,7 +44,7 @@ export const AppToolbar = () => {
               <p className="text-muted-foreground text-xs leading-tight uppercase md:text-base">
                 {balance.label}
               </p>
-              <span className="text-foreground font-mono text-xl leading-tight font-semibold md:text-base">
+              <span className="text-foreground text-base leading-tight font-semibold md:text-lg">
                 {balance.value}
               </span>
             </div>

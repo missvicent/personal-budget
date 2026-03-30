@@ -1,6 +1,7 @@
-import { ChevronRight, LayoutDashboard, Receipt, Tags } from 'lucide-react'
-import { Link } from '@tanstack/react-router'
+import { ChevronRight, Receipt, Tags } from 'lucide-react'
+import { Link, useMatchRoute, useNavigate } from '@tanstack/react-router'
 import type { BudgetOverview } from '@/types/budget.types'
+import { cn } from '@/lib/utils'
 import {
   Collapsible,
   CollapsibleContent,
@@ -16,11 +17,6 @@ import {
 
 const BUDGET_SUB_LINKS = [
   {
-    title: 'Dashboard',
-    icon: LayoutDashboard,
-    to: '/budget/$budgetId/dashboard' as const,
-  },
-  {
     title: 'Expenses',
     icon: Receipt,
     to: '/budget/$budgetId/expenses' as const,
@@ -33,20 +29,45 @@ const BUDGET_SUB_LINKS = [
 ] as const
 
 export function BudgetSidebarItem({ budget }: { budget: BudgetOverview }) {
+  const navigate = useNavigate()
   const percentage =
     budget.budget_amount > 0
       ? Math.round((budget.total_spent / budget.budget_amount) * 100)
       : 0
 
+  const matchRoute = useMatchRoute()
+  const isActive = !!matchRoute({
+    to: '/budget/$budgetId',
+    params: { budgetId: budget.budget_id },
+    fuzzy: true,
+  })
+
+  const onClick = () => {
+    navigate({
+      to: '/budget/$budgetId',
+      params: { budgetId: budget.budget_id },
+    })
+  }
+
   return (
-    <Collapsible asChild className="group/collapsible">
+    <Collapsible asChild defaultOpen={isActive} className="group/collapsible">
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
-          <SidebarMenuButton tooltip={budget.budget_name}>
+          <SidebarMenuButton
+            onClick={onClick}
+            tooltip={budget.budget_name}
+            className="cursor-pointer group-data-[collapsible=icon]:p-1! hover:bg-transparent active:bg-transparent"
+          >
             <span
-              className="h-2 w-2 shrink-0 rounded-full"
-              style={{ backgroundColor: '#7c3aed' }}
-            />
+              className={cn(
+                'flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-xs font-semibold transition-colors',
+                isActive
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-primary/10 text-primary hover:bg-primary/20',
+              )}
+            >
+              {budget.budget_name.charAt(0).toUpperCase()}
+            </span>
             <span className="truncate">{budget.budget_name}</span>
             <span className="text-muted-foreground ml-auto text-xs">
               {percentage}%
