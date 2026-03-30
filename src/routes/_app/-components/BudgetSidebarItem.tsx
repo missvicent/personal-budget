@@ -15,9 +15,21 @@ import {
 } from '@/components/ui/sidebar'
 
 const BUDGET_SUB_LINKS = [
-  { title: 'Dashboard', icon: LayoutDashboard, path: 'dashboard' },
-  { title: 'Expenses', icon: Receipt, path: 'expenses' },
-  { title: 'Categories', icon: Tags, path: 'categories' },
+  {
+    title: 'Dashboard',
+    icon: LayoutDashboard,
+    to: '/budget/$budgetId/dashboard' as const,
+  },
+  {
+    title: 'Expenses',
+    icon: Receipt,
+    to: '/budget/$budgetId/expenses' as const,
+  },
+  {
+    title: 'Categories',
+    icon: Tags,
+    to: '/budget/$budgetId/categories' as const,
+  },
 ] as const
 
 export function BudgetSidebarItem({ budget }: { budget: BudgetOverview }) {
@@ -48,11 +60,8 @@ export function BudgetSidebarItem({ budget }: { budget: BudgetOverview }) {
               <SidebarMenuSubItem key={link.path}>
                 <SidebarMenuSubButton asChild>
                   <Link
-                    to="/budget/$budgetId/$tab"
-                    params={{
-                      budgetId: budget.budget_id,
-                      tab: link.path,
-                    }}
+                    to={link.to}
+                    params={{ budgetId: budget.budget_id }}
                     activeProps={{ className: 'text-primary font-semibold' }}
                   >
                     <link.icon className="h-4 w-4" />
