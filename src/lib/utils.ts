@@ -7,7 +7,7 @@ export function cn(...inputs: Array<ClassValue>) {
 }
 
 export const toSelectOptions = <T>(
-  defaultOption: { label: string; value: string },
+  defaultOption: { label: string; value: string; disabled?: boolean },
   items: Array<T>,
   getLabel: (item: T) => string,
   getValue: (item: T) => string,

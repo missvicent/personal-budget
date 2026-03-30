@@ -1,11 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { BudgetOverview, RecentActivity, SummaryGrid } from './-components'
-import type { SummaryGridProps } from './-components/SummaryGrid'
-import type { BudgetOverviewProps } from './-components/BudgetOverview'
-import type { RecentActivityItem } from './-components/RecentActivity'
+import type { SummaryGridProps } from '@/routes/_app/dashboard/-components/SummaryGrid'
+import type { BudgetOverviewProps } from '@/routes/_app/dashboard/-components/BudgetOverview'
+import type { RecentActivityItem } from '@/routes/_app/dashboard/-components/RecentActivity'
+import {
+  BudgetOverview as DashboardBudgetOverview,
+  RecentActivity,
+  SummaryGrid,
+} from '@/routes/_app/dashboard/-components'
 
-export const Route = createFileRoute('/_app/dashboard/')({
-  component: RouteComponent,
+export const Route = createFileRoute('/_app/budget/$budgetId/dashboard')({
+  component: DashboardPage,
 })
 
 const summaryData: SummaryGridProps['summaryData'] = [
@@ -116,12 +120,13 @@ const recentActivity: Array<RecentActivityItem> = [
     title: 'Food',
   },
 ]
-function RouteComponent() {
+
+function DashboardPage() {
   return (
     <div className="min-h-screen p-8">
       <SummaryGrid summaryData={summaryData} />
       <div className="mt-4 grid grid-cols-1 gap-4 md:mt-8 md:grid-cols-2">
-        <BudgetOverview
+        <DashboardBudgetOverview
           categories={budgetOverview.categories}
           currentMonth={budgetOverview.currentMonth}
         />

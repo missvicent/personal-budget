@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import type { Category } from '@/types/database.types'
-import type { BudgetFormData } from '@/lib/schemas/budget/budget.schema'
+import type { BudgetItemFormData } from '@/lib/schemas/budget/budget-item.schema'
+import { createBudgetItemSchema } from '@/lib/schemas/budget/budget-item.schema'
 import {
   DialogClose,
   DialogContent,
@@ -11,11 +11,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { budgetSchema } from '@/lib/schemas/budget/budget.schema'
 import { FieldGroup } from '@/components/ui/field'
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -25,43 +25,67 @@ import { SelectField } from '@/components/shared/SelectField'
 import { CurrencyInput } from '@/components/shared/CurrencyInput'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
+import { useCategories } from '@/hooks/categories/use-categories'
+import { toSelectOptions } from '@/lib/utils'
 
 interface BudgetCategoryFormProps {
-  categories: Array<Category>
+  budgetId: string
   isPending: boolean
-  onSubmit: (data: BudgetFormData) => void
-  selectedCategory: Category | null
+  onSubmit: (data: BudgetItemFormData) => void
+  remainingBudget: number
+  selectedBudgetItem: BudgetItemFormData | null
+  usedCategoryIds: Array<string>
 }
 
 export const BudgetCategoryForm = ({
-  categories,
+  budgetId,
   isPending,
   onSubmit,
-  selectedCategory,
+  remainingBudget,
+  selectedBudgetItem,
+  usedCategoryIds,
 }: BudgetCategoryFormProps) => {
+  const { data: categories } = useCategories()
+
+  const categoryOptions = useMemo(
+    () =>
+      toSelectOptions(
+        { label: 'Select a category', value: 'select' },
+        (categories ?? []).filter((c) => c.category_type === 'expense'),
+        (c) => `${c.icon} ${c.name}`,
+        (c) => c.id,
+      ).map((option) => ({
+        ...option,
+        disabled: usedCategoryIds.includes(option.value),
+      })),
+    [categories, usedCategoryIds],
+  )
+
+  const schema = useMemo(
+    () => createBudgetItemSchema(remainingBudget),
+    [remainingBudget],
+  )
+
   const defaultValues = useMemo(() => {
     return {
+      budget_id: budgetId,
       category_id: '',
       amount: 0,
       alert_enabled: false,
-      period: 'monthly' as 'monthly' | 'yearly',
     }
-  }, [])
+  }, [budgetId])
 
-  const form = useForm<BudgetFormData>({
-    resolver: zodResolver(budgetSchema),
+  const form = useForm<BudgetItemFormData>({
+    resolver: zodResolver(schema),
     defaultValues: defaultValues,
+    mode: 'onChange',
   })
-
-  const handleSubmit = (data: BudgetFormData) => {
-    onSubmit(data)
-  }
 
   return (
     <Form {...form}>
       <DialogContent>
         <form
-          onSubmit={form.handleSubmit(handleSubmit)}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4"
         >
           <DialogHeader>
@@ -79,12 +103,19 @@ export const BudgetCategoryForm = ({
                   <FormLabel>What&apos;s this for?: </FormLabel>
                   <FormControl>
                     <SelectField
-                      items={categories.map((category) => ({
-                        label: category.name,
-                        value: category.id,
-                      }))}
+                      items={categoryOptions}
                       onChange={(selected) => field.onChange(selected.value)}
                       value={field.value}
+                      placeholder="Select a category"
+                      aria-label="Category"
+                      aria-describedby="category-description"
+                      aria-required="true"
+                      aria-invalid="false"
+                      aria-autocomplete="list"
+                      aria-controls="category-list"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-activedescendant="category-item-0"
                     />
                   </FormControl>
                 </FormItem>
@@ -102,25 +133,10 @@ export const BudgetCategoryForm = ({
                       onChange={field.onChange}
                     />
                   </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="period"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>How often (Optional): </FormLabel>
-                  <FormControl>
-                    <SelectField
-                      items={['Monthly', 'Yearly'].map((period) => ({
-                        label: period,
-                        value: period,
-                      }))}
-                      onChange={(selected) => field.onChange(selected.value)}
-                      value={field.value || 'monthly'}
-                    />
-                  </FormControl>
+                  <FormDescription>
+                    Remaining budget: ${remainingBudget.toFixed(2)}
+                  </FormDescription>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -141,10 +157,6 @@ export const BudgetCategoryForm = ({
                     updates, reminders, and the stuff that actually matters to
                     you.
                   </FormLabel>
-                  <FormMessage>
-                    The app will automatically calculate the end date based on
-                    the start date and the period.
-                  </FormMessage>
                 </FormItem>
               )}
             />
@@ -154,7 +166,7 @@ export const BudgetCategoryForm = ({
               <Button variant="outline">Cancel</Button>
             </DialogClose>
             <Button type="submit" disabled={isPending}>
-              {selectedCategory ? 'Edit Category' : 'Save Category'}
+              {selectedBudgetItem ? 'Update' : 'Save'}
             </Button>
           </DialogFooter>
         </form>

@@ -21,7 +21,7 @@ export const PeriodOption = ({
       {options.map((option) => (
         <ToggleGroupItem
           aria-label={option.label}
-          className="group/toggle text-muted-foreground/50 hover:border-primary/30 data-[state=on]:border-primary/50 data-[state=on]:bg-primary/5 relative flex h-auto w-full cursor-pointer flex-col items-start gap-4 rounded-xl border border-white/10 p-4 transition-colors"
+          className="group/toggle text-muted-foreground/50 hover:border-primary/30 data-[state=on]:border-primary/50 data-[state=on]:bg-primary/5 relative flex h-auto w-full cursor-pointer flex-col items-start gap-4 rounded-xl border border-gray-200 p-4 transition-colors dark:border-white/10"
           key={option.value}
           value={option.value}
         >

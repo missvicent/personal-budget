@@ -28,7 +28,7 @@ export default function PublicHeader() {
       <div className="z-10 flex shrink-0 items-center gap-4">
         <SignedIn>
           <Link
-            to="/dashboard"
+            to="/budget/overview"
             className="rounded-full bg-violet-600 px-6 py-2 font-medium transition-colors hover:bg-violet-500"
           >
             Go to Dashboard

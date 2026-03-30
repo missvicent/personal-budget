@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useBudgetActions } from '../-hooks/use-budget-actions'
 import { PeriodSelector } from './PeriodSelector'
-import type { BudgetItemFormData } from '@/lib/schemas/budget/budget-item.schema'
+import type { Budget } from '@/types/database.types'
+import type { BudgetFormData } from '@/lib/schemas/budget/budget.schema'
 import {
   Form,
   FormControl,
@@ -13,7 +13,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { BudgetItemSchema } from '@/lib/schemas/budget/budget-item.schema'
+import {
+  budgetFormDefaults,
+  budgetSchema,
+} from '@/lib/schemas/budget/budget.schema'
 import {
   DialogClose,
   DialogContent,
@@ -21,43 +24,55 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
+import { CurrencyInput } from '@/components/shared/CurrencyInput'
 import { DatePickerInput } from '@/components/shared/DatepickerInput'
 import { Input } from '@/components/ui/input'
-import { CurrencyInput } from '@/components/shared/CurrencyInput'
+import { Button } from '@/components/ui/button'
 
 export const BudgetForm = ({
-  open,
-  onSubmit,
   isPending,
+  onSubmit,
+  open,
+  selectedBudget,
 }: {
   open: boolean
   isPending: boolean
-  onSubmit: (data: BudgetItemFormData) => void
+  onSubmit: (
+    data: BudgetFormData,
+    dirtyFields: Partial<Record<keyof BudgetFormData, boolean>>,
+  ) => void
+  selectedBudget: Budget | null
 }) => {
-  const form = useForm<BudgetItemFormData>({
-    resolver: zodResolver(BudgetItemSchema),
-    defaultValues: {
-      period: 'monthly',
-      start_date: '',
-      name: '',
-      amount: 0,
-    },
+  const form = useForm<BudgetFormData>({
+    resolver: zodResolver(budgetSchema),
+    defaultValues: budgetFormDefaults,
   })
 
-  const { handlePeriodChange, selectedPeriod } = useBudgetActions(() => {})
+  const submitButtonText = selectedBudget ? 'Update Budget' : 'Create Budget'
 
   useEffect(() => {
-    if (!open) {
-      form.reset()
+    if (!open) return
+
+    if (selectedBudget) {
+      form.reset({
+        id: selectedBudget.id,
+        name: selectedBudget.name,
+        amount: selectedBudget.amount,
+        period: selectedBudget.period,
+        start_date: selectedBudget.start_date,
+      })
+    } else {
+      form.reset(budgetFormDefaults)
     }
-  }, [open, form])
+  }, [open, form, selectedBudget])
 
   return (
     <Form {...form}>
       <DialogContent>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit((data) =>
+            onSubmit(data, form.formState.dirtyFields),
+          )}
           className="flex flex-col gap-4"
         >
           <DialogHeader>
@@ -98,12 +113,12 @@ export const BudgetForm = ({
           <FormField
             control={form.control}
             name="period"
-            render={() => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Billing Period:</FormLabel>
                 <PeriodSelector
-                  value={selectedPeriod ?? 'monthly'}
-                  onValueChange={handlePeriodChange(form)}
+                  value={field.value ?? 'monthly'}
+                  onValueChange={field.onChange}
                 />
                 <FormMessage />
               </FormItem>
@@ -140,7 +155,7 @@ export const BudgetForm = ({
               </Button>
             </DialogClose>
             <Button type="submit" className="w-2/3 p-5" disabled={isPending}>
-              {isPending ? 'Creating...' : 'Create Budget'}
+              {isPending ? 'Saving...' : submitButtonText}
             </Button>
           </div>
         </form>

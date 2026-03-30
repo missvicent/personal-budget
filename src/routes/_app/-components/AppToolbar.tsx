@@ -1,17 +1,26 @@
-import { useLocation } from '@tanstack/react-router'
+import { useMatches } from '@tanstack/react-router'
+import type { ToolbarMeta } from '@/routes/__root'
 import { cn } from '@/lib/utils'
 import { SidebarTrigger } from '@/components/ui/sidebar'
-import { NAVIGATION_ITEMS } from '@/config/navigation'
 
 export const AppToolbar = () => {
-  const { pathname } = useLocation()
-  const itemData = NAVIGATION_ITEMS.find((item) => item.url === pathname)
-  const { description } = itemData ?? { description: '' }
+  const matches = useMatches()
+
+  const toolbarMeta = [...matches]
+    .reverse()
+    .reduce<
+      ToolbarMeta | undefined
+    >((found, { context }) => found ?? (context as { toolbarMeta?: ToolbarMeta }).toolbarMeta, undefined)
+
+  const title = toolbarMeta?.title
+  const description = toolbarMeta?.description
+  const balance = toolbarMeta?.balance
 
   return (
     <header
       className={cn(
-        'bg-sidebar border-b',
+        'border-b border-black/[0.06] bg-white/80 backdrop-blur-xl',
+        'dark:border-white/[0.06] dark:bg-[oklch(0.17_0_0)]/80',
         'h-[72px]',
         'flex shrink-0 items-center',
         'select-none',
@@ -24,20 +33,22 @@ export const AppToolbar = () => {
         <div className="flex w-full items-center justify-between gap-2 px-4">
           <div className="flex flex-col items-start justify-center">
             <p className="text-foreground text-lg leading-tight font-semibold capitalize md:text-lg">
-              {pathname.split('/').pop()}
+              {title}
             </p>
             <span className="text-muted-foreground text-xs leading-tight md:text-sm">
               {description}
             </span>
           </div>
-          <div className="flex flex-col items-end justify-center">
-            <p className="text-muted-foreground text-xs leading-tight uppercase md:text-base">
-              Balance
-            </p>
-            <span className="text-foreground font-mono text-xl leading-tight font-semibold md:text-base">
-              $4418.26
-            </span>
-          </div>
+          {balance && (
+            <div className="flex flex-col items-end justify-center">
+              <p className="text-muted-foreground text-xs leading-tight uppercase md:text-base">
+                {balance.label}
+              </p>
+              <span className="text-foreground font-mono text-xl leading-tight font-semibold md:text-base">
+                {balance.value}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </header>

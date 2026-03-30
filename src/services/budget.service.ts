@@ -1,8 +1,14 @@
-import type { Budget, BudgetOverview } from '@/types/database.types'
+import type {
+  Budget,
+  BudgetOverview,
+  BudgetWithProgress,
+} from '@/types/database.types'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const budgetService = {
-  getOverview: async (supabase: SupabaseClient): Promise<Array<BudgetOverview>> => {
+  getOverview: async (
+    supabase: SupabaseClient,
+  ): Promise<Array<BudgetOverview>> => {
     const { data, error } = await supabase.rpc('get_budgets_overview')
     if (error)
       throw new Error(`Failed to fetch budget overview: ${error.message}`)
@@ -10,7 +16,7 @@ export const budgetService = {
   },
   getAllWithProgress: async (
     supabase: SupabaseClient,
-  ): Promise<Array<Budget & { progress: number }>> => {
+  ): Promise<Array<BudgetWithProgress>> => {
     const { data, error } = await supabase.rpc('get_budgets_with_progress')
     if (error) throw new Error(`Failed to fetch budgets: ${error.message}`)
     return data

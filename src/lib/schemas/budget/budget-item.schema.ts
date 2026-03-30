@@ -1,28 +1,33 @@
 import { z } from 'zod'
-import type { Budget } from '@/types/database.types'
-import { calculatePeriod } from '@/lib/dates/calculatePeriod'
 
-export const BudgetItemSchema = z.object({
+export const budgetItemSchema = z.object({
+  alert_enabled: z.boolean().optional(),
   amount: z.number().min(1, 'Amount is required'),
-  period: z.enum(['monthly', 'yearly']).optional(),
-  start_date: z.string().min(1, 'You must choose a date'),
-  name: z.string().min(1, 'You must choose a name'),
-  is_active: z.boolean().optional(),
+  budget_id: z.string().min(1, 'Budget is required'),
+  category_id: z.string().min(1, 'Category is required'),
+  id: z.string().optional(),
 })
 
-export type BudgetItemFormData = z.infer<typeof BudgetItemSchema>
+export const createBudgetItemSchema = (remainingBudget: number) =>
+  budgetItemSchema.extend({
+    amount: z
+      .number()
+      .min(1, 'Amount is required')
+      .max(
+        remainingBudget,
+        `Amount cannot exceed the remaining budget ($${remainingBudget.toFixed(2)})`,
+      ),
+  })
 
-export function toBudgetItemRequestBody(data: BudgetItemFormData): Budget {
-  const { amount, period, start_date, name, is_active } = data
+export type BudgetItemFormData = z.infer<typeof budgetItemSchema>
+
+export function toBudgetItemPayload(data: BudgetItemFormData) {
+  const { amount, category_id, alert_enabled, budget_id, id } = data
   return {
     amount,
-    name,
-    period,
-    start_date,
-    end_date: calculatePeriod(
-      new Date(start_date),
-      period ?? 'monthly',
-    ).toISOString(),
-    is_active: is_active ?? true,
+    budget_id,
+    category_id,
+    id: id ?? undefined,
+    alert_enabled: alert_enabled ?? false,
   }
 }

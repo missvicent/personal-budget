@@ -12,7 +12,7 @@ export const useCreateBudget = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: useBudgetQueryKeys().budgets(),
+          queryKey: useBudgetQueryKeys().overview(),
         })
       },
     },

@@ -2,11 +2,11 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
 import { PlusIcon } from 'lucide-react'
 
-import { ExpenseTransactionForm } from './-components/ExpenseTransactionForm'
-import { ExpenseList } from './-components/ExpenseList'
-import { useExpenseActions } from './-hooks/use-expense-actions'
-import { useExpenseDialog } from './-hooks/use-expense-dialog'
-import { useExpenseFilters } from './-hooks/use-expense-filters'
+import { ExpenseTransactionForm } from '@/routes/_app/expenses/-components/ExpenseTransactionForm'
+import { ExpenseList } from '@/routes/_app/expenses/-components/ExpenseList'
+import { useExpenseActions } from '@/routes/_app/expenses/-hooks/use-expense-actions'
+import { useExpenseDialog } from '@/routes/_app/expenses/-hooks/use-expense-dialog'
+import { useExpenseFilters } from '@/routes/_app/expenses/-hooks/use-expense-filters'
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -21,11 +21,11 @@ import {
 import { useCategories } from '@/hooks/categories/use-categories'
 import { useGetTransactionsWithCategories } from '@/hooks/transactions/use-transaction-with-categories'
 
-export const Route = createFileRoute('/_app/expenses/')({
-  component: RouteComponent,
+export const Route = createFileRoute('/_app/budget/$budgetId/expenses')({
+  component: ExpensesPage,
 })
 
-function RouteComponent() {
+function ExpensesPage() {
   const { data: categories } = useCategories()
   const { data: transactionsWithCategories } =
     useGetTransactionsWithCategories()

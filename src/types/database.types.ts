@@ -1,5 +1,10 @@
 export type { Account, CreateAccount, UpdateAccount } from './account.types'
-export type { Budget, BudgetOverview, BudgetWithProgress } from './budget.types'
+export type {
+  Budget,
+  BudgetItem,
+  BudgetOverview,
+  BudgetWithProgress,
+} from './budget.types'
 export type { Category } from './category.types'
 export type {
   CreateDebt,
