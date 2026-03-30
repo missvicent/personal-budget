@@ -4,7 +4,7 @@ import { useExpenseItem } from '@/hooks/use-expense-item'
 export const ExpenseItemAmount = () => {
   const { amount } = useExpenseItem()
   return (
-    <p className="text-foreground px-2 font-mono text-lg font-bold">
+    <p className="text-foreground px-2 text-lg font-medium">
       {currencyFormatter.format(amount)}
     </p>
   )

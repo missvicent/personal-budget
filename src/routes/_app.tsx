@@ -5,7 +5,7 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 
 export function AppLayout() {
   return (
-    <SidebarProvider defaultOpen={false}>
+    <SidebarProvider defaultOpen>
       <AppSidebar />
       <SidebarInset className="h-screen flex-col">
         <AppToolbar />

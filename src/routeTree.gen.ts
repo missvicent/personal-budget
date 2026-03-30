@@ -21,8 +21,8 @@ import { Route as AppDebtCalculatorIndexRouteImport } from './routes/_app/debt-c
 import { Route as AppBudgetIndexRouteImport } from './routes/_app/budget/index'
 import { Route as AppBudgetOverviewRouteImport } from './routes/_app/budget/overview'
 import { Route as AppBudgetBudgetIdRouteImport } from './routes/_app/budget/$budgetId'
+import { Route as AppBudgetBudgetIdIndexRouteImport } from './routes/_app/budget/$budgetId/index'
 import { Route as AppBudgetBudgetIdExpensesRouteImport } from './routes/_app/budget/$budgetId/expenses'
-import { Route as AppBudgetBudgetIdDashboardRouteImport } from './routes/_app/budget/$budgetId/dashboard'
 import { Route as AppBudgetBudgetIdCategoriesRouteImport } from './routes/_app/budget/$budgetId/categories'
 
 const PublicRoute = PublicRouteImport.update({
@@ -83,16 +83,15 @@ const AppBudgetBudgetIdRoute = AppBudgetBudgetIdRouteImport.update({
   path: '/budget/$budgetId',
   getParentRoute: () => AppRoute,
 } as any)
+const AppBudgetBudgetIdIndexRoute = AppBudgetBudgetIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppBudgetBudgetIdRoute,
+} as any)
 const AppBudgetBudgetIdExpensesRoute =
   AppBudgetBudgetIdExpensesRouteImport.update({
     id: '/expenses',
     path: '/expenses',
-    getParentRoute: () => AppBudgetBudgetIdRoute,
-  } as any)
-const AppBudgetBudgetIdDashboardRoute =
-  AppBudgetBudgetIdDashboardRouteImport.update({
-    id: '/dashboard',
-    path: '/dashboard',
     getParentRoute: () => AppBudgetBudgetIdRoute,
   } as any)
 const AppBudgetBudgetIdCategoriesRoute =
@@ -114,14 +113,13 @@ export interface FileRoutesByFullPath {
   '/ia-insights': typeof AppIaInsightsIndexRoute
   '/profile': typeof AppProfileIndexRoute
   '/budget/$budgetId/categories': typeof AppBudgetBudgetIdCategoriesRoute
-  '/budget/$budgetId/dashboard': typeof AppBudgetBudgetIdDashboardRoute
   '/budget/$budgetId/expenses': typeof AppBudgetBudgetIdExpensesRoute
+  '/budget/$budgetId/': typeof AppBudgetBudgetIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/': typeof PublicIndexRoute
-  '/budget/$budgetId': typeof AppBudgetBudgetIdRouteWithChildren
   '/budget/overview': typeof AppBudgetOverviewRoute
   '/budget': typeof AppBudgetIndexRoute
   '/debt-calculator': typeof AppDebtCalculatorIndexRoute
@@ -129,8 +127,8 @@ export interface FileRoutesByTo {
   '/ia-insights': typeof AppIaInsightsIndexRoute
   '/profile': typeof AppProfileIndexRoute
   '/budget/$budgetId/categories': typeof AppBudgetBudgetIdCategoriesRoute
-  '/budget/$budgetId/dashboard': typeof AppBudgetBudgetIdDashboardRoute
   '/budget/$budgetId/expenses': typeof AppBudgetBudgetIdExpensesRoute
+  '/budget/$budgetId': typeof AppBudgetBudgetIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -147,8 +145,8 @@ export interface FileRoutesById {
   '/_app/ia-insights/': typeof AppIaInsightsIndexRoute
   '/_app/profile/': typeof AppProfileIndexRoute
   '/_app/budget/$budgetId/categories': typeof AppBudgetBudgetIdCategoriesRoute
-  '/_app/budget/$budgetId/dashboard': typeof AppBudgetBudgetIdDashboardRoute
   '/_app/budget/$budgetId/expenses': typeof AppBudgetBudgetIdExpensesRoute
+  '/_app/budget/$budgetId/': typeof AppBudgetBudgetIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -164,14 +162,13 @@ export interface FileRouteTypes {
     | '/ia-insights'
     | '/profile'
     | '/budget/$budgetId/categories'
-    | '/budget/$budgetId/dashboard'
     | '/budget/$budgetId/expenses'
+    | '/budget/$budgetId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth/sign-in'
     | '/auth/sign-up'
     | '/'
-    | '/budget/$budgetId'
     | '/budget/overview'
     | '/budget'
     | '/debt-calculator'
@@ -179,8 +176,8 @@ export interface FileRouteTypes {
     | '/ia-insights'
     | '/profile'
     | '/budget/$budgetId/categories'
-    | '/budget/$budgetId/dashboard'
     | '/budget/$budgetId/expenses'
+    | '/budget/$budgetId'
   id:
     | '__root__'
     | '/_app'
@@ -196,8 +193,8 @@ export interface FileRouteTypes {
     | '/_app/ia-insights/'
     | '/_app/profile/'
     | '/_app/budget/$budgetId/categories'
-    | '/_app/budget/$budgetId/dashboard'
     | '/_app/budget/$budgetId/expenses'
+    | '/_app/budget/$budgetId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -293,18 +290,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBudgetBudgetIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/budget/$budgetId/': {
+      id: '/_app/budget/$budgetId/'
+      path: '/'
+      fullPath: '/budget/$budgetId/'
+      preLoaderRoute: typeof AppBudgetBudgetIdIndexRouteImport
+      parentRoute: typeof AppBudgetBudgetIdRoute
+    }
     '/_app/budget/$budgetId/expenses': {
       id: '/_app/budget/$budgetId/expenses'
       path: '/expenses'
       fullPath: '/budget/$budgetId/expenses'
       preLoaderRoute: typeof AppBudgetBudgetIdExpensesRouteImport
-      parentRoute: typeof AppBudgetBudgetIdRoute
-    }
-    '/_app/budget/$budgetId/dashboard': {
-      id: '/_app/budget/$budgetId/dashboard'
-      path: '/dashboard'
-      fullPath: '/budget/$budgetId/dashboard'
-      preLoaderRoute: typeof AppBudgetBudgetIdDashboardRouteImport
       parentRoute: typeof AppBudgetBudgetIdRoute
     }
     '/_app/budget/$budgetId/categories': {
@@ -319,14 +316,14 @@ declare module '@tanstack/react-router' {
 
 interface AppBudgetBudgetIdRouteChildren {
   AppBudgetBudgetIdCategoriesRoute: typeof AppBudgetBudgetIdCategoriesRoute
-  AppBudgetBudgetIdDashboardRoute: typeof AppBudgetBudgetIdDashboardRoute
   AppBudgetBudgetIdExpensesRoute: typeof AppBudgetBudgetIdExpensesRoute
+  AppBudgetBudgetIdIndexRoute: typeof AppBudgetBudgetIdIndexRoute
 }
 
 const AppBudgetBudgetIdRouteChildren: AppBudgetBudgetIdRouteChildren = {
   AppBudgetBudgetIdCategoriesRoute: AppBudgetBudgetIdCategoriesRoute,
-  AppBudgetBudgetIdDashboardRoute: AppBudgetBudgetIdDashboardRoute,
   AppBudgetBudgetIdExpensesRoute: AppBudgetBudgetIdExpensesRoute,
+  AppBudgetBudgetIdIndexRoute: AppBudgetBudgetIdIndexRoute,
 }
 
 const AppBudgetBudgetIdRouteWithChildren =

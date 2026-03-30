@@ -2,6 +2,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { BudgetForm } from './-components/budget-list/BudgetForm'
 import { useBudgetHandlers } from './-hooks/use-budget-handlers'
+import { OverviewSkeleton } from './-components/overview/OverviewSkeleton'
+import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
 import { staticToolbarMeta } from '@/lib/toolbar'
 import { Dialog } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
@@ -43,6 +45,10 @@ function OverviewPage() {
   const { handleSubmit, isPending } = useBudgetHandlers(null, () =>
     setOpen(false),
   )
+  const { data: budgets, isLoading } = useBudgetOverview()
+  const hasBudgets = (budgets ?? []).length > 0
+
+  if (isLoading) return <OverviewSkeleton />
 
   return (
     <div className="flex flex-1 items-center justify-center p-4 md:p-8">
@@ -110,7 +116,7 @@ function OverviewPage() {
           className="bg-primary hover:bg-primary/90 rounded-full px-8"
           onClick={() => setOpen(true)}
         >
-          Create your first budget
+          {hasBudgets ? 'Create budget' : 'Create your first budget'}
         </Button>
 
         <Dialog open={open} onOpenChange={setOpen}>

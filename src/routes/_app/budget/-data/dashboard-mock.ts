@@ -1,18 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router'
 import type { SummaryGridProps } from '@/routes/_app/dashboard/-components/SummaryGrid'
 import type { BudgetOverviewProps } from '@/routes/_app/dashboard/-components/BudgetOverview'
 import type { RecentActivityItem } from '@/routes/_app/dashboard/-components/RecentActivity'
-import {
-  BudgetOverview as DashboardBudgetOverview,
-  RecentActivity,
-  SummaryGrid,
-} from '@/routes/_app/dashboard/-components'
 
-export const Route = createFileRoute('/_app/budget/$budgetId/dashboard')({
-  component: DashboardPage,
-})
-
-const summaryData: SummaryGridProps['summaryData'] = [
+export const summaryData: SummaryGridProps['summaryData'] = [
   {
     title: 'Total Spent',
     percentage: 17.6,
@@ -47,7 +37,7 @@ const summaryData: SummaryGridProps['summaryData'] = [
   },
 ]
 
-const budgetOverview: BudgetOverviewProps = {
+export const budgetOverview: BudgetOverviewProps = {
   currentMonth: 'January 2026',
   categories: [
     {
@@ -109,7 +99,7 @@ const budgetOverview: BudgetOverviewProps = {
   ],
 }
 
-const recentActivity: Array<RecentActivityItem> = [
+export const recentActivity: Array<RecentActivityItem> = [
   {
     id: '1',
     amount: 100,
@@ -120,18 +110,3 @@ const recentActivity: Array<RecentActivityItem> = [
     title: 'Food',
   },
 ]
-
-function DashboardPage() {
-  return (
-    <div className="min-h-screen p-8">
-      <SummaryGrid summaryData={summaryData} />
-      <div className="mt-4 grid grid-cols-1 gap-4 md:mt-8 md:grid-cols-2">
-        <DashboardBudgetOverview
-          categories={budgetOverview.categories}
-          currentMonth={budgetOverview.currentMonth}
-        />
-        <RecentActivity recentActivity={recentActivity} />
-      </div>
-    </div>
-  )
-}

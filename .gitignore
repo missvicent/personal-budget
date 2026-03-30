@@ -13,3 +13,6 @@ count.txt
 .superdesign/
 .worktrees/
 .superpowers/
+.cursor/
+
+docs/

@@ -1,9 +1,4 @@
 import { Link } from '@tanstack/react-router'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 import { SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 
 export default function AppSidebarItem({
@@ -14,28 +9,24 @@ export default function AppSidebarItem({
   const { title, url, icon } = item
   const Icon = icon
   return (
-    <SidebarMenuItem key={item.title}>
-      <SidebarMenuButton asChild>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              to={url}
-              className="flex items-center"
-              activeProps={{
-                className:
-                  'bg-sidebar-item-active-bg text-sidebar-item-active-text font-semibold border-l-4 border-sidebar-item-active-border rounded-l-md',
-              }}
-            >
-              <Icon className="h-4 w-4" />
-              <span className="group-data-[collapsible=icon]:hidden">
-                {title}
-              </span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">
-            <p className="text-sm">{title}</p>
-          </TooltipContent>
-        </Tooltip>
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        asChild
+        tooltip={title}
+        className="group-data-[collapsible=icon]:p-1!"
+      >
+        <Link
+          to={url}
+          activeProps={{
+            className:
+              'bg-sidebar-item-active-bg text-sidebar-item-active-text font-semibold',
+          }}
+        >
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center">
+            <Icon className="h-4 w-4" />
+          </span>
+          <span>{title}</span>
+        </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>
   )
