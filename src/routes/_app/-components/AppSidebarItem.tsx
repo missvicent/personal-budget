@@ -26,7 +26,7 @@ export default function AppSidebarItem({
                   'bg-sidebar-item-active-bg text-sidebar-item-active-text font-semibold border-l-4 border-sidebar-item-active-border rounded-l-md',
               }}
             >
-              <Icon className="h-10 w-10 p-2" />
+              <Icon className="h-4 w-4" />
               <span className="group-data-[collapsible=icon]:hidden">
                 {title}
               </span>
