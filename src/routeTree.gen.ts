@@ -103,24 +103,24 @@ const AppBudgetBudgetIdCategoriesRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof PublicIndexRoute
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
+  '/': typeof PublicIndexRoute
   '/budget/$budgetId': typeof AppBudgetBudgetIdRouteWithChildren
   '/budget/overview': typeof AppBudgetOverviewRoute
-  '/budget/': typeof AppBudgetIndexRoute
-  '/debt-calculator/': typeof AppDebtCalculatorIndexRoute
-  '/goal-tracker/': typeof AppGoalTrackerIndexRoute
-  '/ia-insights/': typeof AppIaInsightsIndexRoute
-  '/profile/': typeof AppProfileIndexRoute
+  '/budget': typeof AppBudgetIndexRoute
+  '/debt-calculator': typeof AppDebtCalculatorIndexRoute
+  '/goal-tracker': typeof AppGoalTrackerIndexRoute
+  '/ia-insights': typeof AppIaInsightsIndexRoute
+  '/profile': typeof AppProfileIndexRoute
   '/budget/$budgetId/categories': typeof AppBudgetBudgetIdCategoriesRoute
   '/budget/$budgetId/dashboard': typeof AppBudgetBudgetIdDashboardRoute
   '/budget/$budgetId/expenses': typeof AppBudgetBudgetIdExpensesRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof PublicIndexRoute
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
+  '/': typeof PublicIndexRoute
   '/budget/$budgetId': typeof AppBudgetBudgetIdRouteWithChildren
   '/budget/overview': typeof AppBudgetOverviewRoute
   '/budget': typeof AppBudgetIndexRoute
@@ -153,24 +153,24 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/'
     | '/budget/$budgetId'
     | '/budget/overview'
-    | '/budget/'
-    | '/debt-calculator/'
-    | '/goal-tracker/'
-    | '/ia-insights/'
-    | '/profile/'
+    | '/budget'
+    | '/debt-calculator'
+    | '/goal-tracker'
+    | '/ia-insights'
+    | '/profile'
     | '/budget/$budgetId/categories'
     | '/budget/$budgetId/dashboard'
     | '/budget/$budgetId/expenses'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/'
     | '/budget/$budgetId'
     | '/budget/overview'
     | '/budget'
@@ -212,14 +212,14 @@ declare module '@tanstack/react-router' {
     '/_public': {
       id: '/_public'
       path: ''
-      fullPath: '/'
+      fullPath: ''
       preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
       id: '/_app'
       path: ''
-      fullPath: '/'
+      fullPath: ''
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -247,35 +247,35 @@ declare module '@tanstack/react-router' {
     '/_app/profile/': {
       id: '/_app/profile/'
       path: '/profile'
-      fullPath: '/profile/'
+      fullPath: '/profile'
       preLoaderRoute: typeof AppProfileIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/ia-insights/': {
       id: '/_app/ia-insights/'
       path: '/ia-insights'
-      fullPath: '/ia-insights/'
+      fullPath: '/ia-insights'
       preLoaderRoute: typeof AppIaInsightsIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/goal-tracker/': {
       id: '/_app/goal-tracker/'
       path: '/goal-tracker'
-      fullPath: '/goal-tracker/'
+      fullPath: '/goal-tracker'
       preLoaderRoute: typeof AppGoalTrackerIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/debt-calculator/': {
       id: '/_app/debt-calculator/'
       path: '/debt-calculator'
-      fullPath: '/debt-calculator/'
+      fullPath: '/debt-calculator'
       preLoaderRoute: typeof AppDebtCalculatorIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/budget/': {
       id: '/_app/budget/'
       path: '/budget'
-      fullPath: '/budget/'
+      fullPath: '/budget'
       preLoaderRoute: typeof AppBudgetIndexRouteImport
       parentRoute: typeof AppRoute
     }
