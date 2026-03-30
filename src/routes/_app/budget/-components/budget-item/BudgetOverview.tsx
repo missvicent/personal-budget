@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 import { PlusIcon } from 'lucide-react'
 import { useParams } from '@tanstack/react-router'
 import { useBudgetDialog } from '../../-hooks/use-budget-dialog'
+import { useBudgetItemHandlers } from '../../-hooks/user-budget-item-handlers'
 import { BudgetCategoryForm } from './BudgetCategoryForm'
 import { BudgetOverviewSkeleton } from './BudgetOverviewSkeleton'
 import { BudgetItemCard } from './BudgetItemCard'
-import type { BudgetWithProgress } from '@/types/budget.types'
 import { cn } from '@/lib/utils'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
@@ -17,13 +17,13 @@ export const BudgetOverview = () => {
   const { budgetId } = useParams({ from: '/_app/budget/$budgetId' })
   const { data: budgetItems, isLoading } = useBudgetItems(budgetId)
   const { data: budgetOverviews } = useBudgetOverview()
+  const userBudgetItemHandlers = useBudgetItemHandlers(null, () => {
+    dialog.onOpenChange(false)
+  })
 
   const usedCategoryIds = useMemo(
-    () =>
-      (budgetItems as unknown as Array<BudgetWithProgress> | undefined)
-        ?.filter((b) => b.budget_id === budgetId)
-        .map((b) => b.category_id) ?? [],
-    [budgetItems, budgetId],
+    () => budgetItems?.map((item) => item.category_id) ?? [],
+    [budgetItems],
   )
 
   const remainingBudget = useMemo(() => {
@@ -49,8 +49,9 @@ export const BudgetOverview = () => {
             </Button>
           </DialogTrigger>
           <BudgetCategoryForm
-            isPending={false}
-            onSubmit={() => {}}
+            budgetId={budgetId}
+            isPending={userBudgetItemHandlers.isPending}
+            onSubmit={userBudgetItemHandlers.handleSubmit}
             remainingBudget={remainingBudget}
             selectedBudgetItem={null}
             usedCategoryIds={usedCategoryIds}
@@ -58,11 +59,10 @@ export const BudgetOverview = () => {
         </Dialog>
       </header>
       <section className="flex flex-col gap-4">
-        <h3 className="text-lg font-semibold">All Budget Items</h3>
         <div className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
           {budgetItems && budgetItems.length > 0 ? (
             budgetItems.map((item) => (
-              <BudgetItemCard key={item.id} budgetItem={item} />
+              <BudgetItemCard key={item.item_id} budgetItem={item} />
             ))
           ) : (
             <div className="col-span-4 flex h-full items-center justify-center">

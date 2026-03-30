@@ -1,12 +1,15 @@
 import { useAuthQuery } from '../auth/use-auth-query'
 import { useBudgetQueryKeys } from './use-budget-query-keys'
-import type { BudgetItem } from '@/types/database.types'
+import type { BudgetWithProgress } from '@/types/budget.types'
 import { budgetService } from '@/services/budget.service'
 
 export const useBudgetItems = (budgetId: string) => {
-  return useAuthQuery<Array<BudgetItem>>(
+  return useAuthQuery<Array<BudgetWithProgress>>(
     useBudgetQueryKeys().budgetItem(budgetId),
-    (supabase) => budgetService.getBudgetItemsByBudgetId(budgetId, supabase),
+    async (supabase) => {
+      const all = await budgetService.getAllWithProgress(supabase)
+      return all.filter((item) => item.budget_id === budgetId)
+    },
     {
       retry: false,
     },

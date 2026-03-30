@@ -29,6 +29,7 @@ import { useCategories } from '@/hooks/categories/use-categories'
 import { toSelectOptions } from '@/lib/utils'
 
 interface BudgetCategoryFormProps {
+  budgetId: string
   isPending: boolean
   onSubmit: (data: BudgetItemFormData) => void
   remainingBudget: number
@@ -37,6 +38,7 @@ interface BudgetCategoryFormProps {
 }
 
 export const BudgetCategoryForm = ({
+  budgetId,
   isPending,
   onSubmit,
   remainingBudget,
@@ -66,15 +68,17 @@ export const BudgetCategoryForm = ({
 
   const defaultValues = useMemo(() => {
     return {
+      budget_id: budgetId,
       category_id: '',
       amount: 0,
       alert_enabled: false,
     }
-  }, [])
+  }, [budgetId])
 
   const form = useForm<BudgetItemFormData>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
+    mode: 'onChange',
   })
 
   return (

@@ -19,7 +19,8 @@ export const AppToolbar = () => {
   return (
     <header
       className={cn(
-        'bg-sidebar border-b',
+        'border-b border-black/[0.06] bg-white/80 backdrop-blur-xl',
+        'dark:border-white/[0.06] dark:bg-[oklch(0.17_0_0)]/80',
         'h-[72px]',
         'flex shrink-0 items-center',
         'select-none',

@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { createBudgetItemSchema } from '../budget-item.schema'
 
 const validItem = {
+  budget_id: 'budget-1',
   category_id: 'cat-1',
-  category_name: 'Groceries',
   amount: 100,
   alert_enabled: false,
 }

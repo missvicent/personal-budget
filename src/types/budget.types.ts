@@ -42,16 +42,12 @@ export interface BudgetOverview {
 }
 
 export interface BudgetItem {
-  id: string
+  id?: string
   budget_id: string
-  budget_name: string
-  budget_amount: number
+  category_id: string
   amount: number
-  category_name: string
-  category_icon: string
-  category_color: string
-  created_at: string
-  updated_at: string
-  alert_enabled: boolean
-  alert_threshold: number
+  alert_enabled?: boolean
+  alert_threshold?: number
+  created_at?: string
+  updated_at?: string
 }

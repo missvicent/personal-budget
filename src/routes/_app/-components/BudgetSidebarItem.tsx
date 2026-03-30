@@ -57,7 +57,7 @@ export function BudgetSidebarItem({ budget }: { budget: BudgetOverview }) {
         <CollapsibleContent>
           <SidebarMenuSub>
             {BUDGET_SUB_LINKS.map((link) => (
-              <SidebarMenuSubItem key={link.path}>
+              <SidebarMenuSubItem key={link.title}>
                 <SidebarMenuSubButton asChild>
                   <Link
                     to={link.to}
