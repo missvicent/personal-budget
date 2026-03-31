@@ -15,23 +15,16 @@ export const expenseSchema = z.object({
     .date('Date is required')
     .refine((date) => date <= new Date(), 'Date cannot be in the future'),
   is_recurring: z.boolean().optional(),
-  budget_id: z.string().optional(),
 })
 
 export type ExpenseFormData = z.infer<typeof expenseSchema>
 
-export function toTransactionPayload(data: ExpenseFormData) {
-  const {
-    amount,
-    category_id,
-    description,
-    transaction_date,
-    is_recurring,
-    budget_id,
-  } = data
+export function toTransactionPayload(data: ExpenseFormData, budgetId?: string) {
+  const { amount, category_id, description, transaction_date, is_recurring } =
+    data
   return {
     amount,
-    budget_id: budget_id,
+    budget_id: budgetId ?? null,
     category_id: category_id ?? null,
     description,
     is_recurring: is_recurring ?? false,

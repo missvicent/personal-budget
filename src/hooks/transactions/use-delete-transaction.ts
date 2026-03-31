@@ -1,5 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuthMutation } from '../auth/use-auth-mutation'
+import { useBudgetQueryKeys } from '../budget/use-budget-query-keys'
 import { useTransactionsQueryKeys } from './use-transactions-query-keys'
 import type { Transaction } from '@/types/database.types'
 import { transactionsService } from '@/services/transactions.service'
@@ -32,6 +33,12 @@ export const useDeleteTransaction = () => {
         }
         queryClient.invalidateQueries({
           queryKey: context?.queryKey,
+        })
+        queryClient.invalidateQueries({
+          queryKey: useBudgetQueryKeys().overview(),
+        })
+        queryClient.invalidateQueries({
+          queryKey: useBudgetQueryKeys().budgets(),
         })
       },
     },

@@ -26,6 +26,7 @@ export const Route = createFileRoute('/_app/budget/$budgetId/expenses')({
 })
 
 function ExpensesPage() {
+  const { budgetId } = Route.useParams()
   const { data: categories } = useCategories()
   const { data: transactionsWithCategories } =
     useGetTransactionsWithCategories()
@@ -35,7 +36,7 @@ function ExpensesPage() {
     transactionsWithCategories ?? [],
     categories ?? [],
   )
-  const actions = useExpenseActions(() => dialog.onOpenChange(false))
+  const actions = useExpenseActions(() => dialog.onOpenChange(false), budgetId)
 
   return (
     <section className={cn('flex flex-col gap-4', 'px-4 py-4 md:px-8 md:py-8')}>
