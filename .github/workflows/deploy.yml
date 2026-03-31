@@ -20,6 +20,9 @@ jobs:
           node-version: 20
           cache: 'npm'
 
+      - name: Verify lockfile is in sync
+        run: npx --yes lockfile-lint --path package-lock.json --type npm --allowed-hosts npm
+
       - run: npm ci
 
       - name: Build
