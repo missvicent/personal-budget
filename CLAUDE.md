@@ -32,9 +32,16 @@ npm run check        # Fix all lint/format issues (prettier --write . && eslint 
 
 ### Supabase Migrations
 
+Use the `/migrate` slash command for all migration workflows:
+
+- `/migrate <name>` — Scaffold a new migration file (uses `supabase migration new` for consistent timestamps)
+- `/migrate` — Full lifecycle: check status, detect renames, push to remote, regenerate TypeScript types
+
+**Prerequisites:** Must be logged in (`npx supabase login`) and linked (`npx supabase link --project-ref <ref>`).
+
+**Manual commands** (only needed for troubleshooting):
+
 ```bash
-npx supabase login                              # Login to Supabase CLI
-npx supabase link --project-ref <ref>           # Link to your Supabase project
 npx supabase migration list                     # Show local vs remote migration status
 npx supabase db push                            # Push pending migrations to remote
 npx supabase migration repair <version> --status applied   # Mark a migration as already applied

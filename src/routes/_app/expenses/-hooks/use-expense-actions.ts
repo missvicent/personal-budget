@@ -5,7 +5,7 @@ import { useUpdateTransaction } from '@/hooks/transactions/use-update-transactio
 import { useDeleteTransaction } from '@/hooks/transactions/use-delete-transaction'
 import { toTransactionPayload } from '@/lib/schemas/expenses/expense.schema'
 
-export const useExpenseActions = (onSuccess: () => void) => {
+export const useExpenseActions = (onSuccess: () => void, budgetId?: string) => {
   const { mutate: createTransaction, isPending: isCreating } =
     useCreateTransaction()
   const { mutate: updateTransaction, isPending: isUpdating } =
@@ -19,11 +19,14 @@ export const useExpenseActions = (onSuccess: () => void) => {
   ) => {
     if (selectedTransaction) {
       updateTransaction(
-        { ...toTransactionPayload(data), id: selectedTransaction.id },
+        {
+          ...toTransactionPayload(data, budgetId),
+          id: selectedTransaction.id,
+        },
         { onSuccess },
       )
     } else {
-      createTransaction(toTransactionPayload(data), { onSuccess })
+      createTransaction(toTransactionPayload(data, budgetId), { onSuccess })
     }
   }
 
