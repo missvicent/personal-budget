@@ -5,7 +5,11 @@ import { useUpdateTransaction } from '@/hooks/transactions/use-update-transactio
 import { useDeleteTransaction } from '@/hooks/transactions/use-delete-transaction'
 import { toTransactionPayload } from '@/lib/schemas/expenses/expense.schema'
 
-export const useExpenseActions = (onSuccess: () => void, budgetId?: string) => {
+export const useExpenseActions = (
+  onSuccess: () => void,
+  budgetId?: string,
+  ensureBudgetItem?: (categoryId: string, amount: number) => Promise<void>,
+) => {
   const { mutate: createTransaction, isPending: isCreating } =
     useCreateTransaction()
   const { mutate: updateTransaction, isPending: isUpdating } =
@@ -13,10 +17,14 @@ export const useExpenseActions = (onSuccess: () => void, budgetId?: string) => {
   const { mutate: deleteTransaction, isPending: isDeleting } =
     useDeleteTransaction()
 
-  const onSubmit = (
+  const onSubmit = async (
     data: ExpenseFormData,
     selectedTransaction: ExpenseTransaction | null,
   ) => {
+    if (data.category_id && ensureBudgetItem) {
+      await ensureBudgetItem(data.category_id, data.amount)
+    }
+
     if (selectedTransaction) {
       updateTransaction(
         {

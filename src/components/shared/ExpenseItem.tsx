@@ -5,6 +5,7 @@ import { ExpenseItemDetails } from './ExpenseItemDetails'
 import { ExpenseItemActions } from './ExpenseItemActions'
 import { ExpenseItemMeta } from './ExpenseItemMeta'
 import type { ReactNode } from 'react'
+import { cn } from '@/lib/utils'
 
 export interface ExpenseItemProps {
   amount: number
@@ -12,6 +13,7 @@ export interface ExpenseItemProps {
   children?: ReactNode
   color: string
   icon: string
+  isOverBudget?: boolean
   title: string
 }
 
@@ -23,13 +25,19 @@ export const ExpenseItemRoot = ({
   children,
   color,
   icon,
+  isOverBudget = false,
   title,
 }: ExpenseItemProps) => {
   return (
     <ExpenseItemContext.Provider
-      value={{ amount, category, color, icon, title }}
+      value={{ amount, category, color, icon, isOverBudget, title }}
     >
-      <div className="group bg-sidebar hover:border-primary/50 mt-3 flex w-full items-center justify-between rounded-lg border p-6 transition-colors">
+      <div
+        className={cn(
+          'group bg-sidebar hover:border-primary/50 mt-3 flex w-full items-center justify-between rounded-lg border p-6 transition-colors',
+          isOverBudget && 'border-destructive',
+        )}
+      >
         {children}
       </div>
     </ExpenseItemContext.Provider>
