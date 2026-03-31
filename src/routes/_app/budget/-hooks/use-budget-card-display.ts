@@ -5,7 +5,7 @@ import { leftDays } from '@/lib/dates/leftDays'
 
 export type BudgetBadge = { label: string; color: BadgeColor }
 
-export const useBudgetItemDisplay = (budget: BudgetOverview) => {
+export const useBudgetCardDisplay = (budget: BudgetOverview) => {
   const { budget_amount, total_spent, period } = budget
   const progressValue =
     budget_amount > 0 ? (total_spent / budget_amount) * 100 : 0

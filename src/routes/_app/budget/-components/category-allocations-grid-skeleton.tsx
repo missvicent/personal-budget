@@ -1,7 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 
-export const BudgetOverviewSkeleton = () => {
+export const CategoryAllocationsGridSkeleton = () => {
   return (
     <section className={cn('flex flex-col gap-4', 'px-4 py-4 md:p-8')}>
       {/* Summary card row */}

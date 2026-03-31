@@ -4,11 +4,13 @@ import { CircularProgress } from '@/components/ui/circular-progress'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
-interface BudgetItemCardProps {
+interface CategoryAllocationCardProps {
   budgetItem: BudgetWithProgress
 }
 
-export const BudgetItemCard = ({ budgetItem }: BudgetItemCardProps) => {
+export const CategoryAllocationCard = ({
+  budgetItem,
+}: CategoryAllocationCardProps) => {
   const { category_name, amount, progress, category_icon, category_color } =
     budgetItem
   const progressValue = amount > 0 ? (progress / amount) * 100 : 0

@@ -1,3 +1,3 @@
 export { SummaryGrid } from './SummaryGrid'
-export { BudgetOverview } from './BudgetOverview'
+export { SpendingByCategory } from './spending-by-category'
 export { RecentActivity } from './RecentActivity'

@@ -28,7 +28,7 @@ import { Button } from '@/components/ui/button'
 import { useCategories } from '@/hooks/categories/use-categories'
 import { toSelectOptions } from '@/lib/utils'
 
-interface BudgetCategoryFormProps {
+interface CategoryAllocationFormProps {
   budgetId: string
   isPending: boolean
   onSubmit: (data: BudgetItemFormData) => void
@@ -37,14 +37,14 @@ interface BudgetCategoryFormProps {
   usedCategoryIds: Array<string>
 }
 
-export const BudgetCategoryForm = ({
+export const CategoryAllocationForm = ({
   budgetId,
   isPending,
   onSubmit,
   remainingBudget,
   selectedBudgetItem,
   usedCategoryIds,
-}: BudgetCategoryFormProps) => {
+}: CategoryAllocationFormProps) => {
   const { data: categories } = useCategories()
 
   const categoryOptions = useMemo(

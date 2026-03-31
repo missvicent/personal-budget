@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { PeriodSelector } from './PeriodSelector'
+import { PeriodSelector } from './period-selector'
 import type { Budget } from '@/types/database.types'
 import type { BudgetFormData } from '@/lib/schemas/budget/budget.schema'
 import {
