@@ -5,11 +5,10 @@ import {
   CreditCard,
   GraduationCap,
   Home,
-  Pencil,
-  Trash2,
 } from 'lucide-react'
 import type { Debt } from '@/types/database.types'
 import { Card } from '@/components/ui/card'
+import { CardActions } from '@/components/shared/card-actions'
 
 const DEBT_TYPE_CONFIG = {
   credit_card: { icon: CreditCard, label: 'Credit Card' },
@@ -32,7 +31,6 @@ export function DebtCard({
   onEdit,
   onRecordPayment,
   onDelete,
-  isDeleting,
 }: DebtCardProps) {
   const config = DEBT_TYPE_CONFIG[debt.type]
   const Icon = config.icon
@@ -103,21 +101,11 @@ export function DebtCard({
         >
           <CircleDollarSign className="h-4 w-4" />
         </button>
-        <button
-          onClick={() => onEdit(debt)}
-          className="text-muted-foreground hover:text-foreground rounded p-1.5 transition-colors"
-          title="Edit"
-        >
-          <Pencil className="h-4 w-4" />
-        </button>
-        <button
-          onClick={() => onDelete(debt.id)}
-          disabled={isDeleting}
-          className="text-muted-foreground hover:text-destructive rounded p-1.5 transition-colors"
-          title="Delete"
-        >
-          <Trash2 className="h-4 w-4" />
-        </button>
+        <CardActions
+          onEdit={() => onEdit(debt)}
+          onDelete={() => onDelete(debt.id)}
+          showOnHover={false}
+        />
       </div>
     </Card>
   )

@@ -1,12 +1,12 @@
 import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import type { Category } from '@/types/database.types'
 import type { ExpenseFormData } from '@/lib/schemas/expenses/expense.schema'
+import type { SelectOptionGroup } from '@/components/shared/GroupedSelectField'
 import type { ExpenseTransaction } from './ExpenseList'
 import { Checkbox } from '@/components/ui/checkbox'
 import { expenseSchema } from '@/lib/schemas/expenses/expense.schema'
-import { SelectField } from '@/components/shared/SelectField'
+import { GroupedSelectField } from '@/components/shared/GroupedSelectField'
 import { Button } from '@/components/ui/button'
 import {
   DialogClose,
@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/dialog'
 import { FieldGroup } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { toSelectOptions } from '@/lib/utils'
 import { CurrencyInput } from '@/components/shared/CurrencyInput'
 import { DatePickerInput } from '@/components/shared/DatepickerInput'
 import {
@@ -32,14 +31,14 @@ import {
 } from '@/components/ui/form'
 
 interface ExpenseTransactionFormProps {
-  categories: Array<Category>
+  groups: Array<SelectOptionGroup>
   isPending: boolean
   open: boolean
   onSubmit: (data: ExpenseFormData) => void
   selectedTransaction: ExpenseTransaction | null
 }
 export const ExpenseTransactionForm = ({
-  categories,
+  groups,
   isPending,
   onSubmit,
   open,
@@ -63,19 +62,6 @@ export const ExpenseTransactionForm = ({
   const handleSubmit = (data: ExpenseFormData) => {
     onSubmit(data)
   }
-
-  const categoryOptions = useMemo(
-    () =>
-      categories.length > 0
-        ? toSelectOptions(
-            { label: 'Select Category', value: 'all' },
-            categories.filter((c) => c.category_type === 'expense'),
-            (c) => `${c.icon} ${c.name}`,
-            (c) => c.id,
-          )
-        : [],
-    [categories],
-  )
 
   useEffect(() => {
     if (selectedTransaction) {
@@ -164,20 +150,11 @@ export const ExpenseTransactionForm = ({
                 <FormItem>
                   <FormLabel>Pick a category (optional):</FormLabel>
                   <FormControl>
-                    <SelectField
-                      items={categoryOptions}
+                    <GroupedSelectField
+                      groups={groups}
                       onChange={(selected) => field.onChange(selected.value)}
                       placeholder="Select Category (Optional)"
                       value={field.value || ''}
-                      aria-label="Category"
-                      aria-describedby="category-description"
-                      aria-required="false"
-                      aria-invalid="false"
-                      aria-autocomplete="list"
-                      aria-controls="category-list"
-                      aria-expanded="false"
-                      aria-haspopup="true"
-                      aria-activedescendant="category-item-0"
                     />
                   </FormControl>
                   <FormMessage />

@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import { PencilIcon, Trash2Icon } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { currencyFormatter } from '@/lib/format'
 import { DeleteDialog } from '@/components/shared/DeleteDialog'
 import { ExpenseItem } from '@/components/shared/ExpenseItem'
+import { CardActions } from '@/components/shared/card-actions'
 
 export interface ExpenseTransaction {
   amount: number
@@ -29,6 +28,7 @@ export interface ExpenseListProps {
   onEdit: (transaction: ExpenseTransaction) => void
   onDelete: (id: string, onSuccess: () => void) => void
   isDeleting: boolean
+  overspendingIds: Set<string>
 }
 
 export const ExpenseList = ({
@@ -36,6 +36,7 @@ export const ExpenseList = ({
   onEdit,
   onDelete,
   isDeleting,
+  overspendingIds,
 }: ExpenseListProps) => {
   const [deleteTarget, setDeleteTarget] = useState<ExpenseTransaction | null>(
     null,
@@ -73,6 +74,7 @@ export const ExpenseList = ({
                   category={transaction.name}
                   color={transaction.color}
                   icon={transaction.icon}
+                  isOverBudget={overspendingIds.has(transaction.id)}
                   title={transaction.description}
                 >
                   <div className="flex items-center gap-2">
@@ -82,22 +84,11 @@ export const ExpenseList = ({
                   <div className="flex items-center gap-2">
                     <ExpenseItem.Amount />
                     <ExpenseItem.Actions>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="hover:bg-primary/20 hover:text-primary/70"
-                        onClick={() => onEdit(transaction)}
-                      >
-                        <PencilIcon className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="hover:bg-destructive/20 hover:text-destructive/70"
-                        onClick={() => setDeleteTarget(transaction)}
-                      >
-                        <Trash2Icon className="h-4 w-4" />
-                      </Button>
+                      <CardActions
+                        onEdit={() => onEdit(transaction)}
+                        onDelete={() => setDeleteTarget(transaction)}
+                        showOnHover={false}
+                      />
                     </ExpenseItem.Actions>
                   </div>
                 </ExpenseItem>

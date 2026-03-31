@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
 import { PlusIcon } from 'lucide-react'
@@ -19,7 +20,10 @@ import {
 } from '@/components/ui/tooltip'
 
 import { useCategories } from '@/hooks/categories/use-categories'
+import { useBudgetItems } from '@/hooks/budget/use-budget-item'
+import { useBudgetCategorySelect } from '@/hooks/budget/use-budget-category-select'
 import { useGetTransactionsWithCategories } from '@/hooks/transactions/use-transaction-with-categories'
+import { getOverspendingTransactionIds } from '@/lib/budget.utils'
 
 export const Route = createFileRoute('/_app/budget/$budgetId/expenses')({
   component: ExpensesPage,
@@ -30,13 +34,33 @@ function ExpensesPage() {
   const { data: categories } = useCategories()
   const { data: transactionsWithCategories } =
     useGetTransactionsWithCategories()
+  const { data: budgetItems } = useBudgetItems(budgetId)
+
+  const overspendingIds = useMemo(
+    () =>
+      getOverspendingTransactionIds(
+        transactionsWithCategories ?? [],
+        budgetItems ?? [],
+      ),
+    [transactionsWithCategories, budgetItems],
+  )
+
+  const { groups, ensureBudgetItem } = useBudgetCategorySelect(
+    budgetId,
+    categories ?? [],
+    budgetItems ?? [],
+  )
 
   const dialog = useExpenseDialog()
   const filters = useExpenseFilters(
     transactionsWithCategories ?? [],
     categories ?? [],
   )
-  const actions = useExpenseActions(() => dialog.onOpenChange(false), budgetId)
+  const actions = useExpenseActions(
+    () => dialog.onOpenChange(false),
+    budgetId,
+    ensureBudgetItem,
+  )
 
   return (
     <section className={cn('flex flex-col gap-4', 'px-4 py-4 md:px-8 md:py-8')}>
@@ -74,7 +98,7 @@ function ExpensesPage() {
             <ExpenseTransactionForm
               key={dialog.selectedTransaction?.id}
               open={dialog.open}
-              categories={categories ?? []}
+              groups={groups}
               isPending={actions.isCreating || actions.isUpdating}
               onSubmit={(data) =>
                 actions.onSubmit(data, dialog.selectedTransaction)
@@ -89,6 +113,7 @@ function ExpensesPage() {
         onEdit={dialog.onEdit}
         onDelete={actions.onDelete}
         isDeleting={actions.isDeleting}
+        overspendingIds={overspendingIds}
       />
     </section>
   )
