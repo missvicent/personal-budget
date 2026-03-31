@@ -18,7 +18,7 @@ export const CurrencyInput = React.forwardRef<
     <DollarSign className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
     <Input
       ref={ref}
-      className={`bg-background pl-9 ${className ?? ''}`}
+      className={`dark:bg-input/30 bg-white pl-9 ${className ?? ''}`}
       value={value || ''}
       onChange={(e) => onChange(Number(e.target.value))}
       {...rest}
