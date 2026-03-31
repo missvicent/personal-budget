@@ -2,8 +2,8 @@
 echo "Pre-push: validating build..."
 
 # Fast fail if lockfile is out of sync
-pnpm install --frozen-lockfile || {
-  echo "pnpm-lock.yaml is out of sync with package.json. Run 'pnpm install' first."
+npm ci --dry-run > /dev/null 2>&1 || {
+  echo "package-lock.json is out of sync with package.json. Run 'npm install' first."
   exit 1
 }
 

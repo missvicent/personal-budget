@@ -1,8 +1,8 @@
 export PATH="$HOME/.npm-global/bin:/usr/bin:/bin:/usr/local/bin:$PATH"
 
-if ! pnpm install --frozen-lockfile > /dev/null 2>&1; then
-  echo "ERROR: pnpm-lock.yaml is out of sync with package.json"
-  echo "Run 'pnpm install' to update the lockfile, then commit again."
+if [ package.json -nt package-lock.json ]; then
+  echo "ERROR: package-lock.json may be out of sync with package.json"
+  echo "Run 'npm install' to update the lockfile, then commit again."
   exit 1
 fi
 
