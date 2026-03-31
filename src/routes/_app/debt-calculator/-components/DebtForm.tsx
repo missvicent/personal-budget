@@ -60,7 +60,7 @@ export function DebtForm({ onSubmit, selectedDebt, isPending }: DebtFormProps) {
           <input
             id="debt-name"
             {...register('name')}
-            className="border-input bg-background mt-1 w-full rounded-md border px-3 py-2 text-sm"
+            className="border-input dark:bg-input/30 mt-1 w-full rounded-md border bg-white px-3 py-2 text-sm"
             placeholder="e.g., Chase Sapphire"
           />
           {errors.name && (
@@ -77,7 +77,7 @@ export function DebtForm({ onSubmit, selectedDebt, isPending }: DebtFormProps) {
           <select
             id="debt-type"
             {...register('type')}
-            className="border-input bg-background mt-1 w-full rounded-md border px-3 py-2 text-sm"
+            className="border-input dark:bg-input/30 mt-1 w-full rounded-md border bg-white px-3 py-2 text-sm"
           >
             {DEBT_TYPE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -100,7 +100,7 @@ export function DebtForm({ onSubmit, selectedDebt, isPending }: DebtFormProps) {
               {...register('principal_amount', { valueAsNumber: true })}
               type="number"
               step="0.01"
-              className="border-input bg-background mt-1 w-full rounded-md border px-3 py-2 text-sm"
+              className="border-input dark:bg-input/30 mt-1 w-full rounded-md border bg-white px-3 py-2 text-sm"
             />
             {errors.principal_amount && (
               <p className="text-destructive mt-1 text-xs">
@@ -120,7 +120,7 @@ export function DebtForm({ onSubmit, selectedDebt, isPending }: DebtFormProps) {
               {...register('current_balance', { valueAsNumber: true })}
               type="number"
               step="0.01"
-              className="border-input bg-background mt-1 w-full rounded-md border px-3 py-2 text-sm"
+              className="border-input dark:bg-input/30 mt-1 w-full rounded-md border bg-white px-3 py-2 text-sm"
             />
             {errors.current_balance && (
               <p className="text-destructive mt-1 text-xs">
@@ -140,7 +140,7 @@ export function DebtForm({ onSubmit, selectedDebt, isPending }: DebtFormProps) {
               {...register('interest_rate', { valueAsNumber: true })}
               type="number"
               step="0.01"
-              className="border-input bg-background mt-1 w-full rounded-md border px-3 py-2 text-sm"
+              className="border-input dark:bg-input/30 mt-1 w-full rounded-md border bg-white px-3 py-2 text-sm"
             />
             {errors.interest_rate && (
               <p className="text-destructive mt-1 text-xs">
@@ -160,7 +160,7 @@ export function DebtForm({ onSubmit, selectedDebt, isPending }: DebtFormProps) {
               {...register('minimum_payment', { valueAsNumber: true })}
               type="number"
               step="0.01"
-              className="border-input bg-background mt-1 w-full rounded-md border px-3 py-2 text-sm"
+              className="border-input dark:bg-input/30 mt-1 w-full rounded-md border bg-white px-3 py-2 text-sm"
             />
             {errors.minimum_payment && (
               <p className="text-destructive mt-1 text-xs">
@@ -178,7 +178,7 @@ export function DebtForm({ onSubmit, selectedDebt, isPending }: DebtFormProps) {
             id="debt-start-date"
             {...register('start_date')}
             type="date"
-            className="border-input bg-background mt-1 w-full rounded-md border px-3 py-2 text-sm"
+            className="border-input dark:bg-input/30 mt-1 w-full rounded-md border bg-white px-3 py-2 text-sm"
           />
           {errors.start_date && (
             <p className="text-destructive mt-1 text-xs">

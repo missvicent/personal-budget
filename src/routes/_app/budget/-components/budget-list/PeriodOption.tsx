@@ -21,7 +21,7 @@ export const PeriodOption = ({
       {options.map((option) => (
         <ToggleGroupItem
           aria-label={option.label}
-          className="group/toggle text-muted-foreground/50 hover:border-primary/30 data-[state=on]:border-primary/50 data-[state=on]:bg-primary/5 relative flex h-auto w-full cursor-pointer flex-col items-start gap-4 rounded-xl border border-gray-200 p-4 transition-colors dark:border-white/10"
+          className="group/toggle text-muted-foreground hover:border-primary/30 data-[state=on]:border-primary/50 data-[state=on]:bg-primary/10 dark:data-[state=on]:bg-primary/15 dark:bg-input/30 relative flex h-auto w-full cursor-pointer flex-col items-start gap-4 rounded-xl border border-gray-200 bg-white p-4 transition-colors dark:border-white/10"
           key={option.value}
           value={option.value}
         >
@@ -29,12 +29,12 @@ export const PeriodOption = ({
             <Check className="text-primary-foreground size-3" />
           </div>
           <div className="bg-accent/20 group-hover/toggle:bg-primary/10 rounded-lg p-2">
-            <Calendar className="group-hover/toggle:text-primary text-muted-foreground/50 size-4" />
+            <Calendar className="group-hover/toggle:text-primary text-muted-foreground size-4" />
           </div>
           <div className="flex flex-col items-start">
             <span className="text-sm font-semibold">{option.label} </span>
             {option.subtitle && (
-              <span className="text-muted-foreground/50 text-xs">
+              <span className="text-muted-foreground text-xs">
                 {option.subtitle}
               </span>
             )}

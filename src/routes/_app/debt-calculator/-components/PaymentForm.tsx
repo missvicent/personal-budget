@@ -62,7 +62,7 @@ export function PaymentForm({ debt, onSubmit, isPending }: PaymentFormProps) {
             {...register('amount_paid', { valueAsNumber: true })}
             type="number"
             step="0.01"
-            className="border-input bg-background mt-1 w-full rounded-md border px-3 py-2 text-sm"
+            className="border-input dark:bg-input/30 mt-1 w-full rounded-md border bg-white px-3 py-2 text-sm"
           />
           {errors.amount_paid && (
             <p className="text-destructive mt-1 text-xs">
@@ -99,7 +99,7 @@ export function PaymentForm({ debt, onSubmit, isPending }: PaymentFormProps) {
             id="payment-date"
             {...register('payment_date')}
             type="date"
-            className="border-input bg-background mt-1 w-full rounded-md border px-3 py-2 text-sm"
+            className="border-input dark:bg-input/30 mt-1 w-full rounded-md border bg-white px-3 py-2 text-sm"
           />
           {errors.payment_date && (
             <p className="text-destructive mt-1 text-xs">
@@ -115,7 +115,7 @@ export function PaymentForm({ debt, onSubmit, isPending }: PaymentFormProps) {
           <input
             id="payment-notes"
             {...register('notes')}
-            className="border-input bg-background mt-1 w-full rounded-md border px-3 py-2 text-sm"
+            className="border-input dark:bg-input/30 mt-1 w-full rounded-md border bg-white px-3 py-2 text-sm"
             placeholder="Optional note"
           />
         </div>
