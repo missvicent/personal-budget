@@ -1,23 +1,23 @@
 import { useMemo } from 'react'
 import { PlusIcon } from 'lucide-react'
 import { useParams } from '@tanstack/react-router'
-import { useBudgetDialog } from '../../-hooks/use-budget-dialog'
-import { useBudgetItemHandlers } from '../../-hooks/user-budget-item-handlers'
-import { BudgetCategoryForm } from './BudgetCategoryForm'
-import { BudgetOverviewSkeleton } from './BudgetOverviewSkeleton'
-import { BudgetItemCard } from './BudgetItemCard'
+import { CategoryAllocationForm } from './category-allocation-form'
+import { CategoryAllocationsGridSkeleton } from './category-allocations-grid-skeleton'
+import { CategoryAllocationCard } from './category-allocation-card'
+import { useAllocationHandlers } from '@/routes/_app/budget/-hooks/use-allocation-handlers'
+import { useBudgetDialog } from '@/routes/_app/budget/-hooks/use-budget-dialog'
 import { cn } from '@/lib/utils'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { useBudgetItems } from '@/hooks/budget/use-budget-item'
 import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
 
-export const BudgetOverview = () => {
+export const CategoryAllocationsGrid = () => {
   const dialog = useBudgetDialog()
   const { budgetId } = useParams({ from: '/_app/budget/$budgetId' })
   const { data: budgetItems, isLoading } = useBudgetItems(budgetId)
   const { data: budgetOverviews } = useBudgetOverview()
-  const userBudgetItemHandlers = useBudgetItemHandlers(null, () => {
+  const allocationHandlers = useAllocationHandlers(null, () => {
     dialog.onOpenChange(false)
   })
 
@@ -35,7 +35,7 @@ export const BudgetOverview = () => {
   }, [budgetOverviews, budgetId, budgetItems])
 
   if (isLoading) {
-    return <BudgetOverviewSkeleton />
+    return <CategoryAllocationsGridSkeleton />
   }
 
   return (
@@ -48,10 +48,10 @@ export const BudgetOverview = () => {
               Add Budget
             </Button>
           </DialogTrigger>
-          <BudgetCategoryForm
+          <CategoryAllocationForm
             budgetId={budgetId}
-            isPending={userBudgetItemHandlers.isPending}
-            onSubmit={userBudgetItemHandlers.handleSubmit}
+            isPending={allocationHandlers.isPending}
+            onSubmit={allocationHandlers.handleSubmit}
             remainingBudget={remainingBudget}
             selectedBudgetItem={null}
             usedCategoryIds={usedCategoryIds}
@@ -62,7 +62,7 @@ export const BudgetOverview = () => {
         <div className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
           {budgetItems && budgetItems.length > 0 ? (
             budgetItems.map((item) => (
-              <BudgetItemCard key={item.item_id} budgetItem={item} />
+              <CategoryAllocationCard key={item.item_id} budgetItem={item} />
             ))
           ) : (
             <div className="col-span-4 flex h-full items-center justify-center">

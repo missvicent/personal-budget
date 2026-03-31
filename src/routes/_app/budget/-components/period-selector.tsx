@@ -1,4 +1,4 @@
-import { PeriodOption } from './PeriodOption'
+import { PeriodOption } from './period-option'
 
 interface PeriodSelectorProps {
   value: string

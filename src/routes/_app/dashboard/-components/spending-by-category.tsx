@@ -7,11 +7,11 @@ import {
 } from '@/components/ui/card'
 import { BudgetCategoryCard } from '@/components/shared'
 
-export interface BudgetOverviewProps {
+export interface SpendingByCategoryProps {
   currentMonth: string
-  categories: Array<BudgetOverViewByCategory>
+  categories: Array<SpendingByCategoryItem>
 }
-export interface BudgetOverViewByCategory {
+export interface SpendingByCategoryItem {
   id: string
   icon: string
   category: string
@@ -20,8 +20,8 @@ export interface BudgetOverViewByCategory {
   amountBudget: number
 }
 
-export const BudgetOverview = (budgetOverview: BudgetOverviewProps) => {
-  const { currentMonth, categories } = budgetOverview
+export const SpendingByCategory = (props: SpendingByCategoryProps) => {
+  const { currentMonth, categories } = props
   return (
     <Card className="w-full gap-4">
       <CardHeader>

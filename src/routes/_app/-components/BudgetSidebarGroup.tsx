@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { Dialog } from '@/components/ui/dialog'
-import { BudgetForm } from '@/routes/_app/budget/-components/budget-list/BudgetForm'
+import { BudgetForm } from '@/routes/_app/budget/-components'
 import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
 import { useBudgetHandlers } from '@/routes/_app/budget/-hooks/use-budget-handlers'
 

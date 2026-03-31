@@ -1,10 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { BudgetOverview } from '../-components/budget-item/BudgetOverview'
+import { CategoryAllocationsGrid } from '../-components'
 
 export const Route = createFileRoute('/_app/budget/$budgetId/categories')({
   component: CategoriesPage,
 })
 
 function CategoriesPage() {
-  return <BudgetOverview />
+  return <CategoryAllocationsGrid />
 }

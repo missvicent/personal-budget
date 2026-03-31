@@ -1,5 +1,5 @@
 import type { SummaryGridProps } from '@/routes/_app/dashboard/-components/SummaryGrid'
-import type { BudgetOverviewProps } from '@/routes/_app/dashboard/-components/BudgetOverview'
+import type { SpendingByCategoryProps } from '@/routes/_app/dashboard/-components/spending-by-category'
 import type { RecentActivityItem } from '@/routes/_app/dashboard/-components/RecentActivity'
 
 export const summaryData: SummaryGridProps['summaryData'] = [
@@ -37,7 +37,7 @@ export const summaryData: SummaryGridProps['summaryData'] = [
   },
 ]
 
-export const budgetOverview: BudgetOverviewProps = {
+export const budgetOverview: SpendingByCategoryProps = {
   currentMonth: 'January 2026',
   categories: [
     {

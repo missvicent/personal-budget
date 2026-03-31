@@ -2,11 +2,11 @@ import { parseISO } from 'date-fns'
 
 import { Link } from '@tanstack/react-router'
 
-import { useBudgetItemDisplay } from '../../-hooks/use-budget-item-display'
-import { BudgetCardBadges } from '../budget-card/BudgetCardBadges'
-import { BudgetCardProgress } from '../budget-card/BudgetCardProgress'
-import { BudgetCardActions } from '../budget-card/BudgetCardActions'
+import { BudgetCardBadges } from './budget-card-badges'
+import { BudgetCardProgress } from './budget-card-progress'
+import { BudgetCardActions } from './budget-card-actions'
 import type { BudgetOverview } from '@/types/database.types'
+import { useBudgetCardDisplay } from '@/routes/_app/budget/-hooks/use-budget-card-display'
 import { formatDateRange, formatYear } from '@/lib/dates/formatDate'
 import {
   Card,
@@ -16,17 +16,17 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 
-export interface BudgetItemProps {
+export interface BudgetCardProps {
   budget: BudgetOverview
   onEdit: (budget: BudgetOverview) => void
   onDelete: (budget_id: string) => void
 }
 
-export const BudgetItem = ({ budget, onEdit, onDelete }: BudgetItemProps) => {
+export const BudgetCard = ({ budget, onEdit, onDelete }: BudgetCardProps) => {
   const { budget_name, budget_amount, start_date, end_date, total_spent } =
     budget
   const { progressValue, status, badges, daysLeft } =
-    useBudgetItemDisplay(budget)
+    useBudgetCardDisplay(budget)
 
   const url = `/budget/${budget.budget_id}`
 
