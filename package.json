@@ -71,7 +71,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "husky": "^9.1.7",
     "jsdom": "^26.0.0",
-    "lint-staged": "^16.1.6",
+    "lint-staged": "^16.4.0",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "supabase": "^2.72.3",
