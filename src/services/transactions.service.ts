@@ -84,9 +84,10 @@ export const transactionsService = {
 
   getTransactionsWithCategories: async (
     supabase: SupabaseClient,
+    budgetId: string,
   ): Promise<Array<TransactionWithCategory>> => {
     const { data, error } = await supabase
-      .rpc('get_transactions_with_categories')
+      .rpc('get_transactions_with_categories', { p_budget_id: budgetId })
       .in('category_type', ['expense', 'general'])
       .order('transaction_date', { ascending: false })
     if (error)

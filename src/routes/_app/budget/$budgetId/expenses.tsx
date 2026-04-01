@@ -29,7 +29,7 @@ function ExpensesPage() {
   const { budgetId } = Route.useParams()
   const { data: categories } = useCategories()
   const { data: transactionsWithCategories } =
-    useGetTransactionsWithCategories()
+    useGetTransactionsWithCategories(budgetId)
   const { data: budgetItems } = useBudgetItems(budgetId)
 
   const overspendingIds = useMemo(
