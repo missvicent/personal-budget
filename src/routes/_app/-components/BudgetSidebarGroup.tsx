@@ -10,9 +10,9 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { ResponsiveDialog } from '@/components/shared/ResponsiveDialog'
-import { BudgetForm } from '@/routes/_app/budget/-components'
+import { BudgetForm } from '@/components/budget'
 import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
-import { useBudgetHandlers } from '@/routes/_app/budget/-hooks/use-budget-handlers'
+import { useBudgetHandlers } from '@/hooks/budget/use-budget-handlers'
 
 export function BudgetSidebarGroup() {
   const { data: budgets } = useBudgetOverview()
