@@ -3,7 +3,7 @@ import { Brain, Calculator, LayoutGrid } from 'lucide-react'
 export const GENERAL_NAV_ITEMS = [
   {
     title: 'Overview',
-    url: '/budget/overview',
+    url: '/overview',
     icon: LayoutGrid,
   },
   {

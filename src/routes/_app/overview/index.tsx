@@ -1,14 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import { BudgetForm, OverviewSkeleton } from './-components'
-import { useBudgetHandlers } from './-hooks/use-budget-handlers'
+import { BudgetForm, OverviewSkeleton } from '@/components/budget'
+import { useBudgetHandlers } from '@/hooks/budget/use-budget-handlers'
 import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
 import { staticToolbarMeta } from '@/lib/toolbar'
 import { ResponsiveDialog } from '@/components/shared/ResponsiveDialog'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-export const Route = createFileRoute('/_app/budget/overview')({
+export const Route = createFileRoute('/_app/overview/')({
   beforeLoad: staticToolbarMeta({
     title: 'Overview',
     description: 'Welcome to Personal Budget',

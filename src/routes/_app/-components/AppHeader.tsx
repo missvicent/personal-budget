@@ -26,7 +26,7 @@ export default function AppHeader() {
         <ul className="flex list-none items-center gap-8 font-medium lg:gap-12">
           <li className="flex items-center">
             <Link
-              to="/budget/overview"
+              to="/overview"
               className={linkClasses}
               activeProps={{ className: 'active' }}
             >
