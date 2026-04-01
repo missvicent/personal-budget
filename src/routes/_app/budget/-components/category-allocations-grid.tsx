@@ -1,4 +1,3 @@
-// src/routes/_app/budget/-components/category-allocations-grid.tsx
 import { useParams } from '@tanstack/react-router'
 import { AddAllocationDialog } from './add-allocation-dialog'
 import { CategoryAllocationsGridSkeleton } from './category-allocations-grid-skeleton'
