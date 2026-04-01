@@ -182,7 +182,7 @@ function Sidebar({
 
   if (isMobile) {
     return (
-      <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+      <Sheet open={openMobile} onOpenChange={setOpenMobile} modal={false} {...props}>
         <SheetContent
           data-sidebar="sidebar"
           data-slot="sidebar"
@@ -194,6 +194,15 @@ function Sidebar({
             } as React.CSSProperties
           }
           side={side}
+          onPointerDownOutside={(e) => {
+            const target = e.detail?.originalEvent?.target as HTMLElement | undefined
+            if (target?.closest?.('[class*="cl-"]')) {
+              e.preventDefault()
+              return
+            }
+            setOpenMobile(false)
+          }}
+          onFocusOutside={(e) => e.preventDefault()}
         >
           <SheetHeader className="sr-only">
             <SheetTitle>Sidebar</SheetTitle>
