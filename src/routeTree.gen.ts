@@ -15,11 +15,11 @@ import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/auth/sign-in'
 import { Route as AppProfileIndexRouteImport } from './routes/_app/profile/index'
+import { Route as AppOverviewIndexRouteImport } from './routes/_app/overview/index'
 import { Route as AppIaInsightsIndexRouteImport } from './routes/_app/ia-insights/index'
 import { Route as AppGoalTrackerIndexRouteImport } from './routes/_app/goal-tracker/index'
 import { Route as AppDebtCalculatorIndexRouteImport } from './routes/_app/debt-calculator/index'
 import { Route as AppBudgetIndexRouteImport } from './routes/_app/budget/index'
-import { Route as AppBudgetOverviewRouteImport } from './routes/_app/budget/overview'
 import { Route as AppBudgetBudgetIdRouteImport } from './routes/_app/budget/$budgetId'
 import { Route as AppBudgetBudgetIdIndexRouteImport } from './routes/_app/budget/$budgetId/index'
 import { Route as AppBudgetBudgetIdExpensesRouteImport } from './routes/_app/budget/$budgetId/expenses'
@@ -53,6 +53,11 @@ const AppProfileIndexRoute = AppProfileIndexRouteImport.update({
   path: '/profile/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppOverviewIndexRoute = AppOverviewIndexRouteImport.update({
+  id: '/overview/',
+  path: '/overview/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppIaInsightsIndexRoute = AppIaInsightsIndexRouteImport.update({
   id: '/ia-insights/',
   path: '/ia-insights/',
@@ -71,11 +76,6 @@ const AppDebtCalculatorIndexRoute = AppDebtCalculatorIndexRouteImport.update({
 const AppBudgetIndexRoute = AppBudgetIndexRouteImport.update({
   id: '/budget/',
   path: '/budget/',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppBudgetOverviewRoute = AppBudgetOverviewRouteImport.update({
-  id: '/budget/overview',
-  path: '/budget/overview',
   getParentRoute: () => AppRoute,
 } as any)
 const AppBudgetBudgetIdRoute = AppBudgetBudgetIdRouteImport.update({
@@ -106,11 +106,11 @@ export interface FileRoutesByFullPath {
   '/auth/sign-up': typeof AuthSignUpRoute
   '/': typeof PublicIndexRoute
   '/budget/$budgetId': typeof AppBudgetBudgetIdRouteWithChildren
-  '/budget/overview': typeof AppBudgetOverviewRoute
   '/budget': typeof AppBudgetIndexRoute
   '/debt-calculator': typeof AppDebtCalculatorIndexRoute
   '/goal-tracker': typeof AppGoalTrackerIndexRoute
   '/ia-insights': typeof AppIaInsightsIndexRoute
+  '/overview': typeof AppOverviewIndexRoute
   '/profile': typeof AppProfileIndexRoute
   '/budget/$budgetId/categories': typeof AppBudgetBudgetIdCategoriesRoute
   '/budget/$budgetId/expenses': typeof AppBudgetBudgetIdExpensesRoute
@@ -120,11 +120,11 @@ export interface FileRoutesByTo {
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/': typeof PublicIndexRoute
-  '/budget/overview': typeof AppBudgetOverviewRoute
   '/budget': typeof AppBudgetIndexRoute
   '/debt-calculator': typeof AppDebtCalculatorIndexRoute
   '/goal-tracker': typeof AppGoalTrackerIndexRoute
   '/ia-insights': typeof AppIaInsightsIndexRoute
+  '/overview': typeof AppOverviewIndexRoute
   '/profile': typeof AppProfileIndexRoute
   '/budget/$budgetId/categories': typeof AppBudgetBudgetIdCategoriesRoute
   '/budget/$budgetId/expenses': typeof AppBudgetBudgetIdExpensesRoute
@@ -138,11 +138,11 @@ export interface FileRoutesById {
   '/auth/sign-up': typeof AuthSignUpRoute
   '/_public/': typeof PublicIndexRoute
   '/_app/budget/$budgetId': typeof AppBudgetBudgetIdRouteWithChildren
-  '/_app/budget/overview': typeof AppBudgetOverviewRoute
   '/_app/budget/': typeof AppBudgetIndexRoute
   '/_app/debt-calculator/': typeof AppDebtCalculatorIndexRoute
   '/_app/goal-tracker/': typeof AppGoalTrackerIndexRoute
   '/_app/ia-insights/': typeof AppIaInsightsIndexRoute
+  '/_app/overview/': typeof AppOverviewIndexRoute
   '/_app/profile/': typeof AppProfileIndexRoute
   '/_app/budget/$budgetId/categories': typeof AppBudgetBudgetIdCategoriesRoute
   '/_app/budget/$budgetId/expenses': typeof AppBudgetBudgetIdExpensesRoute
@@ -155,11 +155,11 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/'
     | '/budget/$budgetId'
-    | '/budget/overview'
     | '/budget'
     | '/debt-calculator'
     | '/goal-tracker'
     | '/ia-insights'
+    | '/overview'
     | '/profile'
     | '/budget/$budgetId/categories'
     | '/budget/$budgetId/expenses'
@@ -169,11 +169,11 @@ export interface FileRouteTypes {
     | '/auth/sign-in'
     | '/auth/sign-up'
     | '/'
-    | '/budget/overview'
     | '/budget'
     | '/debt-calculator'
     | '/goal-tracker'
     | '/ia-insights'
+    | '/overview'
     | '/profile'
     | '/budget/$budgetId/categories'
     | '/budget/$budgetId/expenses'
@@ -186,11 +186,11 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/_public/'
     | '/_app/budget/$budgetId'
-    | '/_app/budget/overview'
     | '/_app/budget/'
     | '/_app/debt-calculator/'
     | '/_app/goal-tracker/'
     | '/_app/ia-insights/'
+    | '/_app/overview/'
     | '/_app/profile/'
     | '/_app/budget/$budgetId/categories'
     | '/_app/budget/$budgetId/expenses'
@@ -248,6 +248,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProfileIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/overview/': {
+      id: '/_app/overview/'
+      path: '/overview'
+      fullPath: '/overview'
+      preLoaderRoute: typeof AppOverviewIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/ia-insights/': {
       id: '/_app/ia-insights/'
       path: '/ia-insights'
@@ -274,13 +281,6 @@ declare module '@tanstack/react-router' {
       path: '/budget'
       fullPath: '/budget'
       preLoaderRoute: typeof AppBudgetIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/budget/overview': {
-      id: '/_app/budget/overview'
-      path: '/budget/overview'
-      fullPath: '/budget/overview'
-      preLoaderRoute: typeof AppBudgetOverviewRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/budget/$budgetId': {
@@ -331,21 +331,21 @@ const AppBudgetBudgetIdRouteWithChildren =
 
 interface AppRouteChildren {
   AppBudgetBudgetIdRoute: typeof AppBudgetBudgetIdRouteWithChildren
-  AppBudgetOverviewRoute: typeof AppBudgetOverviewRoute
   AppBudgetIndexRoute: typeof AppBudgetIndexRoute
   AppDebtCalculatorIndexRoute: typeof AppDebtCalculatorIndexRoute
   AppGoalTrackerIndexRoute: typeof AppGoalTrackerIndexRoute
   AppIaInsightsIndexRoute: typeof AppIaInsightsIndexRoute
+  AppOverviewIndexRoute: typeof AppOverviewIndexRoute
   AppProfileIndexRoute: typeof AppProfileIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppBudgetBudgetIdRoute: AppBudgetBudgetIdRouteWithChildren,
-  AppBudgetOverviewRoute: AppBudgetOverviewRoute,
   AppBudgetIndexRoute: AppBudgetIndexRoute,
   AppDebtCalculatorIndexRoute: AppDebtCalculatorIndexRoute,
   AppGoalTrackerIndexRoute: AppGoalTrackerIndexRoute,
   AppIaInsightsIndexRoute: AppIaInsightsIndexRoute,
+  AppOverviewIndexRoute: AppOverviewIndexRoute,
   AppProfileIndexRoute: AppProfileIndexRoute,
 }
 

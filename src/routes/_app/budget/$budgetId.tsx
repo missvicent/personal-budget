@@ -11,7 +11,7 @@ export const Route = createFileRoute('/_app/budget/$budgetId')({
       queryFn: () => budgetService.getOverview(context.supabase),
     })
     const budget = overviews.find((b) => b.budget_id === params.budgetId)
-    if (!budget) throw redirect({ to: '/budget/overview' })
+    if (!budget) throw redirect({ to: '/overview' })
 
     const toolbarMeta: ToolbarMeta = {
       title: budget.budget_name,

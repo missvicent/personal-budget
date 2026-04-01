@@ -32,7 +32,7 @@ export default function Header() {
           <SignedIn>
             <li className="flex items-center">
               <Link
-                to="/budget/overview"
+                to="/overview"
                 className={linkClasses}
                 activeProps={{ className: 'active' }}
               >
