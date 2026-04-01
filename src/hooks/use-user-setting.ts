@@ -9,7 +9,7 @@ const queryKeys = {
   userSetting: (userId: string) => ['user_settings', userId],
 }
 export const useUserSetting = (enabled: boolean) => {
-  return useAuthQuery<UserSettings>(
+  return useAuthQuery<UserSettings | null>(
     queryKeys.userSettings(enabled),
     (supabase) => userSettingsService.get(supabase),
     {

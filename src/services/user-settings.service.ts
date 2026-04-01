@@ -2,12 +2,12 @@ import type { UserSettings } from '@/types/database.types'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const userSettingsService = {
-  get: async (supabase: SupabaseClient): Promise<UserSettings> => {
+  get: async (supabase: SupabaseClient): Promise<UserSettings | null> => {
     const { data, error } = await supabase
       .from('user_settings')
       .select('*')
       .single()
-    if (error) throw error
+    if (error && error.code !== 'PGRST116') throw error
     return data
   },
   upsert: async (
