@@ -18,12 +18,12 @@ import {
   budgetSchema,
 } from '@/lib/schemas/budget/budget.schema'
 import {
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+  ResponsiveDialogClose,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/shared/ResponsiveDialog'
 import { CurrencyInput } from '@/components/shared/CurrencyInput'
 import { DatePickerInput } from '@/components/shared/DatepickerInput'
 import { Input } from '@/components/ui/input'
@@ -68,19 +68,19 @@ export const BudgetForm = ({
 
   return (
     <Form {...form}>
-      <DialogContent>
+      <ResponsiveDialogContent>
         <form
           onSubmit={form.handleSubmit((data) =>
             onSubmit(data, form.formState.dirtyFields),
           )}
           className="flex flex-col gap-4"
         >
-          <DialogHeader>
-            <DialogTitle>Set Up Your Budget</DialogTitle>
-            <DialogDescription className="sr-only">
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>Set Up Your Budget</ResponsiveDialogTitle>
+            <ResponsiveDialogDescription className="sr-only">
               Set Up Your Budget for a new period
-            </DialogDescription>
-          </DialogHeader>
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
 
           <FormField
             control={form.control}
@@ -149,17 +149,17 @@ export const BudgetForm = ({
           />
 
           <div className="flex w-full gap-2">
-            <DialogClose asChild className="w-1/3">
+            <ResponsiveDialogClose asChild className="w-1/3">
               <Button variant="outline" className="p-5">
                 Cancel
               </Button>
-            </DialogClose>
+            </ResponsiveDialogClose>
             <Button type="submit" className="w-2/3 p-5" disabled={isPending}>
               {isPending ? 'Saving...' : submitButtonText}
             </Button>
           </div>
         </form>
-      </DialogContent>
+      </ResponsiveDialogContent>
     </Form>
   )
 }

@@ -9,13 +9,13 @@ import { expenseSchema } from '@/lib/schemas/expenses/expense.schema'
 import { GroupedSelectField } from '@/components/shared/GroupedSelectField'
 import { Button } from '@/components/ui/button'
 import {
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+  ResponsiveDialogClose,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/shared/ResponsiveDialog'
 import { FieldGroup } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { CurrencyInput } from '@/components/shared/CurrencyInput'
@@ -79,20 +79,20 @@ export const ExpenseTransactionForm = ({
 
   return (
     <Form {...form}>
-      <DialogContent className="sm:max-w-sm">
+      <ResponsiveDialogContent className="sm:max-w-sm">
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
           className="flex flex-col gap-4"
         >
-          <DialogHeader>
-            <DialogTitle>
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>
               {selectedTransaction ? 'Edit Expense' : 'Log an Expense'}
-            </DialogTitle>
-            <DialogDescription className="sr-only">
+            </ResponsiveDialogTitle>
+            <ResponsiveDialogDescription className="sr-only">
               Fill in the details to {selectedTransaction ? 'edit' : 'add'} a
               new expense
-            </DialogDescription>
-          </DialogHeader>
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
           <FieldGroup>
             <FormField
               control={form.control}
@@ -215,8 +215,8 @@ export const ExpenseTransactionForm = ({
               )}
             />
           </FieldGroup>
-          <DialogFooter className="flex flex-row gap-2">
-            <DialogClose asChild>
+          <ResponsiveDialogFooter className="flex flex-row gap-2">
+            <ResponsiveDialogClose asChild>
               <Button
                 variant="outline"
                 className="w-full"
@@ -232,7 +232,7 @@ export const ExpenseTransactionForm = ({
               >
                 Cancel
               </Button>
-            </DialogClose>
+            </ResponsiveDialogClose>
             <Button
               type="submit"
               className="w-full"
@@ -249,9 +249,9 @@ export const ExpenseTransactionForm = ({
             >
               {selectedTransaction ? 'Edit Expense' : 'Save Expense'}
             </Button>
-          </DialogFooter>
+          </ResponsiveDialogFooter>
         </form>
-      </DialogContent>
+      </ResponsiveDialogContent>
     </Form>
   )
 }

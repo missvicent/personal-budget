@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { Dialog } from '@radix-ui/react-dialog'
 import { PlusIcon } from 'lucide-react'
+import { ResponsiveDialog } from '@/components/shared/ResponsiveDialog'
 
 import { ExpenseTransactionForm } from '@/routes/_app/expenses/-components/ExpenseTransactionForm'
 import { ExpenseList } from '@/routes/_app/expenses/-components/ExpenseList'
@@ -85,14 +85,17 @@ function ExpensesPage() {
           />
         </div>
         <div className="order-1 flex justify-end lg:order-last">
-          <Dialog open={dialog.open} onOpenChange={dialog.onOpenChange}>
+          <ResponsiveDialog
+            open={dialog.open}
+            onOpenChange={dialog.onOpenChange}
+          >
             <DialogTooltipTrigger
               dialogOpen={dialog.open}
               tooltipContent="Log an Expense"
             >
               <Button
                 size="icon"
-                variant="outline"
+                variant="default"
                 className="h-10 p-3 md:w-auto"
               >
                 <PlusIcon />
@@ -108,7 +111,7 @@ function ExpensesPage() {
               }
               selectedTransaction={dialog.selectedTransaction}
             />
-          </Dialog>
+          </ResponsiveDialog>
         </div>
       </header>
       <ExpenseList

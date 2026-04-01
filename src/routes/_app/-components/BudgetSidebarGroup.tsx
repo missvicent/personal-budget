@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { Dialog } from '@/components/ui/dialog'
+import { ResponsiveDialog } from '@/components/shared/ResponsiveDialog'
 import { BudgetForm } from '@/routes/_app/budget/-components'
 import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
 import { useBudgetHandlers } from '@/routes/_app/budget/-hooks/use-budget-handlers'
@@ -41,14 +41,14 @@ export function BudgetSidebarGroup() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarGroupContent>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <ResponsiveDialog open={open} onOpenChange={setOpen}>
         <BudgetForm
           open={open}
           selectedBudget={null}
           onSubmit={handleSubmit}
           isPending={isPending}
         />
-      </Dialog>
+      </ResponsiveDialog>
     </SidebarGroup>
   )
 }

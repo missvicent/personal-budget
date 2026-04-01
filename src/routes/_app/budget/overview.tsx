@@ -4,7 +4,7 @@ import { BudgetForm, OverviewSkeleton } from './-components'
 import { useBudgetHandlers } from './-hooks/use-budget-handlers'
 import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
 import { staticToolbarMeta } from '@/lib/toolbar'
-import { Dialog } from '@/components/ui/dialog'
+import { ResponsiveDialog } from '@/components/shared/ResponsiveDialog'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -118,14 +118,14 @@ function OverviewPage() {
           {hasBudgets ? 'Create budget' : 'Create your first budget'}
         </Button>
 
-        <Dialog open={open} onOpenChange={setOpen}>
+        <ResponsiveDialog open={open} onOpenChange={setOpen}>
           <BudgetForm
             open={open}
             selectedBudget={null}
             onSubmit={handleSubmit}
             isPending={isPending}
           />
-        </Dialog>
+        </ResponsiveDialog>
       </div>
     </div>
   )
