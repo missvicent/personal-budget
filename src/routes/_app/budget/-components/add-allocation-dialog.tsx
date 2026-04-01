@@ -4,8 +4,9 @@ import { CategoryAllocationForm } from './category-allocation-form'
 import type { BudgetWithProgress } from '@/types/budget.types'
 import { useAllocationHandlers } from '@/routes/_app/budget/-hooks/use-allocation-handlers'
 import { useRemainingBudget } from '@/routes/_app/budget/-hooks/use-remaining-budget'
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { DialogTooltipTrigger } from '@/components/ui/dialog-tooltip-trigger'
 
 interface AddAllocationDialogProps {
   budgetId: string
@@ -27,14 +28,18 @@ export const AddAllocationDialog = ({
     [budgetItems],
   )
 
+  const isFullyAllocated = remainingBudget <= 0
+  const tooltipContent = isFullyAllocated
+    ? 'Budget fully allocated — no remaining funds to assign'
+    : 'Add Allocation'
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="p-5">
-          <PlusIcon className="h-4 w-4" />
-          Add Budget
+      <DialogTooltipTrigger dialogOpen={open} tooltipContent={tooltipContent}>
+        <Button size="icon" variant="outline" className="h-10 p-3 md:w-auto">
+          <PlusIcon />
         </Button>
-      </DialogTrigger>
+      </DialogTooltipTrigger>
       <CategoryAllocationForm
         budgetId={budgetId}
         isPending={allocationHandlers.isPending}

@@ -19,13 +19,17 @@ export const expenseSchema = z.object({
 
 export type ExpenseFormData = z.infer<typeof expenseSchema>
 
-export function toTransactionPayload(data: ExpenseFormData, budgetId?: string) {
+export function toTransactionPayload(
+  data: ExpenseFormData,
+  budgetId?: string,
+  fallbackCategoryId?: string,
+) {
   const { amount, category_id, description, transaction_date, is_recurring } =
     data
   return {
     amount,
     budget_id: budgetId ?? null,
-    category_id: category_id ?? null,
+    category_id: (category_id || fallbackCategoryId) ?? null,
     description,
     is_recurring: is_recurring ?? false,
     transaction_date: transaction_date.toISOString().split('T')[0],

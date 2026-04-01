@@ -9,6 +9,7 @@ export const useExpenseActions = (
   onSuccess: () => void,
   budgetId?: string,
   ensureBudgetItem?: (categoryId: string, amount: number) => Promise<void>,
+  fallbackCategoryId?: string,
 ) => {
   const { mutate: createTransaction, isPending: isCreating } =
     useCreateTransaction()
@@ -28,13 +29,16 @@ export const useExpenseActions = (
     if (selectedTransaction) {
       updateTransaction(
         {
-          ...toTransactionPayload(data, budgetId),
+          ...toTransactionPayload(data, budgetId, fallbackCategoryId),
           id: selectedTransaction.id,
         },
         { onSuccess },
       )
     } else {
-      createTransaction(toTransactionPayload(data, budgetId), { onSuccess })
+      createTransaction(
+        toTransactionPayload(data, budgetId, fallbackCategoryId),
+        { onSuccess },
+      )
     }
   }
 

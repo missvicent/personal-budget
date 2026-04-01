@@ -8,11 +8,11 @@ export const ExpenseItemDetails = ({
   const { title, category } = useExpenseItem()
   return (
     <div className="flex flex-col gap-1">
-      <p className="group-hover:text-primary text-lg font-semibold capitalize transition-colors duration-200">
+      <p className="group-hover:text-primary text-sm font-semibold capitalize transition-colors duration-200">
         {title}
       </p>
       <div className="flex items-center">
-        <p className="text-muted-foreground text-base capitalize">{category}</p>
+        <p className="text-muted-foreground text-xs capitalize">{category}</p>
         {children}
       </div>
     </div>

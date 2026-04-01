@@ -6,7 +6,7 @@ export const ExpenseItemIcon = () => {
   const { bg } = getCategoryStyles(color)
   return (
     <span
-      className="flex h-13 w-13 items-center justify-center rounded-lg text-lg transition-all duration-200 group-hover:scale-110"
+      className="flex h-10 w-10 items-center justify-center rounded-lg text-lg transition-all duration-200 group-hover:scale-110"
       style={{ backgroundColor: bg.backgroundColor }}
     >
       {icon}
