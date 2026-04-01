@@ -52,7 +52,7 @@ export const GroupedSelectField = ({
       <SelectTrigger {...triggerProps}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent className="max-h-94 overflow-y-auto">
+      <SelectContent className="max-h-94 overflow-y-auto" side="bottom">
         {groups.map((group, groupIndex) => (
           <React.Fragment key={group.label}>
             {groupIndex > 0 && <SelectSeparator />}
