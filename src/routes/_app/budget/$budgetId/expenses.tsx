@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
+import { Dialog } from '@radix-ui/react-dialog'
 import { PlusIcon } from 'lucide-react'
 
 import { ExpenseTransactionForm } from '@/routes/_app/expenses/-components/ExpenseTransactionForm'
@@ -13,11 +13,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { SearchInput } from '@/components/common/SearchInput'
 import { SelectField } from '@/components/shared/SelectField'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { DialogTooltipTrigger } from '@/components/ui/dialog-tooltip-trigger'
 
 import { useCategories } from '@/hooks/categories/use-categories'
 import { useBudgetItems } from '@/hooks/budget/use-budget-item'
@@ -56,10 +52,19 @@ function ExpensesPage() {
     transactionsWithCategories ?? [],
     categories ?? [],
   )
+  const fallbackCategoryId = useMemo(
+    () =>
+      categories?.find(
+        (c) => c.name === 'Other Expense' && c.category_type === 'expense',
+      )?.id,
+    [categories],
+  )
+
   const actions = useExpenseActions(
     () => dialog.onOpenChange(false),
     budgetId,
     ensureBudgetItem,
+    fallbackCategoryId,
   )
 
   return (
@@ -81,20 +86,18 @@ function ExpensesPage() {
         </div>
         <div className="order-1 flex justify-end lg:order-last">
           <Dialog open={dialog.open} onOpenChange={dialog.onOpenChange}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <DialogTrigger asChild>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="h-10 p-3 md:w-auto"
-                  >
-                    <PlusIcon />
-                  </Button>
-                </DialogTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Log an Expense</TooltipContent>
-            </Tooltip>
+            <DialogTooltipTrigger
+              dialogOpen={dialog.open}
+              tooltipContent="Log an Expense"
+            >
+              <Button
+                size="icon"
+                variant="outline"
+                className="h-10 p-3 md:w-auto"
+              >
+                <PlusIcon />
+              </Button>
+            </DialogTooltipTrigger>
             <ExpenseTransactionForm
               key={dialog.selectedTransaction?.id}
               open={dialog.open}
