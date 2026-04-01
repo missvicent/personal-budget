@@ -17,7 +17,7 @@ export const CurrencyInput = React.forwardRef<
   <div className="relative">
     <DollarSign className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
     <Input
-      type="number"
+      type="tel"
       ref={ref}
       className={`dark:bg-input/30 bg-white pl-9 ${className ?? ''}`}
       value={value || ''}
