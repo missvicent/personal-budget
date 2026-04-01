@@ -5,7 +5,6 @@ import { ExpenseItemDetails } from './ExpenseItemDetails'
 import { ExpenseItemActions } from './ExpenseItemActions'
 import { ExpenseItemMeta } from './ExpenseItemMeta'
 import type { ReactNode } from 'react'
-import { cn } from '@/lib/utils'
 
 export interface ExpenseItemProps {
   amount: number
@@ -33,10 +32,10 @@ export const ExpenseItemRoot = ({
       value={{ amount, category, color, icon, isOverBudget, title }}
     >
       <div
-        className={cn(
-          'group bg-sidebar hover:border-primary/50 mt-3 flex w-full items-center justify-between rounded-lg border p-6 transition-colors',
-          isOverBudget && 'border-destructive',
-        )}
+        className="group bg-sidebar hover:border-primary/50 flex w-full items-center justify-between rounded-lg border border-l-4 p-3.5 px-4 transition-colors"
+        style={{
+          borderLeftColor: isOverBudget ? 'var(--destructive)' : color,
+        }}
       >
         {children}
       </div>

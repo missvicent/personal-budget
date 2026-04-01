@@ -58,7 +58,7 @@ export const ExpenseList = ({
     <section>
       {expenses.map((expense) => (
         <div key={expense.id} className="py-2">
-          <div className="flex items-center justify-between">
+          <div className="mb-2 flex items-center justify-between">
             <p className="text-foreground text-base font-semibold capitalize">
               {expense.date}
             </p>
@@ -66,7 +66,7 @@ export const ExpenseList = ({
               {currencyFormatter.format(expense.totalAmount)}
             </p>
           </div>
-          <div>
+          <div className="mb-2 grid grid-cols-1 gap-2 xl:grid-cols-2 2xl:grid-cols-3">
             {expense.transactions.map((transaction) => (
               <div key={transaction.id}>
                 <ExpenseItem
@@ -82,7 +82,6 @@ export const ExpenseList = ({
                     <ExpenseItem.Details />
                   </div>
                   <div className="flex items-center gap-2">
-                    <ExpenseItem.Amount />
                     <ExpenseItem.Actions>
                       <CardActions
                         onEdit={() => onEdit(transaction)}
@@ -90,6 +89,7 @@ export const ExpenseList = ({
                         showOnHover={false}
                       />
                     </ExpenseItem.Actions>
+                    <ExpenseItem.Amount />
                   </div>
                 </ExpenseItem>
               </div>
