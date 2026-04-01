@@ -4,11 +4,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import type { Debt } from '@/types/database.types'
 import type { DebtPaymentFormData } from '@/lib/validations/debt.schema'
 import {
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+  ResponsiveDialogContent,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/shared/ResponsiveDialog'
 import { debtPaymentSchema } from '@/lib/validations/debt.schema'
 
 interface PaymentFormProps {
@@ -48,10 +48,12 @@ export function PaymentForm({ debt, onSubmit, isPending }: PaymentFormProps) {
   })
 
   return (
-    <DialogContent className="sm:max-w-md">
-      <DialogHeader>
-        <DialogTitle>Record Payment — {debt.name}</DialogTitle>
-      </DialogHeader>
+    <ResponsiveDialogContent className="sm:max-w-md">
+      <ResponsiveDialogHeader>
+        <ResponsiveDialogTitle>
+          Record Payment — {debt.name}
+        </ResponsiveDialogTitle>
+      </ResponsiveDialogHeader>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <div>
           <label htmlFor="payment-amount" className="text-sm font-medium">
@@ -120,7 +122,7 @@ export function PaymentForm({ debt, onSubmit, isPending }: PaymentFormProps) {
           />
         </div>
 
-        <DialogFooter>
+        <ResponsiveDialogFooter>
           <button
             type="submit"
             disabled={isPending}
@@ -128,8 +130,8 @@ export function PaymentForm({ debt, onSubmit, isPending }: PaymentFormProps) {
           >
             {isPending ? 'Recording...' : 'Record Payment'}
           </button>
-        </DialogFooter>
+        </ResponsiveDialogFooter>
       </form>
-    </DialogContent>
+    </ResponsiveDialogContent>
   )
 }

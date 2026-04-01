@@ -4,7 +4,7 @@ import { CategoryAllocationForm } from './category-allocation-form'
 import type { BudgetWithProgress } from '@/types/budget.types'
 import { useAllocationHandlers } from '@/routes/_app/budget/-hooks/use-allocation-handlers'
 import { useRemainingBudget } from '@/routes/_app/budget/-hooks/use-remaining-budget'
-import { Dialog } from '@/components/ui/dialog'
+import { ResponsiveDialog } from '@/components/shared/ResponsiveDialog'
 import { Button } from '@/components/ui/button'
 import { DialogTooltipTrigger } from '@/components/ui/dialog-tooltip-trigger'
 
@@ -34,9 +34,9 @@ export const AddAllocationDialog = ({
     : 'Add Allocation'
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <ResponsiveDialog open={open} onOpenChange={setOpen}>
       <DialogTooltipTrigger dialogOpen={open} tooltipContent={tooltipContent}>
-        <Button size="icon" variant="outline" className="h-10 p-3 md:w-auto">
+        <Button size="icon" variant="default" className="h-10 p-3 md:w-auto">
           <PlusIcon />
         </Button>
       </DialogTooltipTrigger>
@@ -48,6 +48,6 @@ export const AddAllocationDialog = ({
         selectedBudgetItem={null}
         usedCategoryIds={usedCategoryIds}
       />
-    </Dialog>
+    </ResponsiveDialog>
   )
 }

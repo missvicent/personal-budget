@@ -9,7 +9,7 @@ export function AppLayout() {
       <AppSidebar />
       <SidebarInset className="h-screen flex-col">
         <AppToolbar />
-        <main className="bg-app-bg flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto">
           <Outlet />
         </main>
       </SidebarInset>

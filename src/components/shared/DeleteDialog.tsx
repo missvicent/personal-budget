@@ -1,11 +1,11 @@
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/shared/ResponsiveDialog'
 import { Button } from '@/components/ui/button'
 
 interface DeleteDialogProps {
@@ -25,18 +25,18 @@ export const DeleteDialog = ({
   title,
 }: DeleteDialogProps) => {
   return (
-    <Dialog
+    <ResponsiveDialog
       open={open}
       onOpenChange={(openState) => {
         if (!openState) onCancel()
       }}
     >
-      <DialogContent onPointerDownOutside={(e) => e.preventDefault()}>
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{children}</DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
+      <ResponsiveDialogContent onPointerDownOutside={(e) => e.preventDefault()}>
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>{title}</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>{children}</ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogFooter>
           <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
@@ -47,8 +47,8 @@ export const DeleteDialog = ({
           >
             {isDeleting ? 'Deleting...' : 'Delete'}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

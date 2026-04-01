@@ -4,13 +4,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import type { BudgetItemFormData } from '@/lib/schemas/budget/budget-item.schema'
 import { createBudgetItemSchema } from '@/lib/schemas/budget/budget-item.schema'
 import {
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+  ResponsiveDialogClose,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/shared/ResponsiveDialog'
 import { FieldGroup } from '@/components/ui/field'
 import {
   Form,
@@ -83,17 +83,19 @@ export const CategoryAllocationForm = ({
 
   return (
     <Form {...form}>
-      <DialogContent>
+      <ResponsiveDialogContent>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4"
         >
-          <DialogHeader>
-            <DialogTitle className="mb-3">Set your Budget</DialogTitle>
-            <DialogDescription className="sr-only">
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle className="mb-3">
+              Set your Budget
+            </ResponsiveDialogTitle>
+            <ResponsiveDialogDescription className="sr-only">
               Set your budget for a new category
-            </DialogDescription>
-          </DialogHeader>
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
           <FieldGroup>
             <FormField
               control={form.control}
@@ -161,16 +163,16 @@ export const CategoryAllocationForm = ({
               )}
             />
           </FieldGroup>
-          <DialogFooter>
-            <DialogClose asChild>
+          <ResponsiveDialogFooter>
+            <ResponsiveDialogClose asChild>
               <Button variant="outline">Cancel</Button>
-            </DialogClose>
+            </ResponsiveDialogClose>
             <Button type="submit" disabled={isPending}>
               {selectedBudgetItem ? 'Update' : 'Save'}
             </Button>
-          </DialogFooter>
+          </ResponsiveDialogFooter>
         </form>
-      </DialogContent>
+      </ResponsiveDialogContent>
     </Form>
   )
 }

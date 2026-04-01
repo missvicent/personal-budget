@@ -19,7 +19,7 @@ import type {
 import type { Debt } from '@/types/database.types'
 import { staticToolbarMeta } from '@/lib/toolbar'
 import { cn } from '@/lib/utils'
-import { Dialog } from '@/components/ui/dialog'
+import { ResponsiveDialog } from '@/components/shared/ResponsiveDialog'
 
 export const Route = createFileRoute('/_app/debt-calculator/')({
   beforeLoad: staticToolbarMeta({
@@ -100,7 +100,7 @@ function DebtCalculatorPage() {
         </div>
       </div>
 
-      <Dialog open={dialog.open} onOpenChange={dialog.onOpenChange}>
+      <ResponsiveDialog open={dialog.open} onOpenChange={dialog.onOpenChange}>
         {dialog.mode === 'debt' ? (
           <DebtForm
             onSubmit={handleDebtSubmit}
@@ -114,7 +114,7 @@ function DebtCalculatorPage() {
             isPending={mutations.isPending}
           />
         ) : null}
-      </Dialog>
+      </ResponsiveDialog>
     </section>
   )
 }

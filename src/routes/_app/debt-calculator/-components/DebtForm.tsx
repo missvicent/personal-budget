@@ -3,11 +3,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import type { Debt } from '@/types/database.types'
 import type { DebtFormData } from '@/lib/validations/debt.schema'
 import {
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+  ResponsiveDialogContent,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/shared/ResponsiveDialog'
 import { debtSchema } from '@/lib/validations/debt.schema'
 
 const DEBT_TYPE_OPTIONS = [
@@ -48,10 +48,12 @@ export function DebtForm({ onSubmit, selectedDebt, isPending }: DebtFormProps) {
   })
 
   return (
-    <DialogContent className="sm:max-w-md">
-      <DialogHeader>
-        <DialogTitle>{selectedDebt ? 'Edit Debt' : 'Add Debt'}</DialogTitle>
-      </DialogHeader>
+    <ResponsiveDialogContent className="sm:max-w-md">
+      <ResponsiveDialogHeader>
+        <ResponsiveDialogTitle>
+          {selectedDebt ? 'Edit Debt' : 'Add Debt'}
+        </ResponsiveDialogTitle>
+      </ResponsiveDialogHeader>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <div>
           <label htmlFor="debt-name" className="text-sm font-medium">
@@ -187,7 +189,7 @@ export function DebtForm({ onSubmit, selectedDebt, isPending }: DebtFormProps) {
           )}
         </div>
 
-        <DialogFooter>
+        <ResponsiveDialogFooter>
           <button
             type="submit"
             disabled={isPending}
@@ -195,8 +197,8 @@ export function DebtForm({ onSubmit, selectedDebt, isPending }: DebtFormProps) {
           >
             {isPending ? 'Saving...' : selectedDebt ? 'Update' : 'Add Debt'}
           </button>
-        </DialogFooter>
+        </ResponsiveDialogFooter>
       </form>
-    </DialogContent>
+    </ResponsiveDialogContent>
   )
 }

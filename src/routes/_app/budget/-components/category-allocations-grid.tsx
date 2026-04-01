@@ -15,7 +15,7 @@ export const CategoryAllocationsGrid = () => {
 
   return (
     <section className={cn('flex flex-col gap-4', 'px-4 py-4 md:p-8')}>
-      <header className="flex flex-col justify-end gap-2 md:flex-row">
+      <header className="flex items-center justify-end gap-2">
         <AddAllocationDialog budgetId={budgetId} budgetItems={budgetItems} />
       </header>
       <section className="flex flex-col gap-4">
