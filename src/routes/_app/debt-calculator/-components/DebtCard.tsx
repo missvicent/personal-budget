@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 import type { Debt } from '@/types/database.types'
 import { Card } from '@/components/ui/card'
-import { CardActions } from '@/components/shared/card-actions'
+import { CardActions } from '@/components/shared/CardActions'
 
 const DEBT_TYPE_CONFIG = {
   credit_card: { icon: CreditCard, label: 'Credit Card' },

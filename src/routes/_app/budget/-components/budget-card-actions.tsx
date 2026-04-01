@@ -1,4 +1,4 @@
-import { CardActions } from '@/components/shared/card-actions'
+import { CardActions } from '@/components/shared/CardActions'
 
 interface BudgetCardActionsProps {
   onEdit: () => void

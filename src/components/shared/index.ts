@@ -1,5 +1,5 @@
 export * from './BudgetCategoryCard'
-export * from './card-actions'
+export * from './CardActions'
 export * from './IconCard'
 export * from './StatCard'
 export * from './ExpenseItem'

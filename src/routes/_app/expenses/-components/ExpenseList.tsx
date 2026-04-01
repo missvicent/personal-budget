@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { currencyFormatter } from '@/lib/format'
 import { DeleteDialog } from '@/components/shared/DeleteDialog'
 import { ExpenseItem } from '@/components/shared/ExpenseItem'
-import { CardActions } from '@/components/shared/card-actions'
+import { CardActions } from '@/components/shared/CardActions'
 
 export interface ExpenseTransaction {
   amount: number
