@@ -71,9 +71,12 @@ src/
     _public.tsx               # Public layout (landing page)
     _app.tsx                  # Auth-protected layout (sidebar + toolbar)
     _app/
-      dashboard/              # Dashboard route with summary grid, budget overview, recent activity
-      expenses/               # Expense tracking with filters, forms, CRUD
-      budget/                 # Budget management with category cards and summary
+      budget/                 # Budget management — includes dashboard, expenses, category allocations
+      budget/-components/
+        dashboard/            # Summary grid, budget overview, recent activity
+        expense/              # Expense tracking with filters, forms, CRUD
+        budget-card/          # Budget card components
+        category-allocation/  # Category allocation grid and cards
       debt-calculator/        # Debt calculator with real-time sync (ElectricSQL)
       ia-insights/            # AI-powered spending insights (planned)
       goal-tracker/           # Financial goal tracking (planned)

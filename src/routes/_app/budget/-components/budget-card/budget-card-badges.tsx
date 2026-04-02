@@ -1,4 +1,4 @@
-import type { BudgetBadge } from '@/routes/_app/budget/-hooks/use-budget-card-display'
+import type { BudgetBadge } from '@/routes/_app/budget/-hooks/budget-card/use-budget-card-display'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 

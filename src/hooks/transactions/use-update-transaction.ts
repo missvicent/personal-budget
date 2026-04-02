@@ -5,7 +5,7 @@ import { useTransactionsQueryKeys } from './use-transactions-query-keys'
 import type { Transaction } from '@/types/database.types'
 import { transactionsService } from '@/services/transactions.service'
 
-export const useUpdateTransaction = () => {
+export const useUpdateTransaction = (budgetId?: string) => {
   const queryClient = useQueryClient()
   return useAuthMutation(
     (transaction, supabase) =>
@@ -14,16 +14,19 @@ export const useUpdateTransaction = () => {
       onMutate: async (
         updatedTransaction: Partial<Transaction & { id: string }>,
       ) => {
-        const queryKey = useTransactionsQueryKeys().transactionsWithCategories()
+        const queryKey =
+          useTransactionsQueryKeys().transactionsWithCategories(budgetId)
         await queryClient.cancelQueries({ queryKey })
         const previousTransactions =
           queryClient.getQueryData<Array<Transaction>>(queryKey)
-        queryClient.setQueryData(queryKey, (old: Array<Transaction>) =>
-          old.map((old_transaction) =>
-            old_transaction.id === updatedTransaction.id
-              ? { ...old_transaction, ...updatedTransaction }
-              : old_transaction,
-          ),
+        queryClient.setQueryData(
+          queryKey,
+          (old: Array<Transaction> | undefined) =>
+            old?.map((old_transaction) =>
+              old_transaction.id === updatedTransaction.id
+                ? { ...old_transaction, ...updatedTransaction }
+                : old_transaction,
+            ),
         )
         return { previousTransactions, queryKey }
       },

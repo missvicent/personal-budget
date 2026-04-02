@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { ExpenseTransaction } from '../-components/ExpenseList'
+import type { ExpenseTransaction } from '../../-components/expense/expense-list'
 
 export const useExpenseDialog = () => {
   const [open, setOpen] = useState(false)

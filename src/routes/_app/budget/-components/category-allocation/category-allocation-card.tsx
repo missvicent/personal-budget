@@ -1,4 +1,5 @@
 import type { BudgetWithProgress } from '@/types/budget.types'
+import { CardActions } from '@/components/shared/CardActions'
 import { Card, CardContent } from '@/components/ui/card'
 import { CircularProgress } from '@/components/ui/circular-progress'
 import { Badge } from '@/components/ui/badge'
@@ -6,16 +7,22 @@ import { cn } from '@/lib/utils'
 
 interface CategoryAllocationCardProps {
   budgetItem: BudgetWithProgress
+  isOverBudget: boolean
+  onDelete: () => void
+  onEdit: () => void
 }
 
 export const CategoryAllocationCard = ({
   budgetItem,
+  isOverBudget,
+  onDelete,
+  onEdit,
 }: CategoryAllocationCardProps) => {
   const { category_name, amount, progress, category_icon, category_color } =
     budgetItem
   const progressValue = amount > 0 ? (progress / amount) * 100 : 0
-  const isOverBudget = amount > 0 && progress > amount
   const isUnset = amount === 0
+  const maxPercentage = progressValue > 999 ? 999 : progressValue
 
   return (
     <Card
@@ -55,22 +62,35 @@ export const CategoryAllocationCard = ({
           </div>
         </div>
         <div className="flex flex-col">
-          <div className="mb-5 gap-2">
-            {isOverBudget && (
-              <Badge className="bg-destructive/10 text-destructive border-destructive/20 border px-1.5 text-xs">
+          {isOverBudget && (
+            <div className="-mt-3 flex justify-end">
+              <Badge className="bg-destructive/10 text-destructive border-destructive/20 border px-1.5 text-xs capitalize">
                 Over budget
               </Badge>
-            )}
-          </div>
+            </div>
+          )}
           <p
             className={cn(
-              'text-2xl font-bold',
+              'flex justify-end text-2xl font-bold',
               isOverBudget && 'text-destructive',
             )}
           >
-            {Math.round(progressValue)}%
+            <span className="text-destructive font-mono">
+              {isOverBudget && '>'}
+            </span>
+            {Math.round(maxPercentage)}%
           </p>
-          <p className="text-muted-foreground text-xs">spent</p>
+          <p className="text-muted-foreground flex justify-end text-xs">
+            spent
+          </p>
+          <div className="flex h-14 items-end justify-end">
+            <CardActions
+              className="flex items-end justify-end"
+              onEdit={onEdit}
+              onDelete={onDelete}
+              showOnHover={false}
+            />
+          </div>
         </div>
       </CardContent>
     </Card>

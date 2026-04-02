@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { PlusIcon } from 'lucide-react'
-import { ResponsiveDialog } from '@/components/shared/ResponsiveDialog'
 
-import { ExpenseTransactionForm } from '@/routes/_app/expenses/-components/ExpenseTransactionForm'
-import { ExpenseList } from '@/routes/_app/expenses/-components/ExpenseList'
-import { useExpenseActions } from '@/routes/_app/expenses/-hooks/use-expense-actions'
-import { useExpenseDialog } from '@/routes/_app/expenses/-hooks/use-expense-dialog'
-import { useExpenseFilters } from '@/routes/_app/expenses/-hooks/use-expense-filters'
+import { ExpenseTransactionForm } from '../-components/expense/expense-transaction-form'
+import { ExpenseList } from '../-components/expense/expense-list'
+import { useExpenseActions } from '../-hooks/expense/use-expense-actions'
+import { useExpenseDialog } from '../-hooks/expense/use-expense-dialog'
+import { useExpenseFilters } from '../-hooks/expense/use-expense-filters'
+import { ResponsiveDialog } from '@/components/shared/ResponsiveDialog'
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -17,6 +17,7 @@ import { DialogTooltipTrigger } from '@/components/ui/dialog-tooltip-trigger'
 
 import { useCategories } from '@/hooks/categories/use-categories'
 import { useBudgetItems } from '@/hooks/budget/use-budget-item'
+import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
 import { useBudgetCategorySelect } from '@/hooks/budget/use-budget-category-select'
 import { useGetTransactionsWithCategories } from '@/hooks/transactions/use-transaction-with-categories'
 import { getOverspendingTransactionIds } from '@/lib/budget.utils'
@@ -31,14 +32,17 @@ function ExpensesPage() {
   const { data: transactionsWithCategories } =
     useGetTransactionsWithCategories(budgetId)
   const { data: budgetItems } = useBudgetItems(budgetId)
+  const { data: budgetOverviews } = useBudgetOverview()
+  const budgetAmount =
+    budgetOverviews?.find((b) => b.budget_id === budgetId)?.budget_amount ?? 0
 
-  const overspendingIds = useMemo(
+  const { transactionIds: overspendingIds } = useMemo(
     () =>
       getOverspendingTransactionIds(
         transactionsWithCategories ?? [],
-        budgetItems ?? [],
+        budgetAmount,
       ),
-    [transactionsWithCategories, budgetItems],
+    [transactionsWithCategories, budgetAmount],
   )
 
   const { groups, ensureBudgetItem } = useBudgetCategorySelect(

@@ -1,8 +1,7 @@
 import { useState } from 'react'
+import { Expense } from './expense'
+import { ExpenseDeleteDialog } from './expense-delete-dialog'
 import { currencyFormatter } from '@/lib/format'
-import { DeleteDialog } from '@/components/shared/DeleteDialog'
-import { ExpenseItem } from '@/components/shared/ExpenseItem'
-import { CardActions } from '@/components/shared/CardActions'
 
 export interface ExpenseTransaction {
   amount: number
@@ -41,6 +40,7 @@ export const ExpenseList = ({
   const [deleteTarget, setDeleteTarget] = useState<ExpenseTransaction | null>(
     null,
   )
+
   if (expenses.length === 0) {
     return (
       <section className="flex flex-col items-center justify-center py-16 text-center">
@@ -68,52 +68,24 @@ export const ExpenseList = ({
           </div>
           <div className="mb-2 grid grid-cols-1 gap-2 xl:grid-cols-2 2xl:grid-cols-3">
             {expense.transactions.map((transaction) => (
-              <div key={transaction.id}>
-                <ExpenseItem
-                  amount={transaction.amount}
-                  category={transaction.name}
-                  color={transaction.color}
-                  icon={transaction.icon}
-                  isOverBudget={overspendingIds.has(transaction.id)}
-                  title={transaction.description}
-                >
-                  <div className="flex items-center gap-2">
-                    <ExpenseItem.Icon />
-                    <ExpenseItem.Details />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <ExpenseItem.Actions>
-                      <CardActions
-                        onEdit={() => onEdit(transaction)}
-                        onDelete={() => setDeleteTarget(transaction)}
-                        showOnHover={false}
-                      />
-                    </ExpenseItem.Actions>
-                    <ExpenseItem.Amount />
-                  </div>
-                </ExpenseItem>
-              </div>
+              <Expense
+                key={transaction.id}
+                transaction={transaction}
+                overspendingIds={overspendingIds}
+                onEdit={onEdit}
+                onDelete={setDeleteTarget}
+              />
             ))}
           </div>
         </div>
       ))}
-      <DeleteDialog
+      <ExpenseDeleteDialog
         open={deleteTarget !== null}
-        title="Delete Expense"
         onConfirm={handleConfirmDelete}
-        onCancel={() => {
-          if (!isDeleting) setDeleteTarget(null)
-        }}
+        onCancel={() => setDeleteTarget(null)}
         isDeleting={isDeleting}
-      >
-        {deleteTarget && (
-          <>
-            Are you sure you want to delete {deleteTarget.description} for{' '}
-            {currencyFormatter.format(deleteTarget.amount)}? This action cannot
-            be undone.
-          </>
-        )}
-      </DeleteDialog>
+        deleteTarget={deleteTarget}
+      />
     </section>
   )
 }
