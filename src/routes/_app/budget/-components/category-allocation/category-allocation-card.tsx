@@ -23,6 +23,9 @@ export const CategoryAllocationCard = ({
   const progressValue = amount > 0 ? (progress / amount) * 100 : 0
   const isUnset = amount === 0
   const maxPercentage = progressValue > 999 ? 999 : progressValue
+  const isDeleteDisabled = progressValue > 0
+  const deleteDisabledReason =
+    'Remove or reassign expenses before deleting this category'
 
   return (
     <Card
@@ -86,6 +89,9 @@ export const CategoryAllocationCard = ({
           <div className="flex h-14 items-end justify-end">
             <CardActions
               className="flex items-end justify-end"
+              {...(isDeleteDisabled
+                ? { deleteDisabled: true, deleteDisabledReason }
+                : { deleteDisabled: false })}
               onEdit={onEdit}
               onDelete={onDelete}
               showOnHover={false}

@@ -4,9 +4,9 @@ import { describe, expect, it, vi } from 'vitest'
 import { CardActions } from '../CardActions'
 import { TooltipProvider } from '@/components/ui/tooltip'
 
-const renderCardActions = (
-  props: Partial<Parameters<typeof CardActions>[0]> = {},
-) => {
+type CardActionsTestProps = Partial<React.ComponentProps<typeof CardActions>>
+
+const renderCardActions = (props: CardActionsTestProps = {}) => {
   const defaultProps = {
     onEdit: vi.fn(),
     onDelete: vi.fn(),
@@ -18,7 +18,9 @@ const renderCardActions = (
   return {
     ...render(
       <TooltipProvider>
-        <CardActions {...merged} />
+        <CardActions
+          {...(merged as React.ComponentProps<typeof CardActions>)}
+        />
       </TooltipProvider>,
     ),
     onEdit: merged.onEdit,
