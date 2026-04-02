@@ -1,6 +1,6 @@
-import type { SummaryGridProps } from '@/routes/_app/dashboard/-components/SummaryGrid'
-import type { SpendingByCategoryProps } from '@/routes/_app/dashboard/-components/spending-by-category'
-import type { RecentActivityItem } from '@/routes/_app/dashboard/-components/RecentActivity'
+import type { SummaryGridProps } from '../-components/dashboard/summary-grid'
+import type { SpendingByCategoryProps } from '../-components/dashboard/spending-by-category'
+import type { RecentActivityItem } from '../-components/dashboard/recent-activity'
 
 export const summaryData: SummaryGridProps['summaryData'] = [
   {

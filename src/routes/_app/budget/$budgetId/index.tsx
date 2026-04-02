@@ -4,11 +4,9 @@ import {
   recentActivity,
   summaryData,
 } from '../-data/dashboard-mock'
-import {
-  RecentActivity,
-  SpendingByCategory,
-  SummaryGrid,
-} from '@/routes/_app/dashboard/-components'
+import { RecentActivity } from '../-components/dashboard/recent-activity'
+import { SpendingByCategory } from '../-components/dashboard/spending-by-category'
+import { SummaryGrid } from '../-components/dashboard/summary-grid'
 
 export const Route = createFileRoute('/_app/budget/$budgetId/')({
   component: DashboardPage,

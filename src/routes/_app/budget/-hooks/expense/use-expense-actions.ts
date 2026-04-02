@@ -1,4 +1,4 @@
-import type { ExpenseTransaction } from '../-components/ExpenseList'
+import type { ExpenseTransaction } from '../../-components/expense/expense-list'
 import type { ExpenseFormData } from '@/lib/schemas/expenses/expense.schema'
 import { useCreateTransaction } from '@/hooks/transactions/use-create-transaction'
 import { useUpdateTransaction } from '@/hooks/transactions/use-update-transaction'
@@ -14,7 +14,7 @@ export const useExpenseActions = (
   const { mutate: createTransaction, isPending: isCreating } =
     useCreateTransaction()
   const { mutate: updateTransaction, isPending: isUpdating } =
-    useUpdateTransaction()
+    useUpdateTransaction(budgetId)
   const { mutate: deleteTransaction, isPending: isDeleting } =
     useDeleteTransaction()
 

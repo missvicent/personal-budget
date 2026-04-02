@@ -1,5 +1,5 @@
 import type { TransactionWithCategory } from '@/types/database.types'
-import type { ExpenseRecord } from '@/routes/_app/expenses/-components/ExpenseList'
+import type { ExpenseRecord } from '@/routes/_app/budget/-components/expense/expense-list'
 
 function formatDateLabel(dateStr: string): string {
   const date = new Date(dateStr + 'T00:00:00')

@@ -109,15 +109,6 @@ export const CategoryAllocationForm = ({
                       onChange={(selected) => field.onChange(selected.value)}
                       value={field.value}
                       placeholder="Select a category"
-                      aria-label="Category"
-                      aria-describedby="category-description"
-                      aria-required="true"
-                      aria-invalid="false"
-                      aria-autocomplete="list"
-                      aria-controls="category-list"
-                      aria-expanded="false"
-                      aria-haspopup="true"
-                      aria-activedescendant="category-item-0"
                     />
                   </FormControl>
                 </FormItem>

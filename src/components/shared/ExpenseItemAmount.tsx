@@ -1,5 +1,5 @@
 import { currencyFormatter } from '@/lib/format'
-import { useExpenseItem } from '@/hooks/use-expense-item'
+import { useExpenseItem } from '@/hooks/shared/use-expense-item'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 

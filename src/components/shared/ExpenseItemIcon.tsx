@@ -1,4 +1,4 @@
-import { useExpenseItem } from '@/hooks/use-expense-item'
+import { useExpenseItem } from '@/hooks/shared/use-expense-item'
 import { getCategoryStyles } from '@/lib/colors'
 
 export const ExpenseItemIcon = () => {
