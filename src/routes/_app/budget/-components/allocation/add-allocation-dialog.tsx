@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { PlusIcon } from 'lucide-react'
 import { AllocationForm } from './allocation-form'
 import type { BudgetWithProgress } from '@/types/budget.types'
@@ -11,16 +11,21 @@ import { DialogTooltipTrigger } from '@/components/ui/dialog-tooltip-trigger'
 interface AddAllocationDialogProps {
   budgetId: string
   allocations: Array<BudgetWithProgress> | undefined
+  onOpenChange: (open: boolean) => void
+  open: boolean
+  selectedAllocation: BudgetWithProgress | null
 }
 
 export const AddAllocationDialog = ({
   budgetId,
   allocations,
+  onOpenChange,
+  open,
+  selectedAllocation,
 }: AddAllocationDialogProps) => {
-  const [open, setOpen] = useState(false)
   const remainingBudget = useRemainingBudget(budgetId)
-  const allocationHandlers = useAllocationHandlers(null, () => {
-    setOpen(false)
+  const allocationHandlers = useAllocationHandlers(selectedAllocation, () => {
+    onOpenChange(false)
   })
 
   const usedCategoryIds = useMemo(
@@ -28,24 +33,26 @@ export const AddAllocationDialog = ({
     [allocations],
   )
 
-  const isFullyAllocated = remainingBudget <= 0
+  const isFullyAllocated = remainingBudget <= 0 && !selectedAllocation
   const tooltipContent = isFullyAllocated
     ? 'Budget fully allocated — no remaining funds to assign'
     : 'Add Allocation'
 
   return (
-    <ResponsiveDialog open={open} onOpenChange={setOpen}>
-      <DialogTooltipTrigger dialogOpen={open} tooltipContent={tooltipContent}>
-        <Button size="icon" variant="default" className="h-10 p-3 md:w-auto">
-          <PlusIcon />
-        </Button>
-      </DialogTooltipTrigger>
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
+      {!selectedAllocation && (
+        <DialogTooltipTrigger dialogOpen={open} tooltipContent={tooltipContent}>
+          <Button size="icon" variant="default" className="h-10 p-3 md:w-auto">
+            <PlusIcon />
+          </Button>
+        </DialogTooltipTrigger>
+      )}
       <AllocationForm
         budgetId={budgetId}
         isPending={allocationHandlers.isPending}
         onSubmit={allocationHandlers.handleSubmit}
         remainingBudget={remainingBudget}
-        selectedAllocation={null}
+        selectedAllocation={selectedAllocation}
         usedCategoryIds={usedCategoryIds}
       />
     </ResponsiveDialog>
