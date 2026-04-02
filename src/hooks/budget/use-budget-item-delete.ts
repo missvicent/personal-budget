@@ -7,10 +7,11 @@ import { budgetItemService } from '@/services/budget-item.service'
 export const useDeleteBudgetItem = () => {
   const queryClient = useQueryClient()
   return useAuthMutation(
-    (id, supabase) => budgetItemService.delete(id, supabase),
+    ({ id, budgetId }: { id: string; budgetId: string }, supabase) =>
+      budgetItemService.delete(budgetId, id, supabase),
     {
-      onMutate: async (id: string) => {
-        const queryKey = useBudgetQueryKeys().budgetItem(id)
+      onMutate: async ({ id, budgetId }: { id: string; budgetId: string }) => {
+        const queryKey = useBudgetQueryKeys().budgetItem(budgetId)
         await queryClient.cancelQueries({ queryKey })
         const previousBudgetItem =
           queryClient.getQueryData<BudgetItem>(queryKey)
@@ -31,6 +32,10 @@ export const useDeleteBudgetItem = () => {
             )
           }
         }
+        queryClient.invalidateQueries({ queryKey: context?.queryKey })
+        queryClient.invalidateQueries({
+          queryKey: useBudgetQueryKeys().budgets(),
+        })
       },
     },
   )

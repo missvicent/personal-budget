@@ -1,6 +1,9 @@
 import { createContext, useEffect } from 'react'
 import { useAuth } from '@clerk/clerk-react'
-import { useUpdateUserSetting, useUserSetting } from '@/hooks/use-user-setting'
+import {
+  useUpdateUserSetting,
+  useUserSetting,
+} from '@/hooks/user/use-user-setting'
 
 interface ThemeContextValue {
   isDarkMode: boolean

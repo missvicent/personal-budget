@@ -14,8 +14,16 @@ export const budgetItemService = {
     if (error) throw new Error(`Failed to create budget item: ${error.message}`)
     return data
   },
-  delete: async (id: string, supabase: SupabaseClient): Promise<void> => {
-    const { error } = await supabase.from('budget_items').delete().eq('id', id)
+  delete: async (
+    budgetId: string,
+    id: string,
+    supabase: SupabaseClient,
+  ): Promise<void> => {
+    const { error } = await supabase
+      .from('budget_items')
+      .delete()
+      .eq('budget_id', budgetId)
+      .eq('id', id)
     if (error) throw new Error(`Failed to delete budget item: ${error.message}`)
   },
   update: async (

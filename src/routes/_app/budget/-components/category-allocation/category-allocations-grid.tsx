@@ -1,17 +1,36 @@
+import { useState } from 'react'
 import { useParams } from '@tanstack/react-router'
 import { useCategoryAllocationsData } from '../../-hooks/allocation/use-category-allocations-data'
 import { AddAllocationDialog } from './add-allocation-dialog'
 import { CategoryAllocationsGridSkeleton } from './category-allocations-grid-skeleton'
 import { CategoryAllocationCard } from './category-allocation-card'
+import { CategoryAllocationDeleteDialog } from './category-allocation-delete-dialog'
+import type { BudgetWithProgress } from '@/types/budget.types'
 import { cn } from '@/lib/utils'
 
 export const CategoryAllocationsGrid = () => {
   const { budgetId } = useParams({ from: '/_app/budget/$budgetId' })
-  const { budgetItems, isLoading, overspendingCategoryIds, deleteBudgetItem } =
-    useCategoryAllocationsData(budgetId)
+  const {
+    budgetItems,
+    isLoading,
+    overspendingCategoryIds,
+    deleteBudgetItem,
+    isDeleting,
+  } = useCategoryAllocationsData(budgetId)
+  const [deleteTarget, setDeleteTarget] = useState<BudgetWithProgress | null>(
+    null,
+  )
 
   if (isLoading) {
     return <CategoryAllocationsGridSkeleton />
+  }
+
+  const handleConfirmDelete = () => {
+    if (!deleteTarget) return
+    deleteBudgetItem(
+      { id: deleteTarget.item_id, budgetId: deleteTarget.budget_id },
+      { onSettled: () => setDeleteTarget(null) },
+    )
   }
 
   return (
@@ -26,7 +45,7 @@ export const CategoryAllocationsGrid = () => {
               key={item.item_id}
               budgetItem={item}
               isOverBudget={overspendingCategoryIds.has(item.category_id)}
-              onDelete={() => deleteBudgetItem(item.item_id)}
+              onDelete={() => setDeleteTarget(item)}
               onEdit={() => {}}
             />
           ))
@@ -38,6 +57,13 @@ export const CategoryAllocationsGrid = () => {
           </div>
         )}
       </div>
+      <CategoryAllocationDeleteDialog
+        open={deleteTarget !== null}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+        isDeleting={isDeleting}
+        deleteTarget={deleteTarget}
+      />
     </section>
   )
 }

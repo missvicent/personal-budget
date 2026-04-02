@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useAuthQuery } from './auth/use-auth-query'
 import type { UserSettings } from '@/types/database.types'
+import { useAuthQuery } from '@/hooks/auth/use-auth-query'
 import { userSettingsService } from '@/services/user-settings.service'
 import { useSupabase } from '@/contexts/SupabaseContext'
 

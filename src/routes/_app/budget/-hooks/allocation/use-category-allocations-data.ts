@@ -16,7 +16,7 @@ export const useCategoryAllocationsData = (budgetId: string) => {
   const { data: transactionsWithCategories } =
     useGetTransactionsWithCategories(budgetId)
 
-  const { deleteBudgetItem } = useAllocationMutations()
+  const { deleteBudgetItem, isDeleting } = useAllocationMutations()
 
   const budgetAmount =
     budgetOverviews?.find((b) => b.budget_id === budgetId)?.budget_amount ?? 0
@@ -34,5 +34,6 @@ export const useCategoryAllocationsData = (budgetId: string) => {
     isLoading,
     overspendingCategoryIds,
     deleteBudgetItem,
+    isDeleting,
   }
 }
