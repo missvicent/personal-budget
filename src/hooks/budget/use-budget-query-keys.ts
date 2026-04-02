@@ -1,7 +1,7 @@
 export const useBudgetQueryKeys = () => {
   return {
     budgets: () => ['budgets'],
-    budgetItem: (id: string) => ['budgets', 'items', id],
+    allocation: (id: string) => ['budgets', 'allocations', id],
     overview: () => ['budgets', 'overview'],
   }
 }

@@ -1,30 +1,39 @@
 import { PencilIcon, Trash2Icon } from 'lucide-react'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-interface CardActionsProps {
-  onEdit: () => void
-  onDelete: () => void
-  stopPropagation?: boolean
-  showOnHover?: boolean
+type CardActionsProps = {
   className?: string
-}
+  onDelete: () => void
+  onEdit: () => void
+  showOnHover?: boolean
+  stopPropagation?: boolean
+  preventDefault?: boolean
+} & (
+  | { deleteDisabled: true; deleteDisabledReason: string }
+  | { deleteDisabled?: false; deleteDisabledReason?: never }
+)
 
 export const CardActions = ({
-  onEdit,
-  onDelete,
-  stopPropagation = false,
-  showOnHover = true,
   className,
+  deleteDisabled = false,
+  deleteDisabledReason,
+  onDelete,
+  onEdit,
+  showOnHover = true,
+  stopPropagation = false,
+  preventDefault = false,
 }: CardActionsProps) => {
-  const handleClick =
-    (callback: () => void) => (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (stopPropagation) {
-        e.preventDefault()
-        e.stopPropagation()
-      }
-      callback()
-    }
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (stopPropagation) e.stopPropagation()
+    if (preventDefault) e.preventDefault()
+    if (!deleteDisabled) onDelete()
+  }
 
   return (
     <div
@@ -34,22 +43,45 @@ export const CardActions = ({
         className,
       )}
     >
-      <Button
-        variant="ghost"
-        size="icon"
-        className="hover:bg-primary/20 hover:text-primary/70 z-10"
-        onClick={handleClick(onEdit)}
-      >
-        <PencilIcon className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="hover:bg-destructive/20 hover:text-destructive/70 z-10"
-        onClick={handleClick(onDelete)}
-      >
-        <Trash2Icon className="h-4 w-4" />
-      </Button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:bg-primary/20 hover:text-primary/70 z-10"
+            onClick={(e) => {
+              if (stopPropagation) e.stopPropagation()
+              if (preventDefault) e.preventDefault()
+              onEdit()
+            }}
+          >
+            <PencilIcon />
+            <span className="sr-only">Edit</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Edit</TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-disabled={deleteDisabled}
+            className={cn(
+              'hover:bg-destructive/20 hover:text-destructive/70 z-10',
+              deleteDisabled && 'cursor-not-allowed opacity-50',
+            )}
+            onClick={handleClick}
+          >
+            <Trash2Icon />
+            <span className="sr-only">Delete</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          {deleteDisabled ? deleteDisabledReason : 'Delete'}
+        </TooltipContent>
+      </Tooltip>
     </div>
   )
 }

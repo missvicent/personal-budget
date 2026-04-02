@@ -1,22 +1,22 @@
 import { useCallback, useMemo } from 'react'
-import { useCreateBudgetItem } from './use-budget-item-create'
 import type { Category } from '@/types/database.types'
 import type { BudgetWithProgress } from '@/types/budget.types'
 import type {
   SelectOptionGroup,
   SelectOptionItem,
 } from '@/components/shared/GroupedSelectField'
+import { useCreateAllocation } from '@/hooks/allocation/use-allocation-create'
 
 export const useBudgetCategorySelect = (
   budgetId: string,
   categories: Array<Category>,
-  budgetItems: Array<BudgetWithProgress>,
+  allocations: Array<BudgetWithProgress>,
 ) => {
-  const { mutateAsync: createBudgetItem } = useCreateBudgetItem()
+  const { mutateAsync: createAllocation } = useCreateAllocation()
 
   const budgetedCategoryIds = useMemo(
-    () => new Set(budgetItems.map((bi) => bi.category_id)),
-    [budgetItems],
+    () => new Set(allocations.map((a) => a.category_id)),
+    [allocations],
   )
 
   const expenseCategories = useMemo(
@@ -63,10 +63,10 @@ export const useBudgetCategorySelect = (
     return selected.value
   }, [])
 
-  const ensureBudgetItem = useCallback(
+  const ensureAllocation = useCallback(
     async (categoryId: string, amount: number) => {
       if (!budgetedCategoryIds.has(categoryId)) {
-        await createBudgetItem({
+        await createAllocation({
           budget_id: budgetId,
           category_id: categoryId,
           amount,
@@ -75,8 +75,8 @@ export const useBudgetCategorySelect = (
         })
       }
     },
-    [budgetId, budgetedCategoryIds, createBudgetItem],
+    [budgetId, budgetedCategoryIds, createAllocation],
   )
 
-  return { groups, onCategorySelect, ensureBudgetItem }
+  return { groups, onCategorySelect, ensureAllocation }
 }

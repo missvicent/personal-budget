@@ -23,10 +23,11 @@ export interface SelectOptionGroup {
   items: Array<SelectOptionItem>
 }
 
-export interface GroupedSelectFieldProps extends Omit<
-  React.ComponentPropsWithoutRef<typeof SelectTrigger>,
-  'value' | 'onChange'
-> {
+export interface GroupedSelectFieldProps
+  extends Omit<
+    React.ComponentPropsWithoutRef<typeof SelectTrigger>,
+    'value' | 'onChange'
+  > {
   placeholder?: string
   groups: Array<SelectOptionGroup>
   value: string

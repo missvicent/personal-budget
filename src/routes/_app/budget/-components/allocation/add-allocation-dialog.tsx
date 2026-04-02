@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { PlusIcon } from 'lucide-react'
-import { CategoryAllocationForm } from './category-allocation-form'
+import { AllocationForm } from './allocation-form'
 import type { BudgetWithProgress } from '@/types/budget.types'
 import { useAllocationHandlers } from '@/routes/_app/budget/-hooks/allocation/use-allocation-handlers'
 import { useRemainingBudget } from '@/routes/_app/budget/-hooks/allocation/use-remaining-budget'
@@ -10,12 +10,12 @@ import { DialogTooltipTrigger } from '@/components/ui/dialog-tooltip-trigger'
 
 interface AddAllocationDialogProps {
   budgetId: string
-  budgetItems: Array<BudgetWithProgress> | undefined
+  allocations: Array<BudgetWithProgress> | undefined
 }
 
 export const AddAllocationDialog = ({
   budgetId,
-  budgetItems,
+  allocations,
 }: AddAllocationDialogProps) => {
   const [open, setOpen] = useState(false)
   const remainingBudget = useRemainingBudget(budgetId)
@@ -24,8 +24,8 @@ export const AddAllocationDialog = ({
   })
 
   const usedCategoryIds = useMemo(
-    () => budgetItems?.map((item) => item.category_id) ?? [],
-    [budgetItems],
+    () => allocations?.map((item) => item.category_id) ?? [],
+    [allocations],
   )
 
   const isFullyAllocated = remainingBudget <= 0
@@ -40,12 +40,12 @@ export const AddAllocationDialog = ({
           <PlusIcon />
         </Button>
       </DialogTooltipTrigger>
-      <CategoryAllocationForm
+      <AllocationForm
         budgetId={budgetId}
         isPending={allocationHandlers.isPending}
         onSubmit={allocationHandlers.handleSubmit}
         remainingBudget={remainingBudget}
-        selectedBudgetItem={null}
+        selectedAllocation={null}
         usedCategoryIds={usedCategoryIds}
       />
     </ResponsiveDialog>

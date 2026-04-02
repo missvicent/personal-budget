@@ -1,7 +1,7 @@
 export type { Account, CreateAccount, UpdateAccount } from './account.types'
 export type {
+  Allocation,
   Budget,
-  BudgetItem,
   BudgetOverview,
   BudgetWithProgress,
 } from './budget.types'

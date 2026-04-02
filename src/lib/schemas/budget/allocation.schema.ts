@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const budgetItemSchema = z.object({
+export const allocationSchema = z.object({
   alert_enabled: z.boolean().optional(),
   amount: z.number().min(1, 'Amount is required'),
   budget_id: z.string().min(1, 'Budget is required'),
@@ -8,8 +8,8 @@ export const budgetItemSchema = z.object({
   id: z.string().optional(),
 })
 
-export const createBudgetItemSchema = (remainingBudget: number) =>
-  budgetItemSchema.extend({
+export const createAllocationSchema = (remainingBudget: number) =>
+  allocationSchema.extend({
     amount: z
       .number()
       .min(1, 'Amount is required')
@@ -19,9 +19,9 @@ export const createBudgetItemSchema = (remainingBudget: number) =>
       ),
   })
 
-export type BudgetItemFormData = z.infer<typeof budgetItemSchema>
+export type AllocationFormData = z.infer<typeof allocationSchema>
 
-export function toBudgetItemPayload(data: BudgetItemFormData) {
+export function toAllocationPayload(data: AllocationFormData) {
   const { amount, category_id, alert_enabled, budget_id, id } = data
   return {
     amount,

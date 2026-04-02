@@ -1,34 +1,34 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuthMutation } from '../auth/use-auth-mutation'
-import { useBudgetQueryKeys } from './use-budget-query-keys'
-import type { BudgetItem } from '@/types/database.types'
-import { budgetItemService } from '@/services/budget-item.service'
+import type { Allocation } from '@/types/database.types'
+import { useBudgetQueryKeys } from '@/hooks/budget/use-budget-query-keys'
+import { allocationService } from '@/services/allocation.service'
 
-export const useDeleteBudgetItem = () => {
+export const useDeleteAllocation = () => {
   const queryClient = useQueryClient()
   return useAuthMutation(
     ({ id, budgetId }: { id: string; budgetId: string }, supabase) =>
-      budgetItemService.delete(budgetId, id, supabase),
+      allocationService.delete(budgetId, id, supabase),
     {
       onMutate: async ({ id, budgetId }: { id: string; budgetId: string }) => {
-        const queryKey = useBudgetQueryKeys().budgetItem(budgetId)
+        const queryKey = useBudgetQueryKeys().allocation(budgetId)
         await queryClient.cancelQueries({ queryKey })
-        const previousBudgetItem =
-          queryClient.getQueryData<BudgetItem>(queryKey)
-        queryClient.setQueryData(queryKey, (old: Array<BudgetItem>) =>
+        const previousAllocation =
+          queryClient.getQueryData<Allocation>(queryKey)
+        queryClient.setQueryData(queryKey, (old: Array<Allocation>) =>
           old.filter((item) => item.id !== id),
         )
         return {
-          previousBudgetItem,
-          queryKey: useBudgetQueryKeys().budgetItem(id),
+          previousAllocation,
+          queryKey: useBudgetQueryKeys().allocation(id),
         }
       },
       onSettled: (_data, error, _variables, context) => {
         if (error) {
-          if (context?.previousBudgetItem) {
+          if (context?.previousAllocation) {
             queryClient.setQueryData(
               context.queryKey,
-              context.previousBudgetItem,
+              context.previousAllocation,
             )
           }
         }

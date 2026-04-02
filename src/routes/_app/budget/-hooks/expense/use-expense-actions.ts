@@ -8,7 +8,7 @@ import { toTransactionPayload } from '@/lib/schemas/expenses/expense.schema'
 export const useExpenseActions = (
   onSuccess: () => void,
   budgetId?: string,
-  ensureBudgetItem?: (categoryId: string, amount: number) => Promise<void>,
+  ensureAllocation?: (categoryId: string, amount: number) => Promise<void>,
   fallbackCategoryId?: string,
 ) => {
   const { mutate: createTransaction, isPending: isCreating } =
@@ -22,8 +22,8 @@ export const useExpenseActions = (
     data: ExpenseFormData,
     selectedTransaction: ExpenseTransaction | null,
   ) => {
-    if (data.category_id && ensureBudgetItem) {
-      await ensureBudgetItem(data.category_id, data.amount)
+    if (data.category_id && ensureAllocation) {
+      await ensureAllocation(data.category_id, data.amount)
     }
 
     if (selectedTransaction) {

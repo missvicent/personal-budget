@@ -5,22 +5,25 @@ import { CircularProgress } from '@/components/ui/circular-progress'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
-interface CategoryAllocationCardProps {
-  budgetItem: BudgetWithProgress
+interface AllocationCardProps {
+  allocation: BudgetWithProgress
   isOverBudget: boolean
   onDelete: () => void
   onEdit: () => void
 }
 
-export const CategoryAllocationCard = ({
-  budgetItem,
+export const AllocationCard = ({
+  allocation,
   isOverBudget,
   onDelete,
   onEdit,
-}: CategoryAllocationCardProps) => {
+}: AllocationCardProps) => {
   const { category_name, amount, progress, category_icon, category_color } =
-    budgetItem
+    allocation
   const progressValue = amount > 0 ? (progress / amount) * 100 : 0
+  const deleteDisabledReason =
+    'Remove or reassign expenses before deleting this category'
+  const isDeleteDisabled = progressValue > 0
   const isUnset = amount === 0
   const maxPercentage = progressValue > 999 ? 999 : progressValue
 
@@ -86,6 +89,9 @@ export const CategoryAllocationCard = ({
           <div className="flex h-14 items-end justify-end">
             <CardActions
               className="flex items-end justify-end"
+              {...(isDeleteDisabled
+                ? { deleteDisabled: true, deleteDisabledReason }
+                : { deleteDisabled: false })}
               onEdit={onEdit}
               onDelete={onDelete}
               showOnHover={false}

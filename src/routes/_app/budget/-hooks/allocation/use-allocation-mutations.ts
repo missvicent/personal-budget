@@ -1,10 +1,10 @@
-import { useCreateBudgetItem } from '@/hooks/budget/use-budget-item-create'
-import { useDeleteBudgetItem } from '@/hooks/budget/use-budget-item-delete'
+import { useCreateAllocation } from '@/hooks/allocation/use-allocation-create'
+import { useDeleteAllocation } from '@/hooks/allocation/use-allocation-delete'
 
 export const useAllocationMutations = () => {
-  const { mutate: createBudgetItem, isPending: isCreating } =
-    useCreateBudgetItem()
-  const { mutate: deleteBudgetItem, isPending: isDeleting } =
-    useDeleteBudgetItem()
-  return { createBudgetItem, deleteBudgetItem, isCreating, isDeleting }
+  const { mutate: createAllocation, isPending: isCreating } =
+    useCreateAllocation()
+  const { mutate: deleteAllocation, isPending: isDeleting } =
+    useDeleteAllocation()
+  return { createAllocation, deleteAllocation, isCreating, isDeleting }
 }
