@@ -7,13 +7,14 @@ import { allocationService } from '@/services/allocation.service'
 
 export const useUpdateAllocation = () => {
   const queryClient = useQueryClient()
+  const queryKeys = useBudgetQueryKeys()
   return useAuthMutation(
     ({ id, ...allocation }: { id: string } & Partial<Allocation>, supabase) =>
       allocationService.update(id, allocation, supabase),
     {
       onSuccess: (allocation: Allocation) => {
         queryClient.invalidateQueries({
-          queryKey: useBudgetQueryKeys().allocation(allocation.budget_id),
+          queryKey: queryKeys.allocation(allocation.budget_id),
         })
       },
     },

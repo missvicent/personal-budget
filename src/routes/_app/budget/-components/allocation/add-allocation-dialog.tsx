@@ -48,6 +48,7 @@ export const AddAllocationDialog = ({
         </DialogTooltipTrigger>
       )}
       <AllocationForm
+        key={selectedAllocation?.allocation_id ?? 'new'}
         budgetId={budgetId}
         isPending={allocationHandlers.isPending}
         onSubmit={allocationHandlers.handleSubmit}

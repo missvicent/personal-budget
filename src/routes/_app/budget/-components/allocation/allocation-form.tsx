@@ -97,6 +97,11 @@ export const AllocationForm = ({
     mode: 'onChange',
   })
 
+  const formTitle = selectedAllocation ? 'Edit your Budget' : 'Set your Budget'
+  const formDescription = selectedAllocation
+    ? 'Update the budget amount for this category'
+    : 'Set your budget for a new category'
+
   return (
     <Form {...form}>
       <ResponsiveDialogContent>
@@ -106,10 +111,10 @@ export const AllocationForm = ({
         >
           <ResponsiveDialogHeader>
             <ResponsiveDialogTitle className="mb-3">
-              {selectedAllocation ? 'Edit your Budget' : 'Set your Budget'}
+              {formTitle}
             </ResponsiveDialogTitle>
             <ResponsiveDialogDescription className="sr-only">
-              Set your budget for a new category
+              {formDescription}
             </ResponsiveDialogDescription>
           </ResponsiveDialogHeader>
           <FieldGroup>
