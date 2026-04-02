@@ -1,7 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 
-export const CategoryAllocationsGridSkeleton = () => {
+export const AllocationsGridSkeleton = () => {
   return (
     <section className={cn('flex flex-col gap-4', 'px-4 py-4 md:p-8')}>
       <header className="flex flex-col items-center gap-2 md:flex-row lg:justify-end">

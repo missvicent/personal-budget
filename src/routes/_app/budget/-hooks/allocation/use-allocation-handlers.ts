@@ -2,22 +2,22 @@ import { toast } from 'sonner'
 
 import { useAllocationMutations } from './use-allocation-mutations'
 import type { BudgetWithProgress } from '@/types/budget.types'
-import type { BudgetItemFormData } from '@/lib/schemas/budget/budget-item.schema'
-import { toBudgetItemPayload } from '@/lib/schemas/budget/budget-item.schema'
+import type { AllocationFormData } from '@/lib/schemas/budget/allocation.schema'
+import { toAllocationPayload } from '@/lib/schemas/budget/allocation.schema'
 
 export const useAllocationHandlers = (
-  selectedBudgetItem: BudgetWithProgress | null,
+  selectedAllocation: BudgetWithProgress | null,
   onSuccess: () => void,
 ) => {
   const mutations = useAllocationMutations()
 
-  const handleSubmit = (data: BudgetItemFormData) => {
-    if (selectedBudgetItem) {
-      // mutations.updateBudgetItem(data)
+  const handleSubmit = (data: AllocationFormData) => {
+    if (selectedAllocation) {
+      // mutations.updateAllocation(data)
     } else {
-      mutations.createBudgetItem(toBudgetItemPayload(data), {
+      mutations.createAllocation(toAllocationPayload(data), {
         onSuccess: () => {
-          toast.success('Budget item created successfully')
+          toast.success('Allocation created successfully')
           onSuccess()
         },
       })

@@ -10,7 +10,7 @@ interface DialogProps {
   deleteTarget: BudgetWithProgress | null
 }
 
-export const CategoryAllocationDeleteDialog = ({
+export const AllocationDeleteDialog = ({
   open,
   onConfirm,
   onCancel,

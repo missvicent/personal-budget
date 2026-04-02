@@ -161,6 +161,16 @@ Used only in the debt-calculator route for real-time sync of `debts` and `debt_p
 - Clerk handles all auth tokens — never manage tokens manually
 - Supabase RLS enforces row-level security — never bypass in client code
 
+## Git Commit & PR Rules
+
+NEVER include in commit messages or PR descriptions:
+
+- The phrase "Claude Code" or any mention that you are an AI
+- Any hint of what model or version you are
+- Co-Authored-By lines or any other attribution
+
+Write commit messages as a human developer would.
+
 ## Common Mistakes to Avoid
 
 - No `any` — use `unknown` + type narrowing

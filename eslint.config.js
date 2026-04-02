@@ -12,6 +12,7 @@ export default [
       'src/routeTree.gen.ts',
       '*.config.js',
       '*.config.ts',
+      '.agents/**',
     ],
   },
   ...tanstackConfig,

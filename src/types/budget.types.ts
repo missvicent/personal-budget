@@ -18,7 +18,7 @@ export interface BudgetWithProgress {
   start_date: string
   end_date: string | null
   is_active: boolean
-  item_id: string
+  allocation_id: string
   category_id: string
   amount: number
   alert_enabled: boolean
@@ -41,7 +41,7 @@ export interface BudgetOverview {
   total_spent: number
 }
 
-export interface BudgetItem {
+export interface Allocation {
   id?: string
   budget_id: string
   category_id: string

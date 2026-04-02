@@ -16,7 +16,7 @@ import { SelectField } from '@/components/shared/SelectField'
 import { DialogTooltipTrigger } from '@/components/ui/dialog-tooltip-trigger'
 
 import { useCategories } from '@/hooks/categories/use-categories'
-import { useBudgetItems } from '@/hooks/budget/use-budget-item'
+import { useAllocations } from '@/hooks/allocation/use-allocation'
 import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
 import { useBudgetCategorySelect } from '@/hooks/budget/use-budget-category-select'
 import { useGetTransactionsWithCategories } from '@/hooks/transactions/use-transaction-with-categories'
@@ -31,7 +31,7 @@ function ExpensesPage() {
   const { data: categories } = useCategories()
   const { data: transactionsWithCategories } =
     useGetTransactionsWithCategories(budgetId)
-  const { data: budgetItems } = useBudgetItems(budgetId)
+  const { data: allocations } = useAllocations(budgetId)
   const { data: budgetOverviews } = useBudgetOverview()
   const budgetAmount =
     budgetOverviews?.find((b) => b.budget_id === budgetId)?.budget_amount ?? 0
@@ -45,10 +45,10 @@ function ExpensesPage() {
     [transactionsWithCategories, budgetAmount],
   )
 
-  const { groups, ensureBudgetItem } = useBudgetCategorySelect(
+  const { groups, ensureAllocation } = useBudgetCategorySelect(
     budgetId,
     categories ?? [],
-    budgetItems ?? [],
+    allocations ?? [],
   )
 
   const dialog = useExpenseDialog()
@@ -67,7 +67,7 @@ function ExpensesPage() {
   const actions = useExpenseActions(
     () => dialog.onOpenChange(false),
     budgetId,
-    ensureBudgetItem,
+    ensureAllocation,
     fallbackCategoryId,
   )
 

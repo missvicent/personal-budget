@@ -22,9 +22,9 @@ const BUDGET_SUB_LINKS = [
     to: '/budget/$budgetId/expenses' as const,
   },
   {
-    title: 'Categories',
+    title: 'Allocations',
     icon: Tags,
-    to: '/budget/$budgetId/categories' as const,
+    to: '/budget/$budgetId/allocations' as const,
   },
 ] as const
 

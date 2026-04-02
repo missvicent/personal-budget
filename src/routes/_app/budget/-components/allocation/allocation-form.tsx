@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import type { BudgetItemFormData } from '@/lib/schemas/budget/budget-item.schema'
-import { createBudgetItemSchema } from '@/lib/schemas/budget/budget-item.schema'
+import type { AllocationFormData } from '@/lib/schemas/budget/allocation.schema'
+import { createAllocationSchema } from '@/lib/schemas/budget/allocation.schema'
 import {
   ResponsiveDialogClose,
   ResponsiveDialogContent,
@@ -28,23 +28,23 @@ import { Button } from '@/components/ui/button'
 import { useCategories } from '@/hooks/categories/use-categories'
 import { toSelectOptions } from '@/lib/utils'
 
-interface CategoryAllocationFormProps {
+interface AllocationFormProps {
   budgetId: string
   isPending: boolean
-  onSubmit: (data: BudgetItemFormData) => void
+  onSubmit: (data: AllocationFormData) => void
   remainingBudget: number
-  selectedBudgetItem: BudgetItemFormData | null
+  selectedAllocation: AllocationFormData | null
   usedCategoryIds: Array<string>
 }
 
-export const CategoryAllocationForm = ({
+export const AllocationForm = ({
   budgetId,
   isPending,
   onSubmit,
   remainingBudget,
-  selectedBudgetItem,
+  selectedAllocation,
   usedCategoryIds,
-}: CategoryAllocationFormProps) => {
+}: AllocationFormProps) => {
   const { data: categories } = useCategories()
 
   const categoryOptions = useMemo(
@@ -62,7 +62,7 @@ export const CategoryAllocationForm = ({
   )
 
   const schema = useMemo(
-    () => createBudgetItemSchema(remainingBudget),
+    () => createAllocationSchema(remainingBudget),
     [remainingBudget],
   )
 
@@ -75,7 +75,7 @@ export const CategoryAllocationForm = ({
     }
   }, [budgetId])
 
-  const form = useForm<BudgetItemFormData>({
+  const form = useForm<AllocationFormData>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
     mode: 'onChange',
@@ -159,7 +159,7 @@ export const CategoryAllocationForm = ({
               <Button variant="outline">Cancel</Button>
             </ResponsiveDialogClose>
             <Button type="submit" disabled={isPending}>
-              {selectedBudgetItem ? 'Update' : 'Save'}
+              {selectedAllocation ? 'Update' : 'Save'}
             </Button>
           </ResponsiveDialogFooter>
         </form>
