@@ -24,15 +24,16 @@ export const SelectField = ({
   value,
   onChange,
   placeholder,
+  disabled,
   ...triggerProps
-}: SelectFieldProps) => {
+}: SelectFieldProps & { disabled?: boolean }) => {
   const handleChange = (v: string) => {
     const selected = items.find((item) => item.value === v)
     if (selected) onChange(selected)
   }
 
   return (
-    <Select value={value} onValueChange={handleChange}>
+    <Select value={value} onValueChange={handleChange} disabled={disabled}>
       <SelectTrigger {...triggerProps}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

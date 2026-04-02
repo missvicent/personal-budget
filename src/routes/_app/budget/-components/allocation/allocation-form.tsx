@@ -2,7 +2,11 @@ import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { AllocationFormData } from '@/lib/schemas/budget/allocation.schema'
-import { createAllocationSchema } from '@/lib/schemas/budget/allocation.schema'
+import type { BudgetWithProgress } from '@/types/budget.types'
+import {
+  createAllocationSchema,
+  updateAllocationSchema,
+} from '@/lib/schemas/budget/allocation.schema'
 import {
   ResponsiveDialogClose,
   ResponsiveDialogContent,
@@ -33,7 +37,7 @@ interface AllocationFormProps {
   isPending: boolean
   onSubmit: (data: AllocationFormData) => void
   remainingBudget: number
-  selectedAllocation: AllocationFormData | null
+  selectedAllocation: BudgetWithProgress | null
   usedCategoryIds: Array<string>
 }
 
@@ -62,18 +66,30 @@ export const AllocationForm = ({
   )
 
   const schema = useMemo(
-    () => createAllocationSchema(remainingBudget),
-    [remainingBudget],
+    () =>
+      selectedAllocation
+        ? updateAllocationSchema(remainingBudget, selectedAllocation.amount)
+        : createAllocationSchema(remainingBudget),
+    [remainingBudget, selectedAllocation],
   )
 
   const defaultValues = useMemo(() => {
+    if (selectedAllocation) {
+      return {
+        budget_id: selectedAllocation.budget_id,
+        category_id: selectedAllocation.category_id,
+        amount: selectedAllocation.amount,
+        alert_enabled: selectedAllocation.alert_enabled,
+        id: selectedAllocation.allocation_id,
+      }
+    }
     return {
       budget_id: budgetId,
       category_id: '',
       amount: 0,
       alert_enabled: false,
     }
-  }, [budgetId])
+  }, [budgetId, selectedAllocation])
 
   const form = useForm<AllocationFormData>({
     resolver: zodResolver(schema),
@@ -90,7 +106,7 @@ export const AllocationForm = ({
         >
           <ResponsiveDialogHeader>
             <ResponsiveDialogTitle className="mb-3">
-              Set your Budget
+              {selectedAllocation ? 'Edit your Budget' : 'Set your Budget'}
             </ResponsiveDialogTitle>
             <ResponsiveDialogDescription className="sr-only">
               Set your budget for a new category
@@ -109,6 +125,7 @@ export const AllocationForm = ({
                       onChange={(selected) => field.onChange(selected.value)}
                       value={field.value}
                       placeholder="Select a category"
+                      disabled={selectedAllocation !== null}
                     />
                   </FormControl>
                 </FormItem>
