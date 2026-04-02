@@ -19,6 +19,20 @@ export const createAllocationSchema = (remainingBudget: number) =>
       ),
   })
 
+export const updateAllocationSchema = (
+  remainingBudget: number,
+  currentAmount: number,
+) =>
+  allocationSchema.extend({
+    amount: z
+      .number()
+      .min(1, 'Amount is required')
+      .max(
+        remainingBudget + currentAmount,
+        `Amount cannot exceed the remaining budget ($${(remainingBudget + currentAmount).toFixed(2)})`,
+      ),
+  })
+
 export type AllocationFormData = z.infer<typeof allocationSchema>
 
 export function toAllocationPayload(data: AllocationFormData) {
