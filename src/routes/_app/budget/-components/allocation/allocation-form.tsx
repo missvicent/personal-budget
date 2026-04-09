@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import type { Resolver } from 'react-hook-form'
 import type { AllocationFormData } from '@/lib/schemas/budget/allocation.schema'
 import type { BudgetWithProgress } from '@/types/budget.types'
 import {
@@ -95,7 +96,9 @@ export const AllocationForm = ({
         amount: selectedAllocation.amount,
         alert_enabled: selectedAllocation.alert_enabled,
         id: selectedAllocation.allocation_id,
-        mode: (selectedAllocation.goal_id ? 'savings' : 'expense'),
+        mode: (selectedAllocation.goal_id
+          ? 'savings'
+          : 'expense') satisfies AllocationFormData['mode'],
       }
     }
     return {
@@ -109,8 +112,8 @@ export const AllocationForm = ({
   }, [budgetId, selectedAllocation])
 
   const form = useForm<AllocationFormData>({
-    resolver: zodResolver(schema),
-    defaultValues,
+    resolver: zodResolver(schema) as Resolver<AllocationFormData>,
+    defaultValues: defaultValues as AllocationFormData,
     mode: 'onChange',
   })
 
