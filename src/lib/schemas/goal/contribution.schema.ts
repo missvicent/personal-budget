@@ -23,6 +23,7 @@ export function toContributionPayload(data: ContributionFormData) {
         ? data.transaction_date.toISOString().split('T')[0]
         : data.transaction_date,
     goal_id: data.goal_id,
+    category_id: null,
     type: 'income' as const,
   }
 }
