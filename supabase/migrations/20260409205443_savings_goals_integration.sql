@@ -18,6 +18,10 @@ ALTER TABLE allocations
 ALTER TABLE transactions
   ADD COLUMN goal_id uuid REFERENCES goals(id);
 
+-- Indexes on new goal_id columns
+CREATE INDEX idx_allocations_goal_id ON allocations(goal_id);
+CREATE INDEX idx_transactions_goal_id ON transactions(goal_id);
+
 -- 5. Drop and recreate get_budgets_with_progress to include savings allocations
 DROP FUNCTION IF EXISTS get_budgets_with_progress();
 CREATE FUNCTION get_budgets_with_progress()
@@ -45,6 +49,7 @@ RETURNS TABLE (
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
+SET search_path = ''
 AS $$
   SELECT
     b.id AS budget_id,
@@ -72,11 +77,11 @@ AS $$
           OR (a.goal_id IS NOT NULL AND t.goal_id = a.goal_id)
         )
     ), 0) AS progress
-  FROM budgets b
-  JOIN allocations a ON a.budget_id = b.id
-  LEFT JOIN categories c ON c.id = a.category_id
-  LEFT JOIN goals g ON g.id = a.goal_id
-  LEFT JOIN transactions t ON t.budget_id = b.id
+  FROM public.budgets b
+  JOIN public.allocations a ON a.budget_id = b.id
+  LEFT JOIN public.categories c ON c.id = a.category_id
+  LEFT JOIN public.goals g ON g.id = a.goal_id
+  LEFT JOIN public.transactions t ON t.budget_id = b.id
     AND (
       (a.category_id IS NOT NULL AND t.category_id = a.category_id)
       OR (a.goal_id IS NOT NULL AND t.goal_id = a.goal_id)
@@ -143,6 +148,7 @@ RETURNS TABLE (
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
+SET search_path = ''
 AS $$
   SELECT
     g.id,
@@ -157,48 +163,60 @@ AS $$
     g.created_at,
     COALESCE(SUM(t.amount) FILTER (WHERE t.budget_id IS NOT NULL), 0) AS budget_contributions,
     COALESCE(SUM(t.amount) FILTER (WHERE t.budget_id IS NULL), 0) AS direct_contributions
-  FROM goals g
-  LEFT JOIN transactions t ON t.goal_id = g.id
+  FROM public.goals g
+  LEFT JOIN public.transactions t ON t.goal_id = g.id
   WHERE g.user_id = (auth.jwt()->>'sub')
   GROUP BY g.id
   ORDER BY g.is_achieved ASC, g.created_at DESC;
 $$;
 
--- 8. Auto-achieve trigger: mark goal achieved when contributions >= target
+-- 8. Auto-achieve trigger: mark goal achieved when contributions >= target, un-achieve on reversal
 CREATE OR REPLACE FUNCTION check_goal_achievement()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
   total numeric;
-  goal_target numeric;
-  already_achieved boolean;
+  goal_record RECORD;
+  check_goal_id uuid;
 BEGIN
-  IF NEW.goal_id IS NULL THEN
-    RETURN NEW;
+  -- Determine which goal_id to check
+  IF TG_OP = 'DELETE' THEN
+    check_goal_id := OLD.goal_id;
+  ELSE
+    check_goal_id := NEW.goal_id;
   END IF;
 
-  SELECT target_amount, is_achieved INTO goal_target, already_achieved
-  FROM goals WHERE id = NEW.goal_id;
-
-  IF already_achieved THEN
-    RETURN NEW;
+  -- Also check old goal_id on UPDATE if it changed
+  IF TG_OP = 'UPDATE' AND OLD.goal_id IS DISTINCT FROM NEW.goal_id AND OLD.goal_id IS NOT NULL THEN
+    SELECT target_amount, is_achieved INTO goal_record FROM public.goals WHERE id = OLD.goal_id;
+    IF goal_record.is_achieved THEN
+      SELECT COALESCE(SUM(amount), 0) INTO total FROM public.transactions WHERE goal_id = OLD.goal_id;
+      IF total < goal_record.target_amount THEN
+        UPDATE public.goals SET is_achieved = false, achieved_date = NULL, updated_at = now() WHERE id = OLD.goal_id;
+      END IF;
+    END IF;
   END IF;
 
-  SELECT COALESCE(SUM(amount), 0) INTO total
-  FROM transactions WHERE goal_id = NEW.goal_id;
-
-  IF total >= goal_target THEN
-    UPDATE goals
-    SET is_achieved = true, achieved_date = CURRENT_DATE, updated_at = now()
-    WHERE id = NEW.goal_id;
+  IF check_goal_id IS NULL THEN
+    RETURN COALESCE(NEW, OLD);
   END IF;
 
-  RETURN NEW;
+  SELECT target_amount, is_achieved INTO goal_record FROM public.goals WHERE id = check_goal_id;
+
+  SELECT COALESCE(SUM(amount), 0) INTO total FROM public.transactions WHERE goal_id = check_goal_id;
+
+  IF total >= goal_record.target_amount AND NOT goal_record.is_achieved THEN
+    UPDATE public.goals SET is_achieved = true, achieved_date = CURRENT_DATE, updated_at = now() WHERE id = check_goal_id;
+  ELSIF total < goal_record.target_amount AND goal_record.is_achieved THEN
+    UPDATE public.goals SET is_achieved = false, achieved_date = NULL, updated_at = now() WHERE id = check_goal_id;
+  END IF;
+
+  RETURN COALESCE(NEW, OLD);
 END;
 $$;
 
 CREATE TRIGGER trg_check_goal_achievement
-  AFTER INSERT ON transactions
+  AFTER INSERT OR UPDATE OF amount, goal_id OR DELETE ON transactions
   FOR EACH ROW
   EXECUTE FUNCTION check_goal_achievement();
