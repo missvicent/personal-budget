@@ -6,7 +6,13 @@ import { goalService } from '@/services/goal.service'
 export const useGoals = () => {
   return useAuthQuery<Array<GoalWithProgress>>(
     useGoalQueryKeys().goals(),
-    (supabase) => goalService.getAllWithProgress(supabase),
+    async (supabase) => {
+      try {
+        return await goalService.getAllWithProgress(supabase)
+      } catch {
+        return []
+      }
+    },
     { retry: false },
   )
 }
