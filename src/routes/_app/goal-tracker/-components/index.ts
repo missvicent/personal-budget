@@ -1,3 +1,6 @@
-// Barrel export for goal-tracker route components
-// Add component exports here as they are created
-// Example: export { GoalProgress } from './GoalProgress'
+export { AddFundsDialog } from './add-funds-dialog'
+export { GoalCard } from './goal-card'
+export { GoalContributions } from './goal-contributions'
+export { GoalDialog } from './goal-dialog'
+export { GoalDeleteDialog } from './goal-delete-dialog'
+export { GoalForm } from './goal-form'

@@ -1,10 +1,15 @@
-import { Brain, Calculator, LayoutGrid } from 'lucide-react'
+import { Brain, Calculator, LayoutGrid, Target } from 'lucide-react'
 
 export const GENERAL_NAV_ITEMS = [
   {
     title: 'Overview',
     url: '/overview',
     icon: LayoutGrid,
+  },
+  {
+    title: 'Goal Tracker',
+    url: '/goal-tracker',
+    icon: Target,
   },
   {
     title: 'Analytics',

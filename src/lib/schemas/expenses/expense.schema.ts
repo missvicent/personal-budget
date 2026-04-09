@@ -15,6 +15,7 @@ export const expenseSchema = z.object({
     .date('Date is required')
     .refine((date) => date <= new Date(), 'Date cannot be in the future'),
   is_recurring: z.boolean().optional(),
+  goal_id: z.string().optional(),
 })
 
 export type ExpenseFormData = z.infer<typeof expenseSchema>

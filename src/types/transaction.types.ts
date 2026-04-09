@@ -5,6 +5,7 @@ export interface Transaction {
   category_id: string | null
   created_at?: string | null
   description: string | null
+  goal_id?: string | null
   id?: string
   is_recurring?: boolean | null
   merchant?: string | null

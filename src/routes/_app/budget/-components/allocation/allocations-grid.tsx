@@ -20,6 +20,8 @@ export const AllocationsGrid = () => {
   const [deleteTarget, setDeleteTarget] = useState<BudgetWithProgress | null>(
     null,
   )
+  const [editTarget, setEditTarget] = useState<BudgetWithProgress | null>(null)
+  const [addDialogOpen, setAddDialogOpen] = useState(false)
 
   if (isLoading) {
     return <AllocationsGridSkeleton />
@@ -33,10 +35,28 @@ export const AllocationsGrid = () => {
     )
   }
 
+  const handleDialogOpenChange = (open: boolean) => {
+    if (!open) {
+      setEditTarget(null)
+    }
+    setAddDialogOpen(open)
+  }
+
+  const handleEdit = (item: BudgetWithProgress) => {
+    setEditTarget(item)
+    setAddDialogOpen(true)
+  }
+
   return (
     <section className={cn('flex flex-col gap-4', 'px-4 py-4 md:p-8')}>
       <header className="flex items-center justify-end gap-2">
-        <AddAllocationDialog budgetId={budgetId} allocations={allocations} />
+        <AddAllocationDialog
+          budgetId={budgetId}
+          allocations={allocations}
+          onOpenChange={handleDialogOpenChange}
+          open={addDialogOpen}
+          selectedAllocation={editTarget}
+        />
       </header>
       <div className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
         {allocations && allocations.length > 0 ? (
@@ -44,9 +64,9 @@ export const AllocationsGrid = () => {
             <AllocationCard
               key={item.allocation_id}
               allocation={item}
-              isOverBudget={overspendingCategoryIds.has(item.category_id)}
+              isOverBudget={overspendingCategoryIds.has(item.category_id ?? '')}
               onDelete={() => setDeleteTarget(item)}
-              onEdit={() => {}}
+              onEdit={() => handleEdit(item)}
             />
           ))
         ) : (

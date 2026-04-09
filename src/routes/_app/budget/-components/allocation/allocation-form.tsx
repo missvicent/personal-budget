@@ -1,8 +1,13 @@
 import { useMemo } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import type { Resolver } from 'react-hook-form'
 import type { AllocationFormData } from '@/lib/schemas/budget/allocation.schema'
-import { createAllocationSchema } from '@/lib/schemas/budget/allocation.schema'
+import type { BudgetWithProgress } from '@/types/budget.types'
+import {
+  createAllocationSchema,
+  updateAllocationSchema,
+} from '@/lib/schemas/budget/allocation.schema'
 import {
   ResponsiveDialogClose,
   ResponsiveDialogContent,
@@ -26,6 +31,7 @@ import { CurrencyInput } from '@/components/shared/CurrencyInput'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { useCategories } from '@/hooks/categories/use-categories'
+import { useGoals } from '@/hooks/goal/use-goals'
 import { toSelectOptions } from '@/lib/utils'
 
 interface AllocationFormProps {
@@ -33,7 +39,7 @@ interface AllocationFormProps {
   isPending: boolean
   onSubmit: (data: AllocationFormData) => void
   remainingBudget: number
-  selectedAllocation: AllocationFormData | null
+  selectedAllocation: BudgetWithProgress | null
   usedCategoryIds: Array<string>
 }
 
@@ -46,6 +52,7 @@ export const AllocationForm = ({
   usedCategoryIds,
 }: AllocationFormProps) => {
   const { data: categories } = useCategories()
+  const { data: goals } = useGoals()
 
   const categoryOptions = useMemo(
     () =>
@@ -61,25 +68,66 @@ export const AllocationForm = ({
     [categories, usedCategoryIds],
   )
 
+  const goalOptions = useMemo(
+    () =>
+      toSelectOptions(
+        { label: 'Select a goal', value: 'select' },
+        (goals ?? []).filter((g) => !g.is_achieved),
+        (g) => `🎯 ${g.name}`,
+        (g) => g.id,
+      ),
+    [goals],
+  )
+
   const schema = useMemo(
-    () => createAllocationSchema(remainingBudget),
-    [remainingBudget],
+    () =>
+      selectedAllocation
+        ? updateAllocationSchema(remainingBudget, selectedAllocation.amount)
+        : createAllocationSchema(remainingBudget),
+    [remainingBudget, selectedAllocation],
   )
 
   const defaultValues = useMemo(() => {
+    if (selectedAllocation) {
+      return {
+        budget_id: selectedAllocation.budget_id,
+        category_id: selectedAllocation.category_id ?? '',
+        goal_id: selectedAllocation.goal_id ?? '',
+        amount: selectedAllocation.amount,
+        alert_enabled: selectedAllocation.alert_enabled,
+        id: selectedAllocation.allocation_id,
+        mode: (selectedAllocation.goal_id
+          ? 'savings'
+          : 'expense') satisfies AllocationFormData['mode'],
+      }
+    }
     return {
       budget_id: budgetId,
       category_id: '',
+      goal_id: '',
       amount: 0,
       alert_enabled: false,
+      mode: 'expense' as const,
     }
-  }, [budgetId])
+  }, [budgetId, selectedAllocation])
 
   const form = useForm<AllocationFormData>({
-    resolver: zodResolver(schema),
-    defaultValues: defaultValues,
+    resolver: zodResolver(schema) as Resolver<AllocationFormData>,
+    defaultValues: defaultValues as AllocationFormData,
     mode: 'onChange',
   })
+
+  const currentMode = useWatch({ control: form.control, name: 'mode' })
+
+  const formTitle = selectedAllocation ? 'Edit your Budget' : 'Set your Budget'
+  const formDescription = selectedAllocation
+    ? 'Update the budget amount for this allocation'
+    : 'Set your budget for a category or savings goal'
+
+  const modeOptions = [
+    { label: 'Expense', value: 'expense' },
+    { label: 'Savings Goal', value: 'savings' },
+  ]
 
   return (
     <Form {...form}>
@@ -90,36 +138,86 @@ export const AllocationForm = ({
         >
           <ResponsiveDialogHeader>
             <ResponsiveDialogTitle className="mb-3">
-              Set your Budget
+              {formTitle}
             </ResponsiveDialogTitle>
             <ResponsiveDialogDescription className="sr-only">
-              Set your budget for a new category
+              {formDescription}
             </ResponsiveDialogDescription>
           </ResponsiveDialogHeader>
           <FieldGroup>
             <FormField
               control={form.control}
-              name="category_id"
+              name="mode"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>What&apos;s this for?: </FormLabel>
+                  <FormLabel>Allocation type:</FormLabel>
                   <FormControl>
                     <SelectField
-                      items={categoryOptions}
-                      onChange={(selected) => field.onChange(selected.value)}
+                      items={modeOptions}
+                      onChange={(selected) => {
+                        field.onChange(selected.value)
+                        form.setValue('category_id', '')
+                        form.setValue('goal_id', '')
+                      }}
                       value={field.value}
-                      placeholder="Select a category"
+                      placeholder="Select type"
+                      disabled={selectedAllocation !== null}
                     />
                   </FormControl>
                 </FormItem>
               )}
             />
+
+            {currentMode === 'expense' && (
+              <FormField
+                control={form.control}
+                name="category_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>What&apos;s this for?:</FormLabel>
+                    <FormControl>
+                      <SelectField
+                        items={categoryOptions}
+                        onChange={(selected) => field.onChange(selected.value)}
+                        value={field.value ?? ''}
+                        placeholder="Select a category"
+                        disabled={selectedAllocation !== null}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            {currentMode === 'savings' && (
+              <FormField
+                control={form.control}
+                name="goal_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Which savings goal?:</FormLabel>
+                    <FormControl>
+                      <SelectField
+                        items={goalOptions}
+                        onChange={(selected) => field.onChange(selected.value)}
+                        value={field.value ?? ''}
+                        placeholder="Select a goal"
+                        disabled={selectedAllocation !== null}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
             <FormField
               control={form.control}
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Set your limit: </FormLabel>
+                  <FormLabel>Set your limit:</FormLabel>
                   <FormControl>
                     <CurrencyInput
                       value={field.value}
@@ -145,7 +243,6 @@ export const AllocationForm = ({
                     />
                   </FormControl>
                   <FormLabel className="text-xs">
-                    {' '}
                     Stay in the loop! Enable notifications to get real-time
                     updates, reminders, and the stuff that actually matters to
                     you.

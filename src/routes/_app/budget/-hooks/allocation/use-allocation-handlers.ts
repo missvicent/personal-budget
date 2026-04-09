@@ -13,7 +13,16 @@ export const useAllocationHandlers = (
 
   const handleSubmit = (data: AllocationFormData) => {
     if (selectedAllocation) {
-      // mutations.updateAllocation(data)
+      const { id, ...payload } = toAllocationPayload(data)
+      mutations.updateAllocation(
+        { id: selectedAllocation.allocation_id, ...payload },
+        {
+          onSuccess: () => {
+            toast.success('Allocation updated successfully')
+            onSuccess()
+          },
+        },
+      )
     } else {
       mutations.createAllocation(toAllocationPayload(data), {
         onSuccess: () => {
@@ -26,6 +35,6 @@ export const useAllocationHandlers = (
 
   return {
     handleSubmit,
-    isPending: mutations.isCreating,
+    isPending: mutations.isCreating || mutations.isUpdating,
   }
 }

@@ -24,6 +24,7 @@ export const SelectField = ({
   value,
   onChange,
   placeholder,
+  disabled,
   ...triggerProps
 }: SelectFieldProps) => {
   const handleChange = (v: string) => {
@@ -32,7 +33,7 @@ export const SelectField = ({
   }
 
   return (
-    <Select value={value} onValueChange={handleChange}>
+    <Select value={value} onValueChange={handleChange} disabled={disabled}>
       <SelectTrigger {...triggerProps}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

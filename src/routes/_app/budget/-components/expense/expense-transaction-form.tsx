@@ -4,6 +4,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import type { ExpenseFormData } from '@/lib/schemas/expenses/expense.schema'
 import type { SelectOptionGroup } from '@/components/shared/GroupedSelectField'
 import type { ExpenseTransaction } from './expense-list'
+import { toSelectOptions } from '@/lib/utils'
+import { SelectField } from '@/components/shared/SelectField'
+import { useGoals } from '@/hooks/goal/use-goals'
 import { Checkbox } from '@/components/ui/checkbox'
 import { expenseSchema } from '@/lib/schemas/expenses/expense.schema'
 import { GroupedSelectField } from '@/components/shared/GroupedSelectField'
@@ -44,6 +47,19 @@ export const ExpenseTransactionForm = ({
   open,
   selectedTransaction,
 }: ExpenseTransactionFormProps) => {
+  const { data: goals } = useGoals()
+
+  const goalOptions = useMemo(
+    () =>
+      toSelectOptions(
+        { label: 'None', value: '' },
+        (goals ?? []).filter((g) => !g.is_achieved),
+        (g) => `🎯 ${g.name}`,
+        (g) => g.id,
+      ),
+    [goals],
+  )
+
   const defaultValues = useMemo(() => {
     return {
       amount: 0,
@@ -51,6 +67,7 @@ export const ExpenseTransactionForm = ({
       description: '',
       is_recurring: false,
       transaction_date: new Date(),
+      goal_id: '',
     }
   }, [])
 
@@ -71,6 +88,7 @@ export const ExpenseTransactionForm = ({
         description: selectedTransaction.description,
         is_recurring: selectedTransaction.is_recurring,
         transaction_date: new Date(selectedTransaction.transaction_date),
+        goal_id: '',
       })
     } else {
       form.reset(defaultValues)
@@ -150,6 +168,24 @@ export const ExpenseTransactionForm = ({
                       onChange={(selected) => field.onChange(selected.value)}
                       placeholder="Select Category (Optional)"
                       value={field.value || ''}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="goal_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tag to a savings goal (optional):</FormLabel>
+                  <FormControl>
+                    <SelectField
+                      items={goalOptions}
+                      onChange={(selected) => field.onChange(selected.value)}
+                      value={field.value ?? ''}
+                      placeholder="Select a goal"
                     />
                   </FormControl>
                   <FormMessage />

@@ -18,8 +18,21 @@ export const AllocationCard = ({
   onDelete,
   onEdit,
 }: AllocationCardProps) => {
-  const { category_name, amount, progress, category_icon, category_color } =
-    allocation
+  const {
+    category_name,
+    goal_name,
+    goal_id,
+    amount,
+    progress,
+    category_icon,
+    category_color,
+  } = allocation
+  const isSavings = goal_id !== null
+  const displayName = isSavings ? goal_name : category_name
+  const displayIcon = isSavings ? '🎯' : category_icon
+  const displayColor = isSavings
+    ? 'var(--chart-4)'
+    : (category_color ?? undefined)
   const progressValue = amount > 0 ? (progress / amount) * 100 : 0
   const deleteDisabledReason =
     'Remove or reassign expenses before deleting this category'
@@ -31,7 +44,7 @@ export const AllocationCard = ({
     <Card
       className="rounded-2xl border-l-4"
       style={{
-        borderLeftColor: isOverBudget ? 'var(--destructive)' : category_color,
+        borderLeftColor: isOverBudget ? 'var(--destructive)' : displayColor,
       }}
     >
       <CardContent className="flex items-center justify-between gap-4 px-6">
@@ -40,13 +53,13 @@ export const AllocationCard = ({
             value={progressValue}
             size={64}
             strokeWidth={5}
-            color={isOverBudget ? 'var(--destructive)' : category_color}
+            color={isOverBudget ? 'var(--destructive)' : displayColor}
           >
-            <span className="text-xl">{category_icon}</span>
+            <span className="text-xl">{displayIcon}</span>
           </CircularProgress>
           <div>
             <div className="flex items-center gap-2">
-              <p className="font-semibold">{category_name}</p>
+              <p className="font-semibold">{displayName}</p>
               {isUnset && (
                 <Badge variant="secondary">Created from expenses</Badge>
               )}
@@ -84,7 +97,7 @@ export const AllocationCard = ({
             {Math.round(maxPercentage)}%
           </p>
           <p className="text-muted-foreground flex justify-end text-xs">
-            spent
+            {isSavings ? 'saved' : 'spent'}
           </p>
           <div className="flex h-14 items-end justify-end">
             <CardActions
