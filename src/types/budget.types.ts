@@ -19,14 +19,16 @@ export interface BudgetWithProgress {
   end_date: string | null
   is_active: boolean
   allocation_id: string
-  category_id: string
+  category_id: string | null
+  goal_id: string | null
   amount: number
   alert_enabled: boolean
   alert_threshold: number
-  category_name: string
-  category_type: string
-  category_color: string
-  category_icon: string
+  category_name: string | null
+  category_type: string | null
+  category_color: string | null
+  category_icon: string | null
+  goal_name: string | null
   progress: number
 }
 
@@ -44,7 +46,8 @@ export interface BudgetOverview {
 export interface Allocation {
   id?: string
   budget_id: string
-  category_id: string
+  category_id?: string | null
+  goal_id?: string | null
   amount: number
   alert_enabled?: boolean
   alert_threshold?: number
