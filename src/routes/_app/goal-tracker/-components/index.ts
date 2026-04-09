@@ -1,4 +1,6 @@
+export { AddFundsDialog } from './add-funds-dialog'
 export { GoalCard } from './goal-card'
+export { GoalContributions } from './goal-contributions'
 export { GoalDialog } from './goal-dialog'
 export { GoalDeleteDialog } from './goal-delete-dialog'
 export { GoalForm } from './goal-form'
