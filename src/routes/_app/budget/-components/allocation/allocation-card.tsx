@@ -30,7 +30,9 @@ export const AllocationCard = ({
   const isSavings = goal_id !== null
   const displayName = isSavings ? goal_name : category_name
   const displayIcon = isSavings ? '🎯' : category_icon
-  const displayColor = isSavings ? 'var(--chart-4)' : category_color
+  const displayColor = isSavings
+    ? 'var(--chart-4)'
+    : (category_color ?? undefined)
   const progressValue = amount > 0 ? (progress / amount) * 100 : 0
   const deleteDisabledReason =
     'Remove or reassign expenses before deleting this category'

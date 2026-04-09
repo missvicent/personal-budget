@@ -29,7 +29,10 @@ export const AddAllocationDialog = ({
   })
 
   const usedCategoryIds = useMemo(
-    () => allocations?.map((item) => item.category_id) ?? [],
+    () =>
+      allocations?.flatMap((item) =>
+        item.category_id !== null ? [item.category_id] : [],
+      ) ?? [],
     [allocations],
   )
 

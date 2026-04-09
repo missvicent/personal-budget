@@ -64,7 +64,7 @@ export const AllocationsGrid = () => {
             <AllocationCard
               key={item.allocation_id}
               allocation={item}
-              isOverBudget={overspendingCategoryIds.has(item.category_id)}
+              isOverBudget={overspendingCategoryIds.has(item.category_id ?? '')}
               onDelete={() => setDeleteTarget(item)}
               onEdit={() => handleEdit(item)}
             />

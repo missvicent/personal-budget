@@ -9,6 +9,7 @@ const validItem = {
   category_id: 'cat-1',
   amount: 100,
   alert_enabled: false,
+  mode: 'expense' as const,
 }
 
 describe('createAllocationSchema', () => {
