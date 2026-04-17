@@ -5,13 +5,14 @@ import { currencyFormatter, percentFormatter } from '@/lib/format'
 import { spendingColors } from '@/lib/colors'
 
 export interface StatCardProps {
-  amountSpent: number
   additionalDescription: string
-  title: string
-  percentage?: number
+  amountSpent?: number
   badgeType?: 'positive' | 'negative'
+  percentage?: number
   symbol: string
+  title: string
 }
+
 export const StatCard = ({
   additionalDescription,
   amountSpent,
@@ -29,13 +30,15 @@ export const StatCard = ({
   const formattedAmount =
     symbol === '%'
       ? percentFormatter.format(percentage ?? 0)
-      : currencyFormatter.format(amountSpent)
+      : currencyFormatter.format(amountSpent ?? 0)
+
+  const showBadge = percentage !== undefined && badgeType !== undefined
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <p className="text-base font-semibold uppercase">{title}</p>
-        {percentage && (
+        {showBadge && (
           <Badge
             variant="outline"
             className={cn(badgeColor, 'border-0 px-3 py-1')}
