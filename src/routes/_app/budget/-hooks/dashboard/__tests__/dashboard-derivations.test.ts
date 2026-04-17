@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  buildBurnSeries,
   computeSummary,
   mapCategories,
   mapRecentActivity,
@@ -292,5 +293,66 @@ describe('mapRecentActivity', () => {
   it('falls back to category name when description is empty', () => {
     const items = mapRecentActivity([mkTxn({ description: '' })])
     expect(items[0].title).toBe('Food')
+  })
+})
+
+describe('buildBurnSeries', () => {
+  const overview = baseOverview({ budget_amount: 3000 })
+  const today = new Date('2026-04-03T12:00:00Z')
+
+  it('produces one point per calendar day from start to end of period', () => {
+    const bounds = resolveBounds(overview, today)
+    const series = buildBurnSeries([], overview, bounds, today)
+
+    // April has 30 days
+    expect(series).toHaveLength(30)
+    expect(series[0].date.toISOString().slice(0, 10)).toBe('2026-04-01')
+    expect(series[29].date.toISOString().slice(0, 10)).toBe('2026-04-30')
+  })
+
+  it('renders a pace line from 0 to budget_amount across the period', () => {
+    const bounds = resolveBounds(overview, today)
+    const series = buildBurnSeries([], overview, bounds, today)
+
+    expect(series[0].pace).toBeCloseTo(3000 / 30, 5)
+    expect(series[29].pace).toBeCloseTo(3000, 5)
+  })
+
+  it('accumulates actual spend by transaction_date (only up to today)', () => {
+    const bounds = resolveBounds(overview, today)
+    const txns: Array<TransactionWithCategory> = [
+      mkTxn({ id: 't1', amount: 100, transaction_date: '2026-04-01' }),
+      mkTxn({ id: 't2', amount: 50, transaction_date: '2026-04-02' }),
+      mkTxn({ id: 't3', amount: 25, transaction_date: '2026-04-03' }),
+    ]
+
+    const series = buildBurnSeries(txns, overview, bounds, today)
+
+    expect(series[0].actual).toBe(100)
+    expect(series[1].actual).toBe(150)
+    expect(series[2].actual).toBe(175)
+    // After today, actual stops being cumulative; it becomes null
+    expect(series[3].actual).toBeNull()
+  })
+
+  it('projects forward from today using current slope', () => {
+    const bounds = resolveBounds(overview, today)
+    const txns: Array<TransactionWithCategory> = [
+      mkTxn({ amount: 300, transaction_date: '2026-04-01' }),
+    ]
+
+    const series = buildBurnSeries(txns, overview, bounds, today)
+
+    // slope = 300 / 3 days = 100/day; projected[29] = 300 + 100 * (29-2) = 3000
+    expect(series[2].projected).toBe(300)
+    expect(series[29].projected).toBeCloseTo(3000, 5)
+  })
+
+  it('returns only pace line (no actual, no projected) when there are no transactions', () => {
+    const bounds = resolveBounds(overview, today)
+    const series = buildBurnSeries([], overview, bounds, today)
+
+    expect(series.every((p) => p.actual === 0 || p.actual === null)).toBe(true)
+    expect(series.every((p) => p.projected === null)).toBe(true)
   })
 })

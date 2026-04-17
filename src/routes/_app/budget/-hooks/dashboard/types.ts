@@ -22,7 +22,7 @@ export interface DashboardSummary {
 
 export interface BurnSeriesPoint {
   date: Date
-  actual: number
+  actual: number | null
   pace: number
   projected: number | null
 }

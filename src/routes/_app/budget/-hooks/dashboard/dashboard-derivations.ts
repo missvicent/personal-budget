@@ -1,6 +1,9 @@
 import {
   differenceInCalendarDays,
+  eachDayOfInterval,
   format,
+  isAfter,
+  isBefore,
   isSameMonth,
   isSameYear,
   parseISO,
@@ -13,7 +16,12 @@ import type {
 } from '@/types/database.types'
 import type { SpendingByCategoryItem } from '@/routes/_app/budget/-components/dashboard/spending-by-category'
 import type { RecentActivityItem } from '@/routes/_app/budget/-components/dashboard/recent-activity'
-import type { DashboardSummary, PeriodBounds, PeriodState } from './types'
+import type {
+  BurnSeriesPoint,
+  DashboardSummary,
+  PeriodBounds,
+  PeriodState,
+} from './types'
 
 const parseDateOnly = (value: string): Date => {
   // Values come back from Supabase as ISO date strings (YYYY-MM-DD).
@@ -144,3 +152,55 @@ export const mapRecentActivity = (
     icon: t.icon,
     title: t.description.trim() ? t.description : t.name,
   }))
+
+const toDateKey = (d: Date): string => format(d, 'yyyy-MM-dd')
+
+export const buildBurnSeries = (
+  transactions: Array<TransactionWithCategory>,
+  overview: BudgetOverview,
+  bounds: PeriodBounds,
+  today: Date,
+): Array<BurnSeriesPoint> => {
+  const totals = new Map<string, number>()
+  for (const t of transactions) {
+    const key = t.transaction_date.slice(0, 10)
+    totals.set(key, (totals.get(key) ?? 0) + t.amount)
+  }
+
+  const days = eachDayOfInterval({ start: bounds.start, end: bounds.end })
+  const paceStep = overview.budget_amount / bounds.lengthDays
+  const todayDay = startOfDay(today)
+
+  let cumulative = 0
+  // First pass: build actual + pace, track the last-known cumulative up to today.
+  const withActual = days.map((day, idx) => {
+    const afterToday = isAfter(day, todayDay)
+    if (!afterToday) {
+      cumulative += totals.get(toDateKey(day)) ?? 0
+    }
+    return {
+      date: day,
+      actual: afterToday ? null : cumulative,
+      pace: paceStep * (idx + 1),
+      projected: null as number | null,
+    }
+  })
+
+  // Days elapsed so far (for slope). Clamped to >=1 to avoid divide-by-zero
+  // on the very first day of the period.
+  const elapsed = Math.max(
+    1,
+    differenceInCalendarDays(todayDay, bounds.start) + 1,
+  )
+  const spentToDate = cumulative
+  const slope = spentToDate / elapsed
+
+  // Only emit projected line when we actually have spending to project.
+  if (spentToDate <= 0) return withActual
+
+  return withActual.map((p) => {
+    if (isBefore(p.date, todayDay)) return p
+    const daysFromToday = differenceInCalendarDays(p.date, todayDay)
+    return { ...p, projected: spentToDate + slope * daysFromToday }
+  })
+}
