@@ -21,6 +21,7 @@ import type {
   DashboardSummary,
   PeriodBounds,
   PeriodState,
+  SpotlightCategory,
 } from './types'
 
 const parseDateOnly = (value: string): Date => {
@@ -203,4 +204,38 @@ export const buildBurnSeries = (
     const daysFromToday = differenceInCalendarDays(p.date, todayDay)
     return { ...p, projected: spentToDate + slope * daysFromToday }
   })
+}
+
+export const computeSpotlightCategory = (
+  allocations: Array<BudgetWithProgress>,
+): SpotlightCategory | null => {
+  const withCategory = allocations.filter((a) => a.category_id !== null)
+  if (withCategory.length === 0) return null
+
+  const enriched = withCategory.map((a) => ({
+    row: a,
+    overshoot: a.progress - a.amount,
+  }))
+
+  const overshooters = enriched.filter((e) => e.overshoot > 0)
+  const pick =
+    overshooters.length > 0
+      ? overshooters.reduce((best, curr) =>
+          curr.overshoot > best.overshoot ? curr : best,
+        )
+      : enriched.reduce((best, curr) =>
+          curr.row.progress > best.row.progress ? curr : best,
+        )
+
+  const row = pick.row
+  return {
+    mode: overshooters.length > 0 ? 'outlier' : 'top-spender',
+    id: row.allocation_id,
+    name: row.category_name ?? CATEGORY_DEFAULT_NAME,
+    icon: row.category_icon ?? CATEGORY_DEFAULT_ICON,
+    color: row.category_color ?? CATEGORY_DEFAULT_COLOR,
+    amountSpent: row.progress,
+    amountBudget: row.amount,
+    overshoot: pick.overshoot,
+  }
 }

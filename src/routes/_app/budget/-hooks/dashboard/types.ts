@@ -20,6 +20,19 @@ export interface DashboardSummary {
   periodState: PeriodState
 }
 
+export type SpotlightMode = 'outlier' | 'top-spender'
+
+export interface SpotlightCategory {
+  mode: SpotlightMode
+  id: string
+  name: string
+  icon: string
+  color: string
+  amountSpent: number
+  amountBudget: number
+  overshoot: number
+}
+
 export interface BurnSeriesPoint {
   date: Date
   actual: number | null

@@ -1,17 +1,18 @@
 import { describe, expect, it } from 'vitest'
 import {
   buildBurnSeries,
+  computeSpotlightCategory,
   computeSummary,
   mapCategories,
   mapRecentActivity,
-  resolvePeriodBounds as resolveBounds,
-  resolvePeriodBounds,
+  resolvePeriodBounds as resolveBounds, resolvePeriodBounds 
 } from '../dashboard-derivations'
 import type {
   BudgetOverview,
   BudgetWithProgress,
   TransactionWithCategory,
 } from '@/types/database.types'
+
 
 const baseOverview = (patch: Partial<BudgetOverview> = {}): BudgetOverview => ({
   budget_id: 'b1',
@@ -354,5 +355,121 @@ describe('buildBurnSeries', () => {
 
     expect(series.every((p) => p.actual === 0 || p.actual === null)).toBe(true)
     expect(series.every((p) => p.projected === null)).toBe(true)
+  })
+})
+
+describe('computeSpotlightCategory', () => {
+  it('returns null when there are no allocations', () => {
+    expect(computeSpotlightCategory([])).toBeNull()
+  })
+
+  it('returns null when every allocation is goal-only (no category_id)', () => {
+    const allocations = [
+      mkAllocation({
+        allocation_id: 'a1',
+        category_id: null,
+        goal_id: 'g1',
+        goal_name: 'Travel',
+        category_name: null,
+        category_icon: null,
+        category_color: null,
+      }),
+    ]
+
+    expect(computeSpotlightCategory(allocations)).toBeNull()
+  })
+
+  it('returns top spender when every category is under its budget', () => {
+    const allocations = [
+      mkAllocation({
+        allocation_id: 'a1',
+        category_name: 'Groceries',
+        amount: 500,
+        progress: 300,
+      }),
+      mkAllocation({
+        allocation_id: 'a2',
+        category_name: 'Dining',
+        amount: 200,
+        progress: 150,
+      }),
+    ]
+
+    const spotlight = computeSpotlightCategory(allocations)
+
+    expect(spotlight).not.toBeNull()
+    expect(spotlight?.mode).toBe('top-spender')
+    expect(spotlight?.name).toBe('Groceries')
+    expect(spotlight?.amountSpent).toBe(300)
+    expect(spotlight?.amountBudget).toBe(500)
+  })
+
+  it('returns outlier when a single category is over its budget', () => {
+    const allocations = [
+      mkAllocation({
+        allocation_id: 'a1',
+        category_name: 'Groceries',
+        amount: 500,
+        progress: 300,
+      }),
+      mkAllocation({
+        allocation_id: 'a2',
+        category_name: 'Dining',
+        amount: 200,
+        progress: 280,
+      }),
+    ]
+
+    const spotlight = computeSpotlightCategory(allocations)
+
+    expect(spotlight?.mode).toBe('outlier')
+    expect(spotlight?.name).toBe('Dining')
+    expect(spotlight?.overshoot).toBe(80)
+  })
+
+  it('picks the larger dollar overshoot when two categories are over', () => {
+    const allocations = [
+      mkAllocation({
+        allocation_id: 'a1',
+        category_name: 'Groceries',
+        amount: 500,
+        progress: 560, // +60
+      }),
+      mkAllocation({
+        allocation_id: 'a2',
+        category_name: 'Dining',
+        amount: 200,
+        progress: 320, // +120
+      }),
+    ]
+
+    const spotlight = computeSpotlightCategory(allocations)
+
+    expect(spotlight?.mode).toBe('outlier')
+    expect(spotlight?.name).toBe('Dining')
+    expect(spotlight?.overshoot).toBe(120)
+  })
+
+  it('prefers larger $ overshoot over larger % overshoot', () => {
+    const allocations = [
+      mkAllocation({
+        allocation_id: 'small',
+        category_name: 'Snacks',
+        amount: 10,
+        progress: 20, // +$10, 200%
+      }),
+      mkAllocation({
+        allocation_id: 'big',
+        category_name: 'Rent',
+        amount: 1000,
+        progress: 1100, // +$100, 110%
+      }),
+    ]
+
+    const spotlight = computeSpotlightCategory(allocations)
+
+    expect(spotlight?.mode).toBe('outlier')
+    expect(spotlight?.name).toBe('Rent')
+    expect(spotlight?.overshoot).toBe(100)
   })
 })
