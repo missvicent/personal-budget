@@ -6,7 +6,13 @@ import {
   parseISO,
   startOfDay,
 } from 'date-fns'
-import type { BudgetOverview } from '@/types/database.types'
+import type {
+  BudgetOverview,
+  BudgetWithProgress,
+  TransactionWithCategory,
+} from '@/types/database.types'
+import type { SpendingByCategoryItem } from '@/routes/_app/budget/-components/dashboard/spending-by-category'
+import type { RecentActivityItem } from '@/routes/_app/budget/-components/dashboard/recent-activity'
 import type { DashboardSummary, PeriodBounds, PeriodState } from './types'
 
 const parseDateOnly = (value: string): Date => {
@@ -106,3 +112,35 @@ export const computeSummary = (
     periodState: state,
   }
 }
+
+const CATEGORY_DEFAULT_ICON = '•'
+const CATEGORY_DEFAULT_COLOR = '#94a3b8'
+const CATEGORY_DEFAULT_NAME = 'Uncategorized'
+
+export const mapCategories = (
+  allocations: Array<BudgetWithProgress>,
+): Array<SpendingByCategoryItem> =>
+  allocations
+    .filter((a) => a.category_id !== null)
+    .map((a) => ({
+      id: a.allocation_id,
+      icon: a.category_icon ?? CATEGORY_DEFAULT_ICON,
+      category: a.category_name ?? CATEGORY_DEFAULT_NAME,
+      color: a.category_color ?? CATEGORY_DEFAULT_COLOR,
+      amountSpent: a.progress,
+      amountBudget: a.amount,
+    }))
+
+export const mapRecentActivity = (
+  transactions: Array<TransactionWithCategory>,
+  limit = 5,
+): Array<RecentActivityItem> =>
+  transactions.slice(0, limit).map((t) => ({
+    id: t.id,
+    amount: t.amount,
+    category: t.name,
+    color: t.color,
+    date: t.transaction_date,
+    icon: t.icon,
+    title: t.description.trim() ? t.description : t.name,
+  }))

@@ -1,10 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import {
   computeSummary,
+  mapCategories,
+  mapRecentActivity,
   resolvePeriodBounds as resolveBounds,
   resolvePeriodBounds,
 } from '../dashboard-derivations'
-import type { BudgetOverview } from '@/types/database.types'
+import type {
+  BudgetOverview,
+  BudgetWithProgress,
+  TransactionWithCategory,
+} from '@/types/database.types'
 
 const baseOverview = (patch: Partial<BudgetOverview> = {}): BudgetOverview => ({
   budget_id: 'b1',
@@ -155,5 +161,136 @@ describe('computeSummary', () => {
     const s = computeSummary(overview, bounds, today)
 
     expect(s.periodLabel).toBe(bounds.label)
+  })
+})
+
+const mkAllocation = (
+  patch: Partial<BudgetWithProgress>,
+): BudgetWithProgress => ({
+  budget_id: 'b1',
+  budget_name: 'Test',
+  budget_amount: 3000,
+  period: 'monthly',
+  start_date: '2026-04-01',
+  end_date: '2026-04-30',
+  is_active: true,
+  allocation_id: 'a1',
+  category_id: 'c1',
+  goal_id: null,
+  amount: 300,
+  alert_enabled: false,
+  alert_threshold: 0,
+  category_name: 'Food',
+  category_type: 'expense',
+  category_color: '#064E3B',
+  category_icon: '🛒',
+  goal_name: null,
+  progress: 120,
+  ...patch,
+})
+
+describe('mapCategories', () => {
+  it('maps category-linked allocations to SpendingByCategoryItem shape', () => {
+    const items = mapCategories([mkAllocation({})])
+
+    expect(items).toEqual([
+      {
+        id: 'a1',
+        icon: '🛒',
+        category: 'Food',
+        color: '#064E3B',
+        amountSpent: 120,
+        amountBudget: 300,
+      },
+    ])
+  })
+
+  it('drops goal-only allocations (no category_id)', () => {
+    const items = mapCategories([
+      mkAllocation({}),
+      mkAllocation({
+        allocation_id: 'a2',
+        category_id: null,
+        goal_id: 'g1',
+        goal_name: 'Travel fund',
+        category_name: null,
+        category_color: null,
+        category_icon: null,
+      }),
+    ])
+
+    expect(items).toHaveLength(1)
+    expect(items[0].id).toBe('a1')
+  })
+
+  it('falls back to safe defaults when category fields are unexpectedly null', () => {
+    const items = mapCategories([
+      mkAllocation({
+        category_name: null,
+        category_icon: null,
+        category_color: null,
+      }),
+    ])
+
+    expect(items[0]).toMatchObject({
+      category: 'Uncategorized',
+      icon: '•',
+      color: '#94a3b8',
+    })
+  })
+})
+
+const mkTxn = (
+  patch: Partial<TransactionWithCategory>,
+): TransactionWithCategory => ({
+  id: 't1',
+  amount: 42,
+  budget_id: 'b1',
+  category_id: 'c1',
+  category_type: 'expense',
+  color: '#064E3B',
+  description: 'Groceries',
+  icon: '🛒',
+  name: 'Food',
+  transaction_date: '2026-04-15',
+  ...patch,
+})
+
+describe('mapRecentActivity', () => {
+  it('maps transactions to RecentActivityItem shape', () => {
+    const items = mapRecentActivity([mkTxn({})])
+
+    expect(items).toEqual([
+      {
+        id: 't1',
+        amount: 42,
+        category: 'Food',
+        color: '#064E3B',
+        date: '2026-04-15',
+        icon: '🛒',
+        title: 'Groceries',
+      },
+    ])
+  })
+
+  it('caps output to the requested limit', () => {
+    const txns = Array.from({ length: 10 }, (_, i) =>
+      mkTxn({ id: `t${i}`, transaction_date: `2026-04-${20 - i}` }),
+    )
+
+    const items = mapRecentActivity(txns, 5)
+
+    expect(items).toHaveLength(5)
+    expect(items[0].id).toBe('t0')
+  })
+
+  it('defaults limit to 5 when not specified', () => {
+    const txns = Array.from({ length: 10 }, (_, i) => mkTxn({ id: `t${i}` }))
+    expect(mapRecentActivity(txns)).toHaveLength(5)
+  })
+
+  it('falls back to category name when description is empty', () => {
+    const items = mapRecentActivity([mkTxn({ description: '' })])
+    expect(items[0].title).toBe('Food')
   })
 })
