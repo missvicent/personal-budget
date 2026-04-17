@@ -23,10 +23,9 @@ const { useGetTransactionsWithCategories } = await import(
   '@/hooks/transactions/use-transaction-with-categories'
 )
 
-const mockQuery = <T>(data: T | undefined, isLoading = false) =>
-  ({ data, isLoading, isError: false, error: null }) as unknown as ReturnType<
-    typeof useBudgetOverview
-  >
+function mockQuery<TResult>(data: unknown, isLoading = false): TResult {
+  return { data, isLoading, isError: false, error: null } as unknown as TResult
+}
 
 const overview: BudgetOverview = {
   budget_id: 'b1',
@@ -41,12 +40,18 @@ const overview: BudgetOverview = {
 
 describe('useDashboardData', () => {
   it('returns isLoading=true when any underlying query is loading', () => {
-    vi.mocked(useBudgetOverview).mockReturnValue(mockQuery([overview], true))
+    vi.mocked(useBudgetOverview).mockReturnValue(
+      mockQuery<ReturnType<typeof useBudgetOverview>>([overview], true),
+    )
     vi.mocked(useAllocations).mockReturnValue(
-      mockQuery([] as Array<BudgetWithProgress>),
+      mockQuery<ReturnType<typeof useAllocations>>(
+        [] as Array<BudgetWithProgress>,
+      ),
     )
     vi.mocked(useGetTransactionsWithCategories).mockReturnValue(
-      mockQuery([] as Array<TransactionWithCategory>),
+      mockQuery<ReturnType<typeof useGetTransactionsWithCategories>>(
+        [] as Array<TransactionWithCategory>,
+      ),
     )
 
     const { result } = renderHook(() =>
@@ -57,12 +62,18 @@ describe('useDashboardData', () => {
   })
 
   it('composes summary, categories, activity, and burn series when all queries resolved', () => {
-    vi.mocked(useBudgetOverview).mockReturnValue(mockQuery([overview]))
+    vi.mocked(useBudgetOverview).mockReturnValue(
+      mockQuery<ReturnType<typeof useBudgetOverview>>([overview]),
+    )
     vi.mocked(useAllocations).mockReturnValue(
-      mockQuery([] as Array<BudgetWithProgress>),
+      mockQuery<ReturnType<typeof useAllocations>>(
+        [] as Array<BudgetWithProgress>,
+      ),
     )
     vi.mocked(useGetTransactionsWithCategories).mockReturnValue(
-      mockQuery([] as Array<TransactionWithCategory>),
+      mockQuery<ReturnType<typeof useGetTransactionsWithCategories>>(
+        [] as Array<TransactionWithCategory>,
+      ),
     )
 
     const { result } = renderHook(() =>
@@ -77,12 +88,18 @@ describe('useDashboardData', () => {
   })
 
   it('returns a zeroed summary when the budget overview row is missing', () => {
-    vi.mocked(useBudgetOverview).mockReturnValue(mockQuery([]))
+    vi.mocked(useBudgetOverview).mockReturnValue(
+      mockQuery<ReturnType<typeof useBudgetOverview>>([]),
+    )
     vi.mocked(useAllocations).mockReturnValue(
-      mockQuery([] as Array<BudgetWithProgress>),
+      mockQuery<ReturnType<typeof useAllocations>>(
+        [] as Array<BudgetWithProgress>,
+      ),
     )
     vi.mocked(useGetTransactionsWithCategories).mockReturnValue(
-      mockQuery([] as Array<TransactionWithCategory>),
+      mockQuery<ReturnType<typeof useGetTransactionsWithCategories>>(
+        [] as Array<TransactionWithCategory>,
+      ),
     )
 
     const { result } = renderHook(() =>
