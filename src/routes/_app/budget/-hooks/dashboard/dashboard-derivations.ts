@@ -7,7 +7,7 @@ import {
   startOfDay,
 } from 'date-fns'
 import type { BudgetOverview } from '@/types/database.types'
-import type { PeriodBounds, PeriodState } from './types'
+import type { DashboardSummary, PeriodBounds, PeriodState } from './types'
 
 const parseDateOnly = (value: string): Date => {
   // Values come back from Supabase as ISO date strings (YYYY-MM-DD).
@@ -60,5 +60,49 @@ export const resolvePeriodBounds = (
     lengthDays,
     label: resolveLabel(start, end),
     state: resolveState(start, end, today),
+  }
+}
+
+export const computeSummary = (
+  overview: BudgetOverview,
+  bounds: PeriodBounds,
+  today: Date,
+): DashboardSummary => {
+  const { start, end, lengthDays, state, label } = bounds
+  const budget = overview.budget_amount
+  const spent = overview.total_spent
+
+  if (state === 'not-started') {
+    return {
+      budgetUsedPercent: 0,
+      remaining: budget,
+      projectedEnd: 0,
+      safeDaily: null,
+      periodLabel: label,
+      periodState: state,
+    }
+  }
+
+  const todayDay = startOfDay(today)
+  const clampedToday = todayDay > end ? end : todayDay
+  const daysElapsed = Math.max(
+    1,
+    differenceInCalendarDays(clampedToday, start) + 1,
+  )
+  const daysRemaining = Math.max(0, differenceInCalendarDays(end, clampedToday))
+
+  const budgetUsedPercent = budget > 0 ? (spent / budget) * 100 : 0
+  const remaining = budget - spent
+  const projectedEnd =
+    state === 'ended' ? spent : (spent / daysElapsed) * lengthDays
+  const safeDaily = daysRemaining > 0 ? remaining / daysRemaining : null
+
+  return {
+    budgetUsedPercent,
+    remaining,
+    projectedEnd,
+    safeDaily,
+    periodLabel: label,
+    periodState: state,
   }
 }
