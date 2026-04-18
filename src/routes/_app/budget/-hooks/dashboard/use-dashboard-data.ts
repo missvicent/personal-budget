@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import {
   buildBurnSeries,
+  computeSpotlightCategory,
   computeSummary,
   mapCategories,
   mapRecentActivity,
@@ -35,11 +36,12 @@ export const useDashboardData = (
         summary: {
           budgetUsedPercent: 0,
           remaining: 0,
-          projectedEnd: 0,
-          safeDaily: null,
+          overBudgetAmount: null,
+          dailyAverage: null,
           periodLabel: '',
           periodState: 'not-started',
         },
+        spotlight: null,
         categories: [],
         recentActivity: [],
         burnSeries: [],
@@ -51,6 +53,7 @@ export const useDashboardData = (
     const bounds = resolvePeriodBounds(overview, now)
     return {
       summary: computeSummary(overview, bounds, now),
+      spotlight: computeSpotlightCategory(allocationsQuery.data ?? []),
       categories: mapCategories(allocationsQuery.data ?? []),
       recentActivity: mapRecentActivity(transactionsQuery.data ?? []),
       burnSeries: buildBurnSeries(

@@ -13,9 +13,9 @@ export interface PeriodBounds {
 
 export interface DashboardSummary {
   budgetUsedPercent: number
-  remaining: number
-  projectedEnd: number
-  safeDaily: number | null
+  remaining: number // always ≥ 0 (clamped in derivation)
+  overBudgetAmount: number | null // positive dollars when spent > budget; null otherwise
+  dailyAverage: number | null // null only when period has not started
   periodLabel: string
   periodState: PeriodState
 }
@@ -42,6 +42,7 @@ export interface BurnSeriesPoint {
 
 export interface DashboardData {
   summary: DashboardSummary
+  spotlight: SpotlightCategory | null
   categories: Array<SpendingByCategoryItem>
   recentActivity: Array<RecentActivityItem>
   burnSeries: Array<BurnSeriesPoint>

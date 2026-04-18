@@ -1,12 +1,14 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import { RecentActivity } from '../-components/dashboard/recent-activity'
 import { SpendingByCategory } from '../-components/dashboard/spending-by-category'
-import { SummaryGrid } from '../-components/dashboard/summary-grid'
 import { BurnChart } from '../-components/dashboard/burn-chart'
 import { DashboardSkeleton } from '../-components/dashboard/dashboard-skeleton'
+import { SpotlightCategoryCard } from '../-components/dashboard/spotlight-category-card'
 import { useDashboardData } from '../-hooks/dashboard/use-dashboard-data'
-import type { SummaryGridItem } from '../-components/dashboard/summary-grid'
 import type { DashboardSummary } from '../-hooks/dashboard/types'
+import type {StatCardProps} from '@/components/shared/StatCard';
+import { StatCard  } from '@/components/shared/StatCard'
+import { currencyFormatter } from '@/lib/format'
 
 export const Route = createFileRoute('/_app/budget/$budgetId/')({
   component: DashboardPage,
@@ -20,8 +22,26 @@ const DESCRIPTION_BY_STATE: Record<DashboardSummary['periodState'], string> = {
 
 const buildSummaryItems = (
   summary: DashboardSummary,
-): Array<SummaryGridItem> => {
+  budgetAmount: number,
+): Array<StatCardProps> => {
   const description = DESCRIPTION_BY_STATE[summary.periodState]
+
+  const remainingItem: StatCardProps =
+    summary.overBudgetAmount === null
+      ? {
+          title: 'Remaining',
+          amountSpent: summary.remaining,
+          symbol: '$',
+          additionalDescription: description,
+        }
+      : {
+          title: 'Over Budget',
+          amountSpent: summary.overBudgetAmount,
+          symbol: '$',
+          tone: 'warning',
+          additionalDescription: `Budget was ${currencyFormatter.format(budgetAmount)}`,
+        }
+
   return [
     {
       title: 'Budget Used',
@@ -29,24 +49,13 @@ const buildSummaryItems = (
       symbol: '%',
       additionalDescription: description,
     },
+    remainingItem,
     {
-      title: 'Remaining',
-      amountSpent: summary.remaining,
-      symbol: '$',
-      additionalDescription: description,
-    },
-    {
-      title: 'Projected End',
-      amountSpent: summary.projectedEnd,
-      symbol: '$',
-      additionalDescription: description,
-    },
-    {
-      title: 'Safe Daily',
-      amountSpent: summary.safeDaily ?? 0,
+      title: 'Daily Average',
+      amountSpent: summary.dailyAverage ?? 0,
       symbol: '$',
       additionalDescription:
-        summary.safeDaily === null ? '—' : 'per remaining day',
+        summary.dailyAverage === null ? '—' : 'per day so far',
     },
   ]
 }
@@ -55,6 +64,7 @@ export function DashboardPage() {
   const { budgetId } = useParams({ from: '/_app/budget/$budgetId/' })
   const {
     summary,
+    spotlight,
     categories,
     recentActivity,
     burnSeries,
@@ -66,7 +76,12 @@ export function DashboardPage() {
 
   return (
     <div className="min-h-screen p-8">
-      <SummaryGrid summaryData={buildSummaryItems(summary)} />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {buildSummaryItems(summary, budgetAmount).map((item) => (
+          <StatCard key={item.title} {...item} />
+        ))}
+        <SpotlightCategoryCard spotlight={spotlight} />
+      </div>
       <div className="mt-4 grid grid-cols-1 gap-4 md:mt-8 md:grid-cols-2">
         <SpendingByCategory
           categories={categories}

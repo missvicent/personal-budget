@@ -61,14 +61,34 @@ describe('useDashboardData', () => {
     expect(result.current.isLoading).toBe(true)
   })
 
-  it('composes summary, categories, activity, and burn series when all queries resolved', () => {
+  it('composes summary, spotlight, categories, activity, and burn series when all queries resolved', () => {
+    const allocation: BudgetWithProgress = {
+      budget_id: 'b1',
+      budget_name: 'Test',
+      budget_amount: 3000,
+      period: 'monthly',
+      start_date: '2026-04-01',
+      end_date: '2026-04-30',
+      is_active: true,
+      allocation_id: 'a1',
+      category_id: 'c1',
+      goal_id: null,
+      amount: 300,
+      alert_enabled: false,
+      alert_threshold: 0,
+      category_name: 'Food',
+      category_type: 'expense',
+      category_color: '#064E3B',
+      category_icon: '🛒',
+      goal_name: null,
+      progress: 120,
+    }
+
     vi.mocked(useBudgetOverview).mockReturnValue(
       mockQuery<ReturnType<typeof useBudgetOverview>>([overview]),
     )
     vi.mocked(useAllocations).mockReturnValue(
-      mockQuery<ReturnType<typeof useAllocations>>(
-        [] as Array<BudgetWithProgress>,
-      ),
+      mockQuery<ReturnType<typeof useAllocations>>([allocation]),
     )
     vi.mocked(useGetTransactionsWithCategories).mockReturnValue(
       mockQuery<ReturnType<typeof useGetTransactionsWithCategories>>(
@@ -83,11 +103,15 @@ describe('useDashboardData', () => {
     expect(result.current.isLoading).toBe(false)
     expect(result.current.summary.budgetUsedPercent).toBeCloseTo(50, 5)
     expect(result.current.summary.remaining).toBe(1500)
+    expect(result.current.summary.overBudgetAmount).toBeNull()
     expect(result.current.budgetAmount).toBe(3000)
     expect(result.current.burnSeries).toHaveLength(30)
+    expect(result.current.spotlight).not.toBeNull()
+    expect(result.current.spotlight?.name).toBe('Food')
+    expect(result.current.spotlight?.mode).toBe('top-spender')
   })
 
-  it('returns a zeroed summary when the budget overview row is missing', () => {
+  it('returns a zeroed summary and null spotlight when the budget overview row is missing', () => {
     vi.mocked(useBudgetOverview).mockReturnValue(
       mockQuery<ReturnType<typeof useBudgetOverview>>([]),
     )
@@ -108,6 +132,9 @@ describe('useDashboardData', () => {
 
     expect(result.current.summary.budgetUsedPercent).toBe(0)
     expect(result.current.summary.remaining).toBe(0)
+    expect(result.current.summary.overBudgetAmount).toBeNull()
+    expect(result.current.summary.dailyAverage).toBeNull()
+    expect(result.current.spotlight).toBeNull()
     expect(result.current.budgetAmount).toBe(0)
     expect(result.current.burnSeries).toEqual([])
   })

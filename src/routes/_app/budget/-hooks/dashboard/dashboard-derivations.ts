@@ -83,7 +83,7 @@ export const computeSummary = (
   bounds: PeriodBounds,
   today: Date,
 ): DashboardSummary => {
-  const { start, end, lengthDays, state, label } = bounds
+  const { start, end, state, label } = bounds
   const budget = overview.budget_amount
   const spent = overview.total_spent
 
@@ -91,8 +91,8 @@ export const computeSummary = (
     return {
       budgetUsedPercent: 0,
       remaining: budget,
-      projectedEnd: 0,
-      safeDaily: null,
+      overBudgetAmount: null,
+      dailyAverage: null,
       periodLabel: label,
       periodState: state,
     }
@@ -104,19 +104,17 @@ export const computeSummary = (
     1,
     differenceInCalendarDays(clampedToday, start) + 1,
   )
-  const daysRemaining = Math.max(0, differenceInCalendarDays(end, clampedToday))
 
   const budgetUsedPercent = budget > 0 ? (spent / budget) * 100 : 0
-  const remaining = budget - spent
-  const projectedEnd =
-    state === 'ended' ? spent : (spent / daysElapsed) * lengthDays
-  const safeDaily = daysRemaining > 0 ? remaining / daysRemaining : null
+  const remaining = Math.max(0, budget - spent)
+  const overBudgetAmount = spent > budget ? spent - budget : null
+  const dailyAverage = spent / daysElapsed
 
   return {
     budgetUsedPercent,
     remaining,
-    projectedEnd,
-    safeDaily,
+    overBudgetAmount,
+    dailyAverage,
     periodLabel: label,
     periodState: state,
   }
