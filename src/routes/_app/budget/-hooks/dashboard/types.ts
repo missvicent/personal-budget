@@ -12,8 +12,8 @@ export interface PeriodBounds {
 }
 
 export interface DashboardSummary {
-  budgetUsedPercent: number
-  remaining: number // always ≥ 0 (clamped in derivation)
+  paceVariance: number | null // null when period is not-started or ended
+  remaining: number // ≥ 0 (clamped)
   overBudgetAmount: number | null // positive dollars when spent > budget; null otherwise
   dailyAverage: number | null // null only when period has not started
   periodLabel: string

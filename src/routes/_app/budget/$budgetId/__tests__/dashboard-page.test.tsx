@@ -22,7 +22,7 @@ describe('DashboardPage', () => {
   it('renders a skeleton while loading', () => {
     vi.mocked(useDashboardData).mockReturnValue({
       summary: {
-        budgetUsedPercent: 0,
+        paceVariance: null,
         remaining: 0,
         overBudgetAmount: null,
         dailyAverage: null,
@@ -48,7 +48,7 @@ describe('DashboardPage', () => {
   it('renders the three stat cards, spotlight, burn chart, and recent activity when loaded under budget', () => {
     vi.mocked(useDashboardData).mockReturnValue({
       summary: {
-        budgetUsedPercent: 50,
+        paceVariance: 0,
         remaining: 1500,
         overBudgetAmount: null,
         dailyAverage: 100,
@@ -74,7 +74,8 @@ describe('DashboardPage', () => {
 
     render(<DashboardPage />)
 
-    expect(screen.getByText(/budget used/i)).toBeInTheDocument()
+    expect(screen.getByText(/pace variance/i)).toBeInTheDocument()
+    expect(screen.getByText(/^on pace$/i)).toBeInTheDocument()
     expect(screen.getByText(/^remaining$/i)).toBeInTheDocument()
     expect(screen.getByText(/daily average/i)).toBeInTheDocument()
     expect(screen.getByTestId('spotlight-category-card')).toBeInTheDocument()
@@ -87,7 +88,7 @@ describe('DashboardPage', () => {
   it('renders the Over Budget card with warning tone when overBudgetAmount is set', () => {
     vi.mocked(useDashboardData).mockReturnValue({
       summary: {
-        budgetUsedPercent: 120,
+        paceVariance: 500,
         remaining: 0,
         overBudgetAmount: 500,
         dailyAverage: 200,
@@ -107,5 +108,6 @@ describe('DashboardPage', () => {
     expect(screen.getByText(/^over budget$/i)).toBeInTheDocument()
     expect(screen.queryByText(/^remaining$/i)).not.toBeInTheDocument()
     expect(screen.getByText(/budget was \$3,000\.00/i)).toBeInTheDocument()
+    expect(screen.getByText(/over pace/i)).toBeInTheDocument()
   })
 })

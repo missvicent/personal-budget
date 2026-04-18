@@ -101,7 +101,8 @@ describe('useDashboardData', () => {
     )
 
     expect(result.current.isLoading).toBe(false)
-    expect(result.current.summary.budgetUsedPercent).toBeCloseTo(50, 5)
+    // budget 3000, spent 1500, day 15 of 30: expected = 1500, variance = 0
+    expect(result.current.summary.paceVariance).toBe(0)
     expect(result.current.summary.remaining).toBe(1500)
     expect(result.current.summary.overBudgetAmount).toBeNull()
     expect(result.current.budgetAmount).toBe(3000)
@@ -130,7 +131,7 @@ describe('useDashboardData', () => {
       useDashboardData('missing', new Date('2026-04-15T12:00:00Z')),
     )
 
-    expect(result.current.summary.budgetUsedPercent).toBe(0)
+    expect(result.current.summary.paceVariance).toBeNull()
     expect(result.current.summary.remaining).toBe(0)
     expect(result.current.summary.overBudgetAmount).toBeNull()
     expect(result.current.summary.dailyAverage).toBeNull()

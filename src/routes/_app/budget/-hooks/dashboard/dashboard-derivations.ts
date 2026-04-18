@@ -83,13 +83,13 @@ export const computeSummary = (
   bounds: PeriodBounds,
   today: Date,
 ): DashboardSummary => {
-  const { start, end, state, label } = bounds
+  const { start, end, lengthDays, state, label } = bounds
   const budget = overview.budget_amount
   const spent = overview.total_spent
 
   if (state === 'not-started') {
     return {
-      budgetUsedPercent: 0,
+      paceVariance: null,
       remaining: budget,
       overBudgetAmount: null,
       dailyAverage: null,
@@ -105,13 +105,14 @@ export const computeSummary = (
     differenceInCalendarDays(clampedToday, start) + 1,
   )
 
-  const budgetUsedPercent = budget > 0 ? (spent / budget) * 100 : 0
   const remaining = Math.max(0, budget - spent)
   const overBudgetAmount = spent > budget ? spent - budget : null
   const dailyAverage = spent / daysElapsed
+  const expectedSpent = budget * (daysElapsed / lengthDays)
+  const paceVariance = state === 'ended' ? null : spent - expectedSpent
 
   return {
-    budgetUsedPercent,
+    paceVariance,
     remaining,
     overBudgetAmount,
     dailyAverage,

@@ -109,26 +109,41 @@ describe('computeSummary', () => {
 
     const s = computeSummary(overview, bounds, today)
 
-    expect(s.budgetUsedPercent).toBeCloseTo((1700 / 3000) * 100, 5)
+    // day 17 of 30: expected = 3000 * 17/30 = 1700; variance = 0
+    expect(s.paceVariance).toBeCloseTo(0, 5)
     expect(s.remaining).toBe(1300)
     expect(s.overBudgetAmount).toBeNull()
-    // dailyAverage = 1700 / 17 days elapsed
     expect(s.dailyAverage).toBeCloseTo(1700 / 17, 5)
     expect(s.periodState).toBe('active')
   })
 
-  it('clamps remaining to zero and surfaces overBudgetAmount when over budget', () => {
+  it('reports positive paceVariance when over budget mid-period', () => {
     const today = new Date('2026-04-17T12:00:00Z')
     const overview = baseOverview({ budget_amount: 3000, total_spent: 3500 })
     const bounds = mkBounds(overview, today)
 
     const s = computeSummary(overview, bounds, today)
 
+    // expected = 1700; variance = 3500 - 1700 = 1800
+    expect(s.paceVariance).toBeCloseTo(1800, 5)
+    expect(s.paceVariance).toBeGreaterThan(0)
     expect(s.remaining).toBe(0)
     expect(s.overBudgetAmount).toBe(500)
   })
 
-  it('returns a daily average and null overBudgetAmount when the period ended under budget', () => {
+  it('reports negative paceVariance when spending is below pace', () => {
+    const today = new Date('2026-04-17T12:00:00Z')
+    const overview = baseOverview({ budget_amount: 3000, total_spent: 500 })
+    const bounds = mkBounds(overview, today)
+
+    const s = computeSummary(overview, bounds, today)
+
+    // expected = 1700; variance = 500 - 1700 = -1200
+    expect(s.paceVariance).toBeCloseTo(-1200, 5)
+    expect(s.paceVariance).toBeLessThan(0)
+  })
+
+  it('returns null paceVariance and null overBudgetAmount when the period ended under budget', () => {
     const today = new Date('2026-05-05T12:00:00Z')
     const overview = baseOverview({ budget_amount: 3000, total_spent: 2800 })
     const bounds = mkBounds(overview, today)
@@ -136,12 +151,13 @@ describe('computeSummary', () => {
     const s = computeSummary(overview, bounds, today)
 
     expect(s.periodState).toBe('ended')
+    expect(s.paceVariance).toBeNull()
     expect(s.overBudgetAmount).toBeNull()
     // daily average freezes at period end: 2800 / 30 days
     expect(s.dailyAverage).toBeCloseTo(2800 / 30, 5)
   })
 
-  it('returns null dailyAverage and remaining=budget when the period has not started', () => {
+  it('returns null paceVariance and remaining=budget when the period has not started', () => {
     const today = new Date('2026-03-20T12:00:00Z')
     const overview = baseOverview({ budget_amount: 3000, total_spent: 0 })
     const bounds = mkBounds(overview, today)
@@ -149,7 +165,7 @@ describe('computeSummary', () => {
     const s = computeSummary(overview, bounds, today)
 
     expect(s.periodState).toBe('not-started')
-    expect(s.budgetUsedPercent).toBe(0)
+    expect(s.paceVariance).toBeNull()
     expect(s.remaining).toBe(3000)
     expect(s.overBudgetAmount).toBeNull()
     expect(s.dailyAverage).toBeNull()

@@ -6,8 +6,8 @@ import { DashboardSkeleton } from '../-components/dashboard/dashboard-skeleton'
 import { SpotlightCategoryCard } from '../-components/dashboard/spotlight-category-card'
 import { useDashboardData } from '../-hooks/dashboard/use-dashboard-data'
 import type { DashboardSummary } from '../-hooks/dashboard/types'
-import type {StatCardProps} from '@/components/shared/StatCard';
-import { StatCard  } from '@/components/shared/StatCard'
+import type { StatCardProps } from '@/components/shared/StatCard'
+import { StatCard } from '@/components/shared/StatCard'
 import { currencyFormatter } from '@/lib/format'
 
 export const Route = createFileRoute('/_app/budget/$budgetId/')({
@@ -26,6 +26,36 @@ const buildSummaryItems = (
 ): Array<StatCardProps> => {
   const description = DESCRIPTION_BY_STATE[summary.periodState]
 
+  const paceItem: StatCardProps = (() => {
+    if (summary.paceVariance === null) {
+      return {
+        title: 'Pace Variance',
+        amountSpent: 0,
+        symbol: '$',
+        additionalDescription:
+          summary.periodState === 'not-started'
+            ? 'Period has not started'
+            : 'Period ended',
+      }
+    }
+    if (summary.paceVariance > 0) {
+      return {
+        title: 'Pace Variance',
+        amountSpent: summary.paceVariance,
+        symbol: '$',
+        tone: 'warning',
+        additionalDescription: 'over pace',
+      }
+    }
+    return {
+      title: 'Pace Variance',
+      amountSpent: summary.paceVariance, // negative or 0
+      symbol: '$',
+      additionalDescription:
+        summary.paceVariance === 0 ? 'on pace' : 'under pace',
+    }
+  })()
+
   const remainingItem: StatCardProps =
     summary.overBudgetAmount === null
       ? {
@@ -43,12 +73,7 @@ const buildSummaryItems = (
         }
 
   return [
-    {
-      title: 'Budget Used',
-      percentage: summary.budgetUsedPercent / 100,
-      symbol: '%',
-      additionalDescription: description,
-    },
+    paceItem,
     remainingItem,
     {
       title: 'Daily Average',

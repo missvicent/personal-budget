@@ -34,7 +34,7 @@ export const useDashboardData = (
     if (!overview) {
       return {
         summary: {
-          budgetUsedPercent: 0,
+          paceVariance: null,
           remaining: 0,
           overBudgetAmount: null,
           dailyAverage: null,
