@@ -5,13 +5,16 @@ import {
   LineChart,
   ReferenceLine,
   ResponsiveContainer,
-  Tooltip,
   XAxis,
   YAxis,
 } from 'recharts'
 import type { BurnSeriesPoint } from '@/routes/_app/budget/-hooks/dashboard/types'
 import type { ChartConfig } from '@/components/ui/chart'
-import { ChartContainer } from '@/components/ui/chart'
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart'
 import {
   Card,
   CardContent,
@@ -86,14 +89,34 @@ export const BurnChart = ({ series, budgetAmount }: BurnChartProps) => {
                 axisLine={false}
                 width={72}
               />
-              <Tooltip
-                formatter={(value, name) => {
-                  const numeric =
-                    typeof value === 'number' ? value : Number(value)
-                  const key = String(name)
-                  const label = CHART_CONFIG[key].label ?? key
-                  return [currencyFormatter.format(numeric), label]
-                }}
+              <ChartTooltip
+                cursor={{ stroke: 'var(--border)', strokeDasharray: '3 3' }}
+                content={
+                  <ChartTooltipContent
+                    formatter={(value, name) => {
+                      const numeric =
+                        typeof value === 'number' ? value : Number(value)
+                      const key = String(name)
+                      const label = CHART_CONFIG[key].label ?? key
+                      return (
+                        <>
+                          <div
+                            className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
+                            style={{ backgroundColor: `var(--color-${key})` }}
+                          />
+                          <div className="flex flex-1 items-center justify-between gap-4 leading-none">
+                            <span className="text-muted-foreground">
+                              {label}
+                            </span>
+                            <span className="text-foreground font-mono font-medium tabular-nums">
+                              {currencyFormatter.format(numeric)}
+                            </span>
+                          </div>
+                        </>
+                      )
+                    }}
+                  />
+                }
               />
               <Line
                 type="monotone"
