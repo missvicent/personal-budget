@@ -11,6 +11,7 @@ export interface StatCardProps {
   percentage?: number
   symbol: string
   title: string
+  tone?: 'warning'
 }
 
 export const StatCard = ({
@@ -20,6 +21,7 @@ export const StatCard = ({
   percentage,
   symbol,
   title,
+  tone,
 }: StatCardProps) => {
   const colors =
     badgeType === 'positive'
@@ -35,7 +37,7 @@ export const StatCard = ({
   const showBadge = percentage !== undefined && badgeType !== undefined
 
   return (
-    <Card>
+    <Card className={cn(tone === 'warning' && 'border-destructive border-l-4')}>
       <CardHeader className="flex flex-row items-center justify-between">
         <p className="text-base font-semibold uppercase">{title}</p>
         {showBadge && (
