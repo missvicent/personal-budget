@@ -37,7 +37,6 @@ export const BudgetCategoryForm = ({
   categories,
   isPending,
   onSubmit,
-  open,
   selectedCategory,
 }: BudgetCategoryFormProps) => {
   const defaultValues = useMemo(() => {
