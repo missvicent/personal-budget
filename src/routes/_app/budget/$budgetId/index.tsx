@@ -34,13 +34,16 @@ const PACE_PRESET: Record<DashboardSummary['paceState'], PacePreset> = {
 
 const buildPaceItem = (summary: DashboardSummary): StatCardProps => {
   const preset = PACE_PRESET[summary.paceState]
+  const fallback =
+    summary.periodState === 'active'
+      ? 'No spending yet'
+      : PERIOD_DESCRIPTION[summary.periodState]
   return {
     title: 'Pace Variance',
     symbol: '$',
     amountSpent: summary.paceVariance ?? 0,
     tone: preset.tone,
-    additionalDescription:
-      preset.description ?? PERIOD_DESCRIPTION[summary.periodState],
+    additionalDescription: preset.description ?? fallback,
   }
 }
 

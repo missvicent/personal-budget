@@ -143,6 +143,18 @@ describe('computeSummary', () => {
     expect(s.paceVariance).toBeLessThan(0)
   })
 
+  it('returns null paceVariance with paceState="no-data" mid-period when nothing has been spent', () => {
+    const today = new Date('2026-04-17T12:00:00Z')
+    const overview = baseOverview({ budget_amount: 3000, total_spent: 0 })
+    const bounds = mkBounds(overview, today)
+
+    const s = computeSummary(overview, bounds, today)
+
+    expect(s.periodState).toBe('active')
+    expect(s.paceVariance).toBeNull()
+    expect(s.paceState).toBe('no-data')
+  })
+
   it('returns null paceVariance and null overBudgetAmount when the period ended under budget', () => {
     const today = new Date('2026-05-05T12:00:00Z')
     const overview = baseOverview({ budget_amount: 3000, total_spent: 2800 })
