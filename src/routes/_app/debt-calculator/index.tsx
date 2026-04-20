@@ -1,7 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Dialog } from '@/components/ui/dialog'
 import { Plus } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { DebtDBProvider } from './-hooks/use-debt-db'
 import { useDebts } from './-hooks/use-debts'
 import { useDebtMutations } from './-hooks/use-debt-mutations'
@@ -14,8 +12,13 @@ import {
   PaymentForm,
   PayoffComparison,
 } from './-components'
-import type { DebtFormData, DebtPaymentFormData } from '@/lib/validations/debt.schema'
+import type {
+  DebtFormData,
+  DebtPaymentFormData,
+} from '@/lib/validations/debt.schema'
 import type { Debt } from '@/types/database.types'
+import { cn } from '@/lib/utils'
+import { Dialog } from '@/components/ui/dialog'
 
 export const Route = createFileRoute('/_app/debt-calculator/')({
   component: RouteComponent,

@@ -1,4 +1,4 @@
-import { useLiveQuery, eq } from '@tanstack/react-db'
+import { eq, useLiveQuery } from '@tanstack/react-db'
 import { useDebtDB } from './use-debt-db'
 
 export function useDebtPayments(debtId?: string) {
@@ -7,7 +7,9 @@ export function useDebtPayments(debtId?: string) {
     (q) => {
       const base = q.from({ debtPayments })
       if (debtId) {
-        return base.where(({ debtPayments }) => eq(debtPayments.debt_id, debtId))
+        return base.where(({ debtPayments }) =>
+          eq(debtPayments.debt_id, debtId),
+        )
       }
       return base
     },

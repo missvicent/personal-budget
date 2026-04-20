@@ -1,11 +1,10 @@
 import { useMemo, useState } from 'react'
-import type { Debt } from '@/types/database.types'
 import {
-  calculateSnowball,
   calculateAvalanche,
-  type DebtInput,
-  type PayoffResult,
+  calculateSnowball,
 } from '../-lib/payoff-strategies'
+import type { DebtInput, PayoffResult } from '../-lib/payoff-strategies'
+import type { Debt } from '@/types/database.types'
 
 export function usePayoffCalculator(debts: Array<Debt>) {
   const [extraPayment, setExtraPayment] = useState(0)

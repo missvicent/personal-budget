@@ -1,4 +1,4 @@
-import { useLiveQuery, eq } from '@tanstack/react-db'
+import { eq, useLiveQuery } from '@tanstack/react-db'
 import { useDebtDB } from './use-debt-db'
 
 export function useDebts() {

@@ -1,6 +1,15 @@
+import {
+  Banknote,
+  Car,
+  CircleDollarSign,
+  CreditCard,
+  GraduationCap,
+  Home,
+  Pencil,
+  Trash2,
+} from 'lucide-react'
 import type { Debt } from '@/types/database.types'
 import { cn } from '@/lib/utils'
-import { CreditCard, Car, GraduationCap, Home, Banknote, Pencil, Trash2, CircleDollarSign } from 'lucide-react'
 
 const DEBT_TYPE_CONFIG = {
   credit_card: { icon: CreditCard, label: 'Credit Card' },
