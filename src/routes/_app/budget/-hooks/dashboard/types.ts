@@ -18,7 +18,9 @@ export interface DashboardSummary {
   dailyAverage: number | null // null only when period has not started
   periodLabel: string
   periodState: PeriodState
+  paceState: PaceState
 }
+export type PaceState = 'no-data' | 'over' | 'on' | 'under'
 
 export type SpotlightMode = 'outlier' | 'top-spender'
 

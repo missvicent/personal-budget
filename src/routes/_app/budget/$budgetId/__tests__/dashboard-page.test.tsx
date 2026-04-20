@@ -28,6 +28,7 @@ describe('DashboardPage', () => {
         dailyAverage: null,
         periodLabel: '',
         periodState: 'not-started',
+        paceState: 'no-data',
       },
       spotlight: null,
       categories: [],
@@ -54,6 +55,7 @@ describe('DashboardPage', () => {
         dailyAverage: 100,
         periodLabel: 'April 2026',
         periodState: 'active',
+        paceState: 'on',
       },
       spotlight: {
         mode: 'top-spender',
@@ -94,6 +96,7 @@ describe('DashboardPage', () => {
         dailyAverage: 200,
         periodLabel: 'April 2026',
         periodState: 'active',
+        paceState: 'over',
       },
       spotlight: null,
       categories: [],

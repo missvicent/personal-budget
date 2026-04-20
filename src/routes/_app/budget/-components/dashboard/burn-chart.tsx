@@ -4,7 +4,6 @@ import {
   Line,
   LineChart,
   ReferenceLine,
-  ResponsiveContainer,
   XAxis,
   YAxis,
 } from 'recharts'
@@ -73,91 +72,87 @@ export const BurnChart = ({ series, budgetAmount }: BurnChartProps) => {
           </p>
         )}
         <ChartContainer config={CHART_CONFIG} className="h-full w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis
-                dataKey="dateLabel"
-                minTickGap={24}
-                tickLine={false}
-                axisLine={false}
-              />
-              <YAxis
-                domain={[0, Math.max(budgetAmount, 0)]}
-                tickFormatter={(v) => currencyFormatter.format(v as number)}
-                tickLine={false}
-                axisLine={false}
-                width={72}
-              />
-              <ChartTooltip
-                cursor={{ stroke: 'var(--border)', strokeDasharray: '3 3' }}
-                content={
-                  <ChartTooltipContent
-                    formatter={(value, name) => {
-                      const numeric =
-                        typeof value === 'number' ? value : Number(value)
-                      const key = String(name)
-                      const label = CHART_CONFIG[key].label ?? key
-                      return (
-                        <>
-                          <div
-                            className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
-                            style={{ backgroundColor: `var(--color-${key})` }}
-                          />
-                          <div className="flex flex-1 items-center justify-between gap-4 leading-none">
-                            <span className="text-muted-foreground">
-                              {label}
-                            </span>
-                            <span className="text-foreground font-mono font-medium tabular-nums">
-                              {currencyFormatter.format(numeric)}
-                            </span>
-                          </div>
-                        </>
-                      )
-                    }}
-                  />
-                }
-              />
-              <Line
-                type="monotone"
-                dataKey="pace"
-                stroke="var(--muted-foreground)"
-                strokeDasharray="4 4"
-                dot={false}
-                strokeWidth={1.5}
-              />
-              <Line
-                type="stepAfter"
-                dataKey="actual"
-                stroke="var(--primary)"
-                dot={false}
-                strokeWidth={2}
-                connectNulls={false}
-              />
-              <Line
-                type="monotone"
-                dataKey="projected"
-                stroke="var(--primary)"
-                strokeDasharray="2 4"
-                strokeOpacity={0.55}
-                dot={false}
-                strokeWidth={1.5}
-                connectNulls
-              />
-              {todayDate && (
-                <ReferenceLine
-                  x={format(todayDate, 'MMM d')}
-                  stroke="var(--border)"
-                  strokeDasharray="3 3"
-                  label={{
-                    value: 'Today',
-                    position: 'insideTop',
-                    fontSize: 11,
+          <LineChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis
+              dataKey="dateLabel"
+              minTickGap={24}
+              tickLine={false}
+              axisLine={false}
+            />
+            <YAxis
+              domain={[0, Math.max(budgetAmount, 0)]}
+              tickFormatter={(v) => currencyFormatter.format(v as number)}
+              tickLine={false}
+              axisLine={false}
+              width={72}
+            />
+            <ChartTooltip
+              cursor={{ stroke: 'var(--border)', strokeDasharray: '3 3' }}
+              content={
+                <ChartTooltipContent
+                  formatter={(value, name) => {
+                    const numeric =
+                      typeof value === 'number' ? value : Number(value)
+                    const key = String(name)
+                    const label = CHART_CONFIG[key].label ?? key
+                    return (
+                      <>
+                        <div
+                          className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
+                          style={{ backgroundColor: `var(--color-${key})` }}
+                        />
+                        <div className="flex flex-1 items-center justify-between gap-4 leading-none">
+                          <span className="text-muted-foreground">{label}</span>
+                          <span className="text-foreground font-mono font-medium tabular-nums">
+                            {currencyFormatter.format(numeric)}
+                          </span>
+                        </div>
+                      </>
+                    )
                   }}
                 />
-              )}
-            </LineChart>
-          </ResponsiveContainer>
+              }
+            />
+            <Line
+              type="monotone"
+              dataKey="pace"
+              stroke="var(--muted-foreground)"
+              strokeDasharray="4 4"
+              dot={false}
+              strokeWidth={1.5}
+            />
+            <Line
+              type="stepAfter"
+              dataKey="actual"
+              stroke="var(--primary)"
+              dot={false}
+              strokeWidth={2}
+              connectNulls={false}
+            />
+            <Line
+              type="monotone"
+              dataKey="projected"
+              stroke="var(--primary)"
+              strokeDasharray="2 4"
+              strokeOpacity={0.55}
+              dot={false}
+              strokeWidth={1.5}
+              connectNulls
+            />
+            {todayDate && (
+              <ReferenceLine
+                x={format(todayDate, 'MMM d')}
+                stroke="var(--border)"
+                strokeDasharray="3 3"
+                label={{
+                  value: 'Today',
+                  position: 'insideTop',
+                  fontSize: 11,
+                }}
+              />
+            )}
+          </LineChart>
         </ChartContainer>
       </CardContent>
     </Card>

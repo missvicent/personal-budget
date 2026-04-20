@@ -95,6 +95,7 @@ export const computeSummary = (
       dailyAverage: null,
       periodLabel: label,
       periodState: state,
+      paceState: 'no-data',
     }
   }
 
@@ -109,7 +110,8 @@ export const computeSummary = (
   const overBudgetAmount = spent > budget ? spent - budget : null
   const dailyAverage = spent / daysElapsed
   const expectedSpent = budget * (daysElapsed / lengthDays)
-  const paceVariance = state === 'ended' ? null : spent - expectedSpent
+  const paceVariance =
+    state === 'ended' || spent === 0 ? null : spent - expectedSpent
 
   return {
     paceVariance,
@@ -118,6 +120,14 @@ export const computeSummary = (
     dailyAverage,
     periodLabel: label,
     periodState: state,
+    paceState:
+      paceVariance === null
+        ? 'no-data'
+        : paceVariance > 0
+          ? 'over'
+          : paceVariance < 0
+            ? 'under'
+            : 'on',
   }
 }
 

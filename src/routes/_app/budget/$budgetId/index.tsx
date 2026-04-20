@@ -14,76 +14,71 @@ export const Route = createFileRoute('/_app/budget/$budgetId/')({
   component: DashboardPage,
 })
 
-const DESCRIPTION_BY_STATE: Record<DashboardSummary['periodState'], string> = {
+const PERIOD_DESCRIPTION: Record<DashboardSummary['periodState'], string> = {
   'not-started': 'Period has not started',
   active: 'This period',
   ended: 'Period ended',
 }
 
+type PacePreset = {
+  description: string | null // null → fall back to PERIOD_DESCRIPTION
+  tone?: StatCardProps['tone']
+}
+
+const PACE_PRESET: Record<DashboardSummary['paceState'], PacePreset> = {
+  'no-data': { description: null },
+  over: { description: 'over pace', tone: 'warning' },
+  under: { description: 'under pace' },
+  on: { description: 'on pace' },
+}
+
+const buildPaceItem = (summary: DashboardSummary): StatCardProps => {
+  const preset = PACE_PRESET[summary.paceState]
+  return {
+    title: 'Pace Variance',
+    symbol: '$',
+    amountSpent: summary.paceVariance ?? 0,
+    tone: preset.tone,
+    additionalDescription:
+      preset.description ?? PERIOD_DESCRIPTION[summary.periodState],
+  }
+}
+
+const buildRemainingItem = (
+  summary: DashboardSummary,
+  budgetAmount: number,
+): StatCardProps => {
+  if (summary.overBudgetAmount !== null) {
+    return {
+      title: 'Over Budget',
+      amountSpent: summary.overBudgetAmount,
+      symbol: '$',
+      tone: 'warning',
+      additionalDescription: `Budget was ${currencyFormatter.format(budgetAmount)}`,
+    }
+  }
+  return {
+    title: 'Remaining',
+    amountSpent: summary.remaining,
+    symbol: '$',
+    additionalDescription: PERIOD_DESCRIPTION[summary.periodState],
+  }
+}
+
 const buildSummaryItems = (
   summary: DashboardSummary,
   budgetAmount: number,
-): Array<StatCardProps> => {
-  const description = DESCRIPTION_BY_STATE[summary.periodState]
-
-  const paceItem: StatCardProps = (() => {
-    if (summary.paceVariance === null) {
-      return {
-        title: 'Pace Variance',
-        amountSpent: 0,
-        symbol: '$',
-        additionalDescription:
-          summary.periodState === 'not-started'
-            ? 'Period has not started'
-            : 'Period ended',
-      }
-    }
-    if (summary.paceVariance > 0) {
-      return {
-        title: 'Pace Variance',
-        amountSpent: summary.paceVariance,
-        symbol: '$',
-        tone: 'warning',
-        additionalDescription: 'over pace',
-      }
-    }
-    return {
-      title: 'Pace Variance',
-      amountSpent: summary.paceVariance, // negative or 0
-      symbol: '$',
-      additionalDescription:
-        summary.paceVariance === 0 ? 'on pace' : 'under pace',
-    }
-  })()
-
-  const remainingItem: StatCardProps =
-    summary.overBudgetAmount === null
-      ? {
-          title: 'Remaining',
-          amountSpent: summary.remaining,
-          symbol: '$',
-          additionalDescription: description,
-        }
-      : {
-          title: 'Over Budget',
-          amountSpent: summary.overBudgetAmount,
-          symbol: '$',
-          tone: 'warning',
-          additionalDescription: `Budget was ${currencyFormatter.format(budgetAmount)}`,
-        }
-
-  return [
-    paceItem,
-    remainingItem,
-    {
-      title: 'Daily Average',
-      amountSpent: summary.dailyAverage ?? 0,
-      symbol: '$',
-      additionalDescription:
-        summary.dailyAverage === null ? '—' : 'per day so far',
-    },
-  ]
-}
+): Array<StatCardProps> => [
+  buildPaceItem(summary),
+  buildRemainingItem(summary, budgetAmount),
+  {
+    title: 'Daily Average',
+    amountSpent: summary.dailyAverage ?? 0,
+    symbol: '$',
+    additionalDescription:
+      summary.dailyAverage === null ? '—' : 'per day so far',
+  },
+]
 
 export function DashboardPage() {
   const { budgetId } = useParams({ from: '/_app/budget/$budgetId/' })
@@ -107,7 +102,7 @@ export function DashboardPage() {
         ))}
         <SpotlightCategoryCard spotlight={spotlight} />
       </div>
-      <div className="mt-4 grid grid-cols-1 gap-4 md:mt-8 md:grid-cols-2">
+      <div className="mt-4 grid grid-cols-1 gap-4 md:mt-8 xl:grid-cols-2">
         <SpendingByCategory
           categories={categories}
           currentMonth={summary.periodLabel}

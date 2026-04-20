@@ -29,7 +29,9 @@ export const SpotlightCategoryCard = ({
   return (
     <Card
       data-testid="spotlight-category-card"
-      className={cn(isOutlier && 'border-destructive border-l-4')}
+      className={cn(
+        isOutlier && 'border-destructive dark:border-destructive border-l-4',
+      )}
     >
       <CardHeader className="flex flex-row items-center gap-3">
         <span className="text-2xl" aria-hidden>

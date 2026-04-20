@@ -37,7 +37,12 @@ export const StatCard = ({
   const showBadge = percentage !== undefined && badgeType !== undefined
 
   return (
-    <Card className={cn(tone === 'warning' && 'border-destructive border-l-4')}>
+    <Card
+      className={cn(
+        tone === 'warning' &&
+          'border-destructive dark:border-destructive border-l-4',
+      )}
+    >
       <CardHeader className="flex flex-row items-center justify-between">
         <p className="text-base font-semibold uppercase">{title}</p>
         {showBadge && (

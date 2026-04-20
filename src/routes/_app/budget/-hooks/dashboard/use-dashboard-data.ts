@@ -40,6 +40,7 @@ export const useDashboardData = (
           dailyAverage: null,
           periodLabel: '',
           periodState: 'not-started',
+          paceState: 'no-data',
         },
         spotlight: null,
         categories: [],
