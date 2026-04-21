@@ -17,3 +17,6 @@ count.txt
 docs/
 .vscode/
 .agents/
+
+#Ignore cursor AI rules
+.cursor/rules/codacy.mdc
