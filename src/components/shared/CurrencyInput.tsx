@@ -17,7 +17,7 @@ export const CurrencyInput = React.forwardRef<
     <Input
       inputMode="decimal"
       ref={ref}
-      className={`dark:bg-input/30 bg-white pl-9 ${className ?? ''}`}
+      className={`dark:bg-input/30 rounded-full bg-white pl-9 ${className ?? ''}`}
       value={value || ''}
       onChange={(e) => onChange(Number(e.target.value))}
       {...rest}

@@ -32,6 +32,7 @@ interface SelectOptionItem {
   color?: string
   description?: string
   disabled?: boolean
+  selectedOptionLabel?: string
   icon?: string
   label: string
   value: string
@@ -67,11 +68,11 @@ export const BudgetSelector = ({
 
   return (
     <Select value={value} onValueChange={onChange} disabled={disabled}>
-      <SelectTrigger {...triggerProps}>
+      <SelectTrigger className="rounded-full" {...triggerProps}>
         <SelectValue placeholder="Select a budget">
           <BudgetSelectorItem
             label={selectedItem?.label ?? ''}
-            description=""
+            description={selectedItem?.selectedOptionLabel ?? ''}
             color={selectedItem?.color ?? ''}
             icon={selectedItem?.icon ?? ''}
           />
