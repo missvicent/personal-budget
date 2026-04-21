@@ -33,6 +33,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
+const GOAL_NONE = 'none'
+
 interface ExpenseTransactionFormProps {
   groups: Array<SelectOptionGroup>
   isPending: boolean
@@ -52,7 +54,7 @@ export const ExpenseTransactionForm = ({
   const goalOptions = useMemo(
     () =>
       toSelectOptions(
-        { label: 'None', value: '' },
+        { label: 'None', value: GOAL_NONE },
         (goals ?? []).filter((g) => !g.is_achieved),
         (g) => `🎯 ${g.name}`,
         (g) => g.id,
@@ -146,7 +148,6 @@ export const ExpenseTransactionForm = ({
                       {...field}
                       placeholder="What did you spend on?"
                       autoComplete="off"
-                      className="rounded-md"
                     />
                   </FormControl>
                   <FormDescription>
@@ -183,8 +184,12 @@ export const ExpenseTransactionForm = ({
                   <FormControl>
                     <SelectField
                       items={goalOptions}
-                      onChange={(selected) => field.onChange(selected.value)}
-                      value={field.value ?? ''}
+                      onChange={(selected) =>
+                        field.onChange(
+                          selected.value === GOAL_NONE ? '' : selected.value,
+                        )
+                      }
+                      value={field.value ? field.value : GOAL_NONE}
                       placeholder="Select a goal"
                     />
                   </FormControl>

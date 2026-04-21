@@ -21,7 +21,7 @@ export const SearchInput = ({
 }: SearchInputProps) => {
   return (
     <Field>
-      <InputGroup>
+      <InputGroup className="rounded-full">
         <InputGroupInput
           id="input-group-url"
           placeholder={placeholder}

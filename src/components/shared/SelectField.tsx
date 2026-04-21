@@ -34,7 +34,7 @@ export const SelectField = ({
 
   return (
     <Select value={value} onValueChange={handleChange} disabled={disabled}>
-      <SelectTrigger {...triggerProps}>
+      <SelectTrigger className="rounded-full" {...triggerProps}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className="max-h-94 overflow-y-auto">
