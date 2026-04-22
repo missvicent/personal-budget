@@ -1,5 +1,6 @@
 export * from './AnomalyRow'
 export * from './CategorySpendingChart'
+export * from './CategorySpendingLegend'
 export * from './InsightsSummary'
 export * from './PeriodRangeSelector'
 export * from './TimeRangeSelector'

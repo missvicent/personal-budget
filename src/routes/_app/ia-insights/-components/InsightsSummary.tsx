@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { currencyFormatter } from '@/lib/format'
 
 export interface InsightsSummaryStats {
@@ -31,8 +32,10 @@ const handleWhyThese = () => {
 
 export const InsightsSummary = ({
   insights,
+  isLoading = false,
 }: {
   insights: InsightsSummaryStats
+  isLoading?: boolean
 }) => {
   return (
     <Card className="w-full shadow-none">
@@ -41,7 +44,7 @@ export const InsightsSummary = ({
           <Brain className="h-2.5 w-2.5" />
           <span className="ml-1.5 text-xs font-medium">AI Generated</span>
         </Badge>
-        <CardTitle className="text-muted-foreground/80 text-xl font-semibold">
+        <CardTitle className="text-content-foreground text-xl font-semibold">
           Insights from this period
         </CardTitle>
         <div className="sm:ml-auto">
@@ -57,13 +60,17 @@ export const InsightsSummary = ({
               key={key}
               className="border-border flex flex-col items-start justify-start sm:border-r sm:last:border-r-0 [&:not(:last-child)]:border-b sm:[&:not(:last-child)]:border-b-0"
             >
-              <div className="flex flex-col p-4">
+              <div className="flex flex-col gap-1 p-4">
                 <span className="text-content-foreground text-sm font-medium">
                   {label}
                 </span>
-                <span className="text-content-foreground text-sm font-medium">
-                  {currencyFormatter.format(insights[key])}
-                </span>
+                {isLoading ? (
+                  <Skeleton className="h-4 w-20" />
+                ) : (
+                  <span className="text-content-foreground text-sm font-medium">
+                    {currencyFormatter.format(insights[key])}
+                  </span>
+                )}
               </div>
             </div>
           ))}

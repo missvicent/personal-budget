@@ -1,5 +1,8 @@
 import { Pie, PieChart } from 'recharts'
+import { CategorySpendingLegend } from './CategorySpendingLegend'
+import type { CategorySpendingLegendItem } from './CategorySpendingLegend'
 import type { ChartConfig } from '@/components/ui/chart'
+import type { BudgetWithProgress } from '@/types/budget.types'
 import {
   Card,
   CardContent,
@@ -12,24 +15,33 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart'
-import { Progress } from '@/components/ui/progress'
-import { currencyFormatter } from '@/lib/format'
+import { Skeleton } from '@/components/ui/skeleton'
+
+const toLegendItem = (
+  allocation: BudgetWithProgress,
+): CategorySpendingLegendItem => ({
+  name: allocation.category_name ?? '',
+  value: allocation.category_name ?? '',
+  color: allocation.category_color ?? '',
+  amount: allocation.progress,
+  icon: allocation.category_icon ?? '',
+  budget: allocation.budget_amount || 0,
+})
 
 export const CategorySpendingChart = ({
   chartConfig,
   chartData,
+  allocations,
+  isLoading = false,
 }: {
   chartData: Array<{ category: string; amount: number; fill: string }>
   chartConfig: ChartConfig
+  allocations: Array<BudgetWithProgress>
+  isLoading?: boolean
 }) => {
-  const total = chartData.reduce((acc, curr) => acc + curr.amount, 0)
-
-  const legendData = Object.entries(chartConfig).map(([key, value]) => ({
-    name: value.label,
-    value: key,
-    color: value.color,
-    amount: chartData.find((item) => item.category === key)?.amount ?? 0,
-  }))
+  const legendData = allocations.map(toLegendItem)
+  const hasAllocations = legendData.length > 0
+  const hasSpending = chartData.length > 0
 
   return (
     <Card className="w-full">
@@ -40,44 +52,59 @@ export const CategorySpendingChart = ({
         <CardDescription>Categories ranked by spent.</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4 xl:flex-row">
-        <div className="flex-1">
-          <ChartContainer
-            config={chartConfig}
-            className="mx-auto aspect-square h-72"
-          >
-            <PieChart>
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent hideLabel />}
-              />
-              <Pie
-                data={chartData}
-                dataKey="amount"
-                nameKey="category"
-                innerRadius={60}
-              />
-            </PieChart>
-          </ChartContainer>
-        </div>
-        <div className="flex-1 flex-col items-start justify-center">
-          {legendData.map((item) => (
-            <div key={item.value} className="flex w-full flex-col items-start">
-              <div className="flex w-full items-center gap-2 py-3">
-                <div
-                  className="h-4 w-4 rounded-sm"
-                  style={{ background: item.color }}
-                />
-                <div className="flex w-full justify-between">
-                  <span className="text-sm font-medium">{item.name}</span>
-                  <span className="text-muted-foreground text-sm">
-                    {currencyFormatter.format(item.amount)}
-                  </span>
-                </div>
-              </div>
-              <Progress value={total > 0 ? (item.amount / total) * 100 : 0} />
+        {isLoading && (
+          <>
+            <div className="flex flex-1 items-center justify-center">
+              <Skeleton className="aspect-square h-72 rounded-full" />
             </div>
-          ))}
-        </div>
+            <div className="flex flex-1 flex-col gap-4">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div key={index} className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-4 w-4 rounded-sm" />
+                    <Skeleton className="h-4 flex-1" />
+                  </div>
+                  <Skeleton className="h-2 w-full" />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+        {!isLoading && !hasAllocations && (
+          <p className="text-muted-foreground text-sm">No categories found</p>
+        )}
+        {!isLoading && hasAllocations && !hasSpending && (
+          <div className="flex w-full flex-col gap-3">
+            <p className="text-muted-foreground text-sm">
+              No spending yet — amounts will appear as you track expenses.
+            </p>
+            <CategorySpendingLegend items={legendData} />
+          </div>
+        )}
+        {!isLoading && hasAllocations && hasSpending && (
+          <>
+            <div className="flex-1">
+              <ChartContainer
+                config={chartConfig}
+                className="mx-auto aspect-square h-72"
+              >
+                <PieChart>
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                  />
+                  <Pie
+                    data={chartData}
+                    dataKey="amount"
+                    nameKey="category"
+                    innerRadius={60}
+                  />
+                </PieChart>
+              </ChartContainer>
+            </div>
+            <CategorySpendingLegend items={legendData} />
+          </>
+        )}
       </CardContent>
     </Card>
   )

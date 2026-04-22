@@ -15,7 +15,7 @@ const TIME_OPTIONS_BY_PERIOD: Record<
     { label: '30d', value: '30d' },
   ],
   yearly: [
-    { label: '1M', value: '1y' },
+    { label: '1M', value: '1m' },
     { label: '3M', value: '3m' },
     { label: '6M', value: '6m' },
     { label: '1Y', value: '1y' },
