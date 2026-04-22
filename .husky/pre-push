@@ -2,13 +2,13 @@
 echo "Pre-push: validating build..."
 
 # Fast fail if lockfile is out of sync
-npm ci --dry-run > /dev/null 2>&1 || {
-  echo "package-lock.json is out of sync with package.json. Run 'npm install' first."
+pnpm install --frozen-lockfile --prefer-offline > /dev/null 2>&1 || {
+  echo "pnpm-lock.yaml is out of sync with package.json. Run 'pnpm install' first."
   exit 1
 }
 
 # Full production build (vite build + tsc)
-npm run build || {
+pnpm run build || {
   echo "Build failed. Fix errors before pushing."
   exit 1
 }

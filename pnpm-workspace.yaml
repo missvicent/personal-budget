@@ -1,5 +1,6 @@
-allowBuilds:
-  '@clerk/shared': false
-  esbuild: false
-  supabase: false
-  unrs-resolver: false
+onlyBuiltDependencies:
+  - '@clerk/shared'
+  - esbuild
+  - supabase
+  - unrs-resolver
+

@@ -47,7 +47,7 @@ export const AllocationCard = ({
         borderLeftColor: isOverBudget ? 'var(--destructive)' : displayColor,
       }}
     >
-      <CardContent className="flex items-center justify-between gap-4 px-6">
+      <CardContent className="flex items-center justify-between gap-4 p-6">
         <div className="flex flex-col gap-3">
           <CircularProgress
             value={progressValue}

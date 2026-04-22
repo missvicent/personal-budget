@@ -20,7 +20,7 @@ const toggleGroupVariants = cva(
         ],
         segmented: [
           "justify-center overflow-hidden rounded-md border bg-white shadow-xs dark:bg-input/30",
-          "[&>*]:!h-10 [&>*]:!rounded-none [&>*]:!border-0 [&>*]:!shadow-none",
+          "[&>*]:!h-8 [&>*]:!min-w-0 [&>*]:px-4 [&>*]:!rounded-none [&>*]:!border-0 [&>*]:!shadow-none",
           "[&>*:not(:last-child)]:!border-r [&>*:not(:last-child)]:!border-border",
         ],
       },

@@ -14,9 +14,8 @@ vi.mock('@/routes/_app/budget/-components/dashboard/burn-chart', () => ({
   BurnChart: () => <div data-testid="burn-chart" />,
 }))
 
-const { useDashboardData } = await import(
-  '@/routes/_app/budget/-hooks/dashboard/use-dashboard-data'
-)
+const { useDashboardData } =
+  await import('@/routes/_app/budget/-hooks/dashboard/use-dashboard-data')
 
 describe('DashboardPage', () => {
   it('renders a skeleton while loading', () => {

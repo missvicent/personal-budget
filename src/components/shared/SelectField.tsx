@@ -8,11 +8,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-export interface SelectFieldProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof SelectTrigger>,
-    'value' | 'onChange'
-  > {
+export interface SelectFieldProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof SelectTrigger>,
+  'value' | 'onChange'
+> {
   placeholder?: string
   items: Array<{ label: string; value: string; disabled?: boolean }>
   value: string

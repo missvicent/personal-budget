@@ -19,9 +19,8 @@ vi.mock('@/hooks/transactions/use-transaction-with-categories', () => ({
 
 const { useBudgetOverview } = await import('@/hooks/budget/use-budget-overview')
 const { useAllocations } = await import('@/hooks/allocation/use-allocation')
-const { useGetTransactionsWithCategories } = await import(
-  '@/hooks/transactions/use-transaction-with-categories'
-)
+const { useGetTransactionsWithCategories } =
+  await import('@/hooks/transactions/use-transaction-with-categories')
 
 function mockQuery<TResult>(data: unknown, isLoading = false): TResult {
   return { data, isLoading, isError: false, error: null } as unknown as TResult

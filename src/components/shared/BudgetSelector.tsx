@@ -78,10 +78,10 @@ export const BudgetSelector = ({
           />
         </SelectValue>
       </SelectTrigger>
-      <SelectContent className="max-h-94 overflow-y-auto">
+      <SelectContent className="max-h-94 min-w-96 overflow-y-auto">
         {items.map((group, index) => (
           <SelectGroup key={group.groupLabel}>
-            <SelectLabel className="mb-2 p-2 pb-0">
+            <SelectLabel className="mb-2 p-2 pb-0 capitalize">
               {group.groupLabel}
             </SelectLabel>
             {group.items.map((item) => (

@@ -1,3 +1,6 @@
-// Barrel export for ia-insights route components
-// Add component exports here as they are created
-// Example: export { InsightsChart } from './InsightsChart'
+export * from './AnomalyRow'
+export * from './CategorySpendingChart'
+export * from './InsightsSummary'
+export * from './PeriodRangeSelector'
+export * from './TimeRangeSelector'
+export * from './TopOutliners'

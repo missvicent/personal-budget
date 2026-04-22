@@ -22,7 +22,9 @@ export const BudgetSelectorItem = ({
       </div>
       {description && (
         <div className="flex min-w-0 flex-row items-center justify-end gap-2">
-          <span className="truncate">{description}</span>
+          <span className="text-muted-foreground truncate text-xs">
+            {description}
+          </span>
         </div>
       )}
     </div>

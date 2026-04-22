@@ -12,18 +12,9 @@ export const PeriodRangeSelector = ({
   onValueChange,
 }: PeriodRangeSelectorProps) => {
   return (
-    <ToggleGroup
-      type="single"
-      value={value}
-      onValueChange={onValueChange}
-      className="w-full"
-    >
+    <ToggleGroup type="single" value={value} onValueChange={onValueChange}>
       {options.map((option) => (
-        <ToggleGroupItem
-          key={option.value}
-          value={option.value}
-          className="flex-1"
-        >
+        <ToggleGroupItem key={option.value} value={option.value}>
           {option.label}
         </ToggleGroupItem>
       ))}
