@@ -8,7 +8,7 @@ interface CreateCardProps {
 
 export const CreateCard = ({ children, onClick }: CreateCardProps) => {
   return (
-    <Card variant="dashed" className="flex h-78 items-center justify-center">
+    <Card className="border-brand/60 text-brand flex h-78 items-center justify-center border-2 border-dashed bg-white dark:bg-white/[0.05]">
       <CardContent>
         <button
           type="button"
