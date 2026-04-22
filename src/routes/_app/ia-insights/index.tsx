@@ -1,9 +1,15 @@
-import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { PeriodRangeSelector } from './-components/PeriodRangeSelector'
-import { TimeRangeSelector } from './-components/TimeRangeSelector'
-import { staticToolbarMeta } from '@/lib/toolbar'
+import {
+  CategorySpendingChart,
+  InsightsSummary,
+  TimeRangeSelector,
+  TopOutliners,
+} from './-components'
+import { useInsightFilters } from './-hooks/use-insight-filters'
+import type { ChartConfig } from '@/components/ui/chart'
+import type { Anomaly } from '@/types/insights.types'
 import { BudgetSelector } from '@/components/shared/BudgetSelector'
+import { staticToolbarMeta } from '@/lib/toolbar'
 
 export const Route = createFileRoute('/_app/ia-insights/')({
   beforeLoad: staticToolbarMeta({
@@ -14,81 +20,97 @@ export const Route = createFileRoute('/_app/ia-insights/')({
   component: RouteComponent,
 })
 
-const items = [
-  {
-    groupLabel: 'Income',
-    items: [
-      {
-        label: 'Salary',
-        value: 'salary',
-        description: 'Monthly salary',
-        color: '#ff0000',
-        icon: 'S',
-        selectedOptionLabel: 'monthly',
-      },
-      {
-        label: 'Bonus',
-        value: 'bonus',
-        description: 'Annual bonus',
-        color: '#00ff00',
-        icon: 'B',
-        selectedOptionLabel: 'yearly',
-      },
-      {
-        label: 'Freelance',
-        value: 'freelance',
-        description: 'Freelance income',
-        color: '#0000ff',
-        icon: 'F',
-        selectedOptionLabel: 'monthly',
-      },
-    ],
-  },
-  {
-    groupLabel: 'Expenses',
-    items: [{ label: 'Food', value: 'food' }],
-  },
+const insights = {
+  totalSpending: 1000,
+  totalIncome: 1500,
+  totalExpenses: 500,
+  totalNet: 1000,
+}
+
+const chartData = [
+  { category: 'income', amount: 500, fill: 'var(--color-income)' },
+  { category: 'expenses', amount: 300, fill: 'var(--color-expenses)' },
 ]
 
-const options = [
-  { label: 'Monthly', value: 'monthly' },
-  { label: 'Yearly', value: 'yearly' },
-]
+const chartConfig = {
+  income: { label: 'Income', color: '#00ff00' },
+  expenses: { label: 'Expenses', color: '#ff0000' },
+} satisfies ChartConfig
 
-const timeOptions = [
-  { label: '1M', value: '1m' },
-  { label: '3M', value: '3m' },
-  { label: '6M', value: '6m' },
-  { label: '1Y', value: '1y' },
-]
+const anomalies = [
+  {
+    id: '1',
+    amount: 100,
+    type: 'spike',
+    category_name: 'Food',
+    color: '#ff0000',
+    icon: 'F',
+    severity: 'low',
+    message: 'Food spending is too high',
+  },
+  {
+    id: '2',
+    amount: 100,
+    type: 'spike',
+    category_name: 'Food',
+    color: '#ff0000',
+    icon: 'F',
+    severity: 'medium',
+    message: 'Food spending is too high',
+  },
+  {
+    id: '3',
+    amount: 100,
+    type: 'spike',
+    category_name: 'Food',
+    color: '#ff0000',
+    severity: 'high',
+    message: 'Food spending is too high',
+    icon: 'F',
+  },
+] satisfies Array<Anomaly>
 
 function RouteComponent() {
-  const [selectedBudget, setSelectedBudget] = useState<string>('')
-  const [selectedPeriod, setSelectedPeriod] = useState<string>('monthly')
-  const [selectedTime, setSelectedTime] = useState<string>('1m')
+  const {
+    budgetOptions,
+    handleBudgetChange,
+    handleTimeChange,
+    selectedBudget,
+    selectedTime,
+    timeOptions,
+  } = useInsightFilters()
 
   return (
-    <div className="flex">
-      <div className="w-full p-4 md:w-1/2 xl:w-1/7">
-        <BudgetSelector
-          items={items}
-          onChange={setSelectedBudget}
-          value={selectedBudget}
-        />
+    <div className="flex w-full flex-col gap-3">
+      <div className="flex flex-wrap items-center gap-3 px-5 pt-2">
+        <div className="w-full sm:w-fit">
+          <BudgetSelector
+            items={budgetOptions}
+            onChange={handleBudgetChange}
+            value={selectedBudget}
+          />
+        </div>
+        <div className="w-full sm:w-auto">
+          <TimeRangeSelector
+            options={timeOptions}
+            value={selectedTime}
+            onValueChange={handleTimeChange}
+          />
+        </div>
       </div>
-      <div className="w-full p-4 md:w-1/2 xl:w-1/7">
-        <PeriodRangeSelector
-          options={options}
-          value={selectedPeriod}
-          onValueChange={setSelectedPeriod}
-        />
+      <div className="flex w-full px-5">
+        <InsightsSummary insights={insights} />
       </div>
-      <div className="w-full p-4 md:w-1/2 xl:w-1/7">
-        <TimeRangeSelector
-          options={timeOptions}
-          value={selectedTime}
-          onValueChange={setSelectedTime}
-        />
+      <div className="flex w-full gap-3 px-5">
+        <div className="flex w-full xl:w-1/2">
+          <CategorySpendingChart
+            chartData={chartData}
+            chartConfig={chartConfig}
+          />
+        </div>
+        <div className="flex w-full xl:w-1/2">
+          <TopOutliners anomalies={anomalies} />
+        </div>
       </div>
     </div>
   )

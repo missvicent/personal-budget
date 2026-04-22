@@ -56,7 +56,7 @@ export const GoalCard = ({
 
   return (
     <Card
-      className="rounded-2xl border-l-4"
+      className="rounded-2xl border-l-4 pt-4"
       style={{ borderLeftColor: progressColor }}
     >
       <CardContent className="flex flex-col gap-4 px-6">
