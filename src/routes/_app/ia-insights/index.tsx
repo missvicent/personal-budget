@@ -6,7 +6,7 @@ import {
   TopOutliners,
 } from './-components'
 import { useInsightFilters } from './-hooks/use-insight-filters'
-import type { ChartConfig } from '@/components/ui/chart'
+import { useBudgetAllocations } from './-hooks/use-budget-allocations-chart'
 import type { Anomaly } from '@/types/insights.types'
 import { BudgetSelector } from '@/components/shared/BudgetSelector'
 import { staticToolbarMeta } from '@/lib/toolbar'
@@ -26,16 +26,6 @@ const insights = {
   totalExpenses: 500,
   totalNet: 1000,
 }
-
-const chartData = [
-  { category: 'income', amount: 500, fill: 'var(--color-income)' },
-  { category: 'expenses', amount: 300, fill: 'var(--color-expenses)' },
-]
-
-const chartConfig = {
-  income: { label: 'Income', color: '#00ff00' },
-  expenses: { label: 'Expenses', color: '#ff0000' },
-} satisfies ChartConfig
 
 const anomalies = [
   {
@@ -80,6 +70,9 @@ function RouteComponent() {
     timeOptions,
   } = useInsightFilters()
 
+  const { allocations, chartData, chartConfig, isLoading } =
+    useBudgetAllocations(selectedBudget)
+
   return (
     <div className="flex w-full flex-col gap-3">
       <div className="flex flex-wrap items-center gap-3 px-5 pt-2">
@@ -99,13 +92,15 @@ function RouteComponent() {
         </div>
       </div>
       <div className="flex w-full px-5">
-        <InsightsSummary insights={insights} />
+        <InsightsSummary insights={insights} isLoading={isLoading} />
       </div>
       <div className="flex w-full gap-3 px-5">
         <div className="flex w-full xl:w-1/2">
           <CategorySpendingChart
             chartData={chartData}
             chartConfig={chartConfig}
+            allocations={allocations}
+            isLoading={isLoading}
           />
         </div>
         <div className="flex w-full xl:w-1/2">
