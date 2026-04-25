@@ -36,6 +36,7 @@ body {
   --radius-xl: calc(var(--radius) + 4px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-content-foreground: var(--content-foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -130,7 +131,7 @@ body {
 
   /* Sidebar — matches content with subtle offset */
   --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.4 0 0);
+  --sidebar-foreground: var(--content-foreground);
   --sidebar-primary: oklch(0.62 0.16 290);
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.96 0 0);
@@ -145,11 +146,16 @@ body {
 
   /* Content */
   --content-background: oklch(0.955 0 0);
+  --content-foreground: oklch(0.4 0 0);
 
   /* Card text */
   --card-text-primary: inherit;
   --card-text-secondary: inherit;
   --card-text-muted: inherit;
+
+  /* Budget period chip colors */
+  --color-period-monthly: var(--primary);
+  --color-period-yearly: var(--purple-muted);
 }
 
 .dark {
@@ -199,7 +205,7 @@ body {
 
   /* Sidebar — matches content with subtle offset */
   --sidebar: oklch(0.17 0 0);
-  --sidebar-foreground: oklch(0.7 0 0);
+  --sidebar-foreground: var(--content-foreground);
   --sidebar-primary: oklch(0.63 0.22 290);
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.22 0 0);
@@ -214,11 +220,16 @@ body {
 
   /* Content */
   --content-background: oklch(0.15 0 0);
+  --content-foreground: oklch(0.7 0 0);
 
   /* Card text */
   --card-text-primary: oklch(0.93 0 0);
   --card-text-secondary: oklch(0.6 0 0);
   --card-text-muted: oklch(0.4 0 0);
+
+  /* Budget period chip colors */
+  --color-period-monthly: var(--primary);
+  --color-period-yearly: var(--purple-muted);
 }
 
 /* =================================

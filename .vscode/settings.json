@@ -1,6 +1,7 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
+  "npm.packageManager": "pnpm",
   "files.watcherExclude": {
     "**/routeTree.gen.ts": true
   },

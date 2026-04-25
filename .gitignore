@@ -1,4 +1,6 @@
 node_modules
+package-lock.json
+yarn.lock
 .DS_Store
 dist
 dist-ssr
@@ -17,3 +19,6 @@ count.txt
 docs/
 .vscode/
 .agents/
+
+#Ignore cursor AI rules
+.cursor/rules/codacy.mdc

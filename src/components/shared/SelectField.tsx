@@ -8,11 +8,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-export interface SelectFieldProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof SelectTrigger>,
-    'value' | 'onChange'
-  > {
+export interface SelectFieldProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof SelectTrigger>,
+  'value' | 'onChange'
+> {
   placeholder?: string
   items: Array<{ label: string; value: string; disabled?: boolean }>
   value: string
@@ -34,7 +33,7 @@ export const SelectField = ({
 
   return (
     <Select value={value} onValueChange={handleChange} disabled={disabled}>
-      <SelectTrigger {...triggerProps}>
+      <SelectTrigger className="rounded-full" {...triggerProps}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className="max-h-94 overflow-y-auto">

@@ -8,6 +8,17 @@ export type {
   DebtType,
   UpdateDebt,
 } from './debt.types'
+export type {
+  AIInsightsResponse,
+  AIRecommendation,
+  Anomaly,
+  CategoryBreakdown,
+  DebtSummary,
+  GoalProgress,
+  InsightSummary,
+  InsightsResponse,
+  Pattern,
+} from './insights.types'
 export type { Profile } from './profile.types'
 export type {
   PaginatedResponse,
@@ -16,3 +27,4 @@ export type {
   TransactionWithCategory,
 } from './transaction.types'
 export type { UserSettings } from './user-settings.types'
+export type { SelectOptionGroup, SelectOptionItem } from './selectOptions.types'

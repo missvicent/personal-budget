@@ -2,8 +2,10 @@ import * as React from 'react'
 import { DollarSign } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 
-export interface CurrencyInputProps
-  extends Omit<React.ComponentProps<'input'>, 'value' | 'onChange'> {
+export interface CurrencyInputProps extends Omit<
+  React.ComponentProps<'input'>,
+  'value' | 'onChange'
+> {
   value: number
   onChange: (value: number) => void
 }
@@ -17,7 +19,7 @@ export const CurrencyInput = React.forwardRef<
     <Input
       inputMode="decimal"
       ref={ref}
-      className={`dark:bg-input/30 bg-white pl-9 ${className ?? ''}`}
+      className={`dark:bg-input/30 rounded-full bg-white pl-9 ${className ?? ''}`}
       value={value || ''}
       onChange={(e) => onChange(Number(e.target.value))}
       {...rest}
