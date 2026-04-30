@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { Budget } from '@/types/database.types'
+import type { CreateBudget, UpdateBudget } from '@/types/database.types'
 import { calculatePeriod } from '@/lib/dates/calculatePeriod'
 
 export const budgetSchema = z.object({
@@ -20,13 +20,12 @@ export const budgetFormDefaults: BudgetFormData = {
   start_date: '',
 }
 
-export function toBudgetRequestBody(data: BudgetFormData): Budget {
-  const { amount, period, start_date, name, is_active, id } = data
+export function toBudgetRequestBody(data: BudgetFormData): CreateBudget {
+  const { amount, period, start_date, name, is_active } = data
   return {
-    id: id ?? undefined,
     amount,
     name,
-    period,
+    period: period ?? 'monthly',
     start_date,
     end_date: calculatePeriod(
       new Date(start_date),
@@ -39,8 +38,11 @@ export function toBudgetRequestBody(data: BudgetFormData): Budget {
 export function toUpdateRequestBody(
   data: BudgetFormData,
   dirtyFields: Partial<Record<keyof BudgetFormData, boolean>>,
-): Budget {
+): UpdateBudget & { id: string } {
   const { amount, period, start_date, name, is_active, id } = data
+  if (!id) {
+    throw new Error('toUpdateRequestBody requires an id on the form data')
+  }
   const shouldRecalculateEndDate = dirtyFields.start_date || dirtyFields.period
 
   return {

@@ -1,8 +1,12 @@
 import type { Profile } from '@/types/database.types'
+import type { TablesInsert } from '@/lib/supabase/types'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const profilesService = {
-  get: async (userId: string, supabase: SupabaseClient): Promise<any> => {
+  get: async (
+    userId: string,
+    supabase: SupabaseClient,
+  ): Promise<Profile | null> => {
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
@@ -12,19 +16,13 @@ export const profilesService = {
     if (error && error.code !== 'PGRST116') throw error
     return data
   },
-  create: async (profile: Profile, supabase: SupabaseClient): Promise<any> => {
-    const { userId, email, fullName, avatarUrl } = profile
+  create: async (
+    profile: TablesInsert<'profiles'>,
+    supabase: SupabaseClient,
+  ): Promise<Profile> => {
     const { data, error } = await supabase
       .from('profiles')
-      .upsert(
-        {
-          clerk_user_id: userId,
-          email: email,
-          full_name: fullName,
-          avatar_url: avatarUrl,
-        },
-        { onConflict: 'clerk_user_id' },
-      )
+      .upsert(profile, { onConflict: 'clerk_user_id' })
       .select()
       .single()
     if (error) throw error

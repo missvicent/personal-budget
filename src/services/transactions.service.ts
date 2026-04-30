@@ -1,8 +1,10 @@
 import type {
+  CreateTransaction,
   PaginatedResponse,
   Transaction,
   TransactionFilters,
   TransactionWithCategory,
+  UpdateTransaction,
 } from '@/types/database.types'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
@@ -52,7 +54,7 @@ export const transactionsService = {
     }
   },
   create: async (
-    transaction: Omit<Transaction, 'id' | 'created_at' | 'updated_at'>,
+    transaction: CreateTransaction,
     supabase: SupabaseClient,
   ): Promise<Transaction> => {
     const { data, error } = await supabase
@@ -69,7 +71,7 @@ export const transactionsService = {
   },
   update: async (
     id: string,
-    transaction: Partial<Transaction & { id: string }>,
+    transaction: UpdateTransaction,
     supabase: SupabaseClient,
   ): Promise<Transaction> => {
     const { data, error } = await supabase

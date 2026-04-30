@@ -1,9 +1,13 @@
-import type { Allocation } from '@/types/database.types'
+import type {
+  Allocation,
+  CreateAllocation,
+  UpdateAllocation,
+} from '@/types/database.types'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const allocationService = {
   create: async (
-    allocation: Omit<Allocation, 'id' | 'created_at' | 'updated_at'>,
+    allocation: CreateAllocation,
     supabase: SupabaseClient,
   ): Promise<Allocation> => {
     const { data, error } = await supabase
@@ -28,7 +32,7 @@ export const allocationService = {
   },
   update: async (
     id: string,
-    allocation: Partial<Allocation>,
+    allocation: UpdateAllocation,
     supabase: SupabaseClient,
   ): Promise<Allocation> => {
     const { data, error } = await supabase
