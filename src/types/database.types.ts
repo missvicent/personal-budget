@@ -20,5 +20,10 @@ export type {
   TransactionFilters,
   TransactionWithCategory,
 } from './transaction.types'
-export type { Goal, GoalWithProgress } from './goal.types'
+export type {
+  CreateGoal,
+  Goal,
+  GoalWithProgress,
+  UpdateGoal,
+} from './goal.types'
 export type { UserSettings } from './user-settings.types'

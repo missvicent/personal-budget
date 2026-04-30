@@ -1,20 +1,11 @@
-export interface Goal {
-  id?: string
-  user_id?: string
-  name: string
-  target_amount: number
-  current_amount?: number
-  target_date?: string | null
-  category?: string | null
-  notes?: string | null
-  is_achieved?: boolean
-  achieved_date?: string | null
-  created_at?: string
-  updated_at?: string
-}
+import type { Tables, TablesInsert, TablesUpdate } from '@/lib/supabase/types'
 
+export type Goal = Tables<'goals'>
+export type CreateGoal = TablesInsert<'goals'>
+export type UpdateGoal = TablesUpdate<'goals'>
+
+// Domain projection — output of get_goals_with_progress RPC, not a raw row.
 export interface GoalWithProgress extends Goal {
-  id: string
   current_amount: number
   budget_contributions: number
   direct_contributions: number

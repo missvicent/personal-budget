@@ -1,4 +1,9 @@
-import type { Goal, GoalWithProgress } from '@/types/database.types'
+import type {
+  CreateGoal,
+  Goal,
+  GoalWithProgress,
+  UpdateGoal,
+} from '@/types/database.types'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const goalService = {
@@ -10,10 +15,7 @@ export const goalService = {
     return data
   },
 
-  create: async (
-    goal: Omit<Goal, 'id' | 'created_at' | 'updated_at'>,
-    supabase: SupabaseClient,
-  ): Promise<Goal> => {
+  create: async (goal: CreateGoal, supabase: SupabaseClient): Promise<Goal> => {
     const { data, error } = await supabase
       .from('goals')
       .insert(goal)
@@ -25,7 +27,7 @@ export const goalService = {
 
   update: async (
     id: string,
-    goal: Partial<Goal>,
+    goal: UpdateGoal,
     supabase: SupabaseClient,
   ): Promise<Goal> => {
     const { data, error } = await supabase
