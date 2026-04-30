@@ -3,7 +3,12 @@ export type {
   Allocation,
   Budget,
   BudgetOverview,
+  BudgetPeriod,
   BudgetWithProgress,
+  CreateAllocation,
+  CreateBudget,
+  UpdateAllocation,
+  UpdateBudget,
 } from './budget.types'
 export type { Category } from './category.types'
 export type {

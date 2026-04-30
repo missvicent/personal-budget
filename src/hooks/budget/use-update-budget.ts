@@ -1,17 +1,19 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuthMutation } from '../auth/use-auth-mutation'
 import { useBudgetQueryKeys } from './use-budget-query-keys'
-import type { Budget, BudgetOverview } from '@/types/database.types'
+import type { BudgetOverview, UpdateBudget } from '@/types/database.types'
 import { budgetService } from '@/services/budget.service'
 import { toBudgetOverview } from '@/lib/mappers/budget'
+
+type UpdateBudgetWithId = UpdateBudget & { id: string }
 
 export const useUpdateBudget = () => {
   const queryClient = useQueryClient()
   return useAuthMutation(
-    (budget: Budget, supabase) =>
-      budgetService.update(budget.id || '', budget, supabase),
+    (budget: UpdateBudgetWithId, supabase) =>
+      budgetService.update(budget.id, budget, supabase),
     {
-      onMutate: async (budget: Budget) => {
+      onMutate: async (budget: UpdateBudgetWithId) => {
         const queryKey = useBudgetQueryKeys().overview()
         await queryClient.cancelQueries({ queryKey })
         const previousBudgets =

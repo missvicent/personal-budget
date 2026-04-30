@@ -1,4 +1,9 @@
-import type { Budget, BudgetOverview } from '@/types/database.types'
+import type {
+  Budget,
+  BudgetOverview,
+  BudgetPeriod,
+  UpdateBudget,
+} from '@/types/database.types'
 import type {
   SelectOptionGroup,
   SelectOptionItem,
@@ -11,7 +16,15 @@ const PERIOD_COLORS: Record<BudgetOverview['period'], string> = {
   yearly: 'var(--color-period-yearly)',
 }
 
-export const toBudget = (overview: BudgetOverview): Budget => ({
+// Subset of Budget fields that BudgetOverview can populate. Audit/server fields
+// (archived_at, created_at, updated_at, user_id) aren't surfaced by the
+// get_budgets_overview RPC, so they can't round-trip through this mapper.
+type BudgetSummary = Pick<
+  Budget,
+  'id' | 'name' | 'amount' | 'period' | 'start_date' | 'end_date' | 'is_active'
+>
+
+export const toBudget = (overview: BudgetOverview): BudgetSummary => ({
   id: overview.budget_id,
   name: overview.budget_name,
   amount: overview.budget_amount,
@@ -22,16 +35,16 @@ export const toBudget = (overview: BudgetOverview): Budget => ({
 })
 
 export const toBudgetOverview = (
-  budget: Budget,
+  budget: UpdateBudget,
   existing: BudgetOverview,
 ): BudgetOverview => ({
   ...existing,
-  budget_name: budget.name,
-  budget_amount: budget.amount,
-  period: budget.period ?? existing.period,
-  start_date: budget.start_date,
+  budget_name: budget.name ?? existing.budget_name,
+  budget_amount: budget.amount ?? existing.budget_amount,
+  period: (budget.period as BudgetPeriod | undefined) ?? existing.period,
+  start_date: budget.start_date ?? existing.start_date,
   end_date: budget.end_date ?? existing.end_date,
-  is_active: budget.is_active,
+  is_active: budget.is_active ?? existing.is_active,
 })
 
 export const toBudgetOption = (budget: BudgetOverview): SelectOptionItem => ({

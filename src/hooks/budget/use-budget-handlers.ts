@@ -18,21 +18,24 @@ export const useBudgetHandlers = (
     data: BudgetFormData,
     dirtyFields: Partial<Record<keyof BudgetFormData, boolean>>,
   ) => {
-    const isUpdate = !!selectedBudget
-    const body = isUpdate
-      ? toUpdateRequestBody({ ...data, id: selectedBudget.id }, dirtyFields)
-      : toBudgetRequestBody(data)
-    const action = isUpdate ? mutations.update : mutations.create
-    const message = isUpdate
-      ? 'Budget updated successfully'
-      : 'Budget created successfully'
-
-    action(body, {
-      onSuccess: () => {
-        toast.success(message)
-        onSuccess()
-      },
-    })
+    if (selectedBudget) {
+      mutations.update(
+        toUpdateRequestBody({ ...data, id: selectedBudget.id }, dirtyFields),
+        {
+          onSuccess: () => {
+            toast.success('Budget updated successfully')
+            onSuccess()
+          },
+        },
+      )
+    } else {
+      mutations.create(toBudgetRequestBody(data), {
+        onSuccess: () => {
+          toast.success('Budget created successfully')
+          onSuccess()
+        },
+      })
+    }
   }
 
   const handleDelete = (id: string) => {

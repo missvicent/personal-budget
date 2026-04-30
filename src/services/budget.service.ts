@@ -2,6 +2,8 @@ import type {
   Budget,
   BudgetOverview,
   BudgetWithProgress,
+  CreateBudget,
+  UpdateBudget,
 } from '@/types/database.types'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
@@ -22,7 +24,7 @@ export const budgetService = {
     return data
   },
   create: async (
-    budget: Omit<Budget, 'id' | 'created_at' | 'updated_at'>,
+    budget: CreateBudget,
     supabase: SupabaseClient,
   ): Promise<Budget> => {
     const { data, error } = await supabase
@@ -39,7 +41,7 @@ export const budgetService = {
   },
   update: async (
     id: string,
-    budget: Partial<Omit<Budget, 'id' | 'created_at' | 'updated_at'>>,
+    budget: UpdateBudget,
     supabase: SupabaseClient,
   ): Promise<Budget> => {
     const { data, error } = await supabase
