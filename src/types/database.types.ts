@@ -20,10 +20,13 @@ export type {
 } from './debt.types'
 export type { Profile } from './profile.types'
 export type {
+  CreateTransaction,
   PaginatedResponse,
   Transaction,
   TransactionFilters,
+  TransactionType,
   TransactionWithCategory,
+  UpdateTransaction,
 } from './transaction.types'
 export type {
   CreateGoal,

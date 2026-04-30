@@ -1,28 +1,18 @@
-export interface Transaction {
-  account_id?: string | null
-  amount: number
-  budget_id?: string | null
-  category_id: string | null
-  created_at?: string | null
-  description: string | null
-  goal_id?: string | null
-  id?: string
-  is_recurring?: boolean | null
-  merchant?: string | null
-  note?: string | null
-  recurring_id?: string | null
-  tags?: Array<string> | null
-  transaction_date: Date | string
-  type: 'income' | 'expense'
-  updated_at?: string | null
-  user_id?: string
-}
+import type { Tables, TablesInsert, TablesUpdate } from '@/lib/supabase/types'
 
+// type is stored as text + CHECK; narrow back to the union for ergonomics.
+export type TransactionType = 'income' | 'expense'
+
+export type Transaction = Tables<'transactions'> & { type: TransactionType }
+export type CreateTransaction = TablesInsert<'transactions'>
+export type UpdateTransaction = TablesUpdate<'transactions'>
+
+// Domain projection — output of joined fetch with categories.
 export interface TransactionWithCategory {
   amount: number
   budget_id?: string
   category_id: string
-  category_type: 'income' | 'expense'
+  category_type: TransactionType
   color: string
   description: string
   icon: string
@@ -32,6 +22,7 @@ export interface TransactionWithCategory {
   transaction_date: string
 }
 
+// UI filter shape — not a row.
 export interface TransactionFilters {
   accountId?: string
   categoryId?: string
@@ -39,9 +30,10 @@ export interface TransactionFilters {
   page?: number
   pageSize?: number
   startDate?: string
-  type?: 'income' | 'expense'
+  type?: TransactionType
 }
 
+// Generic pagination wrapper — not a row.
 export interface PaginatedResponse<T> {
   data: Array<T>
   hasMore: boolean
