@@ -1,6 +1,3 @@
-export interface UserSettings {
-  user_id: string
-  dark_mode: boolean
-  created_at: string
-  updated_at: string
-}
+import type { Tables } from '@/lib/supabase/types'
+
+export type UserSettings = Tables<'user_settings'>
