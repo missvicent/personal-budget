@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useUser } from '@clerk/clerk-react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { Profile } from '@/types/database.types'
 import { useSupabase } from '@/contexts/SupabaseContext'
 import { profilesService } from '@/services/profiles.service'
 
@@ -31,11 +30,11 @@ export function useSyncUser() {
       if (!user) throw new Error('User or session not found')
       return profilesService.create(
         {
-          userId: user.id,
+          clerk_user_id: user.id,
           email: user.primaryEmailAddress?.emailAddress || '',
-          fullName: user.fullName || '',
-          avatarUrl: user.imageUrl,
-        } as Profile,
+          full_name: user.fullName,
+          avatar_url: user.imageUrl,
+        },
         supabase,
       )
     },
