@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo } from 'react'
 import { useAuth } from '@clerk/clerk-react'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { createSupabaseClient } from '@/lib/supabaseClient'
+import { createSupabaseClient } from '@/lib/supabase-client'
 
 const SupabaseContext = createContext<SupabaseClient | null>(null)
 
