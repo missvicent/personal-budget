@@ -7,17 +7,17 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { currencyFormatter } from '@/lib/format'
 
 export interface InsightsSummaryStats {
-  totalSpending: number
-  totalIncome: number
-  totalExpenses: number
-  totalNet: number
+  total_spending: number
+  total_income: number
+  total_expenses: number
+  net: number
 }
 
 const STATS = [
-  { key: 'totalSpending', label: 'Total Spending' },
-  { key: 'totalIncome', label: 'Total Income' },
-  { key: 'totalExpenses', label: 'Total Expenses' },
-  { key: 'totalNet', label: 'Net' },
+  { key: 'total_spending', label: 'Total Spending' },
+  { key: 'total_income', label: 'Total Income' },
+  { key: 'total_expenses', label: 'Total Expenses' },
+  { key: 'net', label: 'Net' },
 ] as const satisfies ReadonlyArray<{
   key: keyof InsightsSummaryStats
   label: string
