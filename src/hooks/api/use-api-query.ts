@@ -11,7 +11,12 @@ export const useApiQuery = <T>(
   const api = useAuthedFetch()
   return useQuery<T, Error, T>({
     queryKey,
-    queryFn: ({ signal }) => queryFn(api, signal),
+    queryFn: ({
+      signal,
+    }: {
+      signal?: AbortSignal
+      params?: Record<string, string>
+    }) => queryFn(api, signal),
     ...queryOptions,
     enabled: queryOptions.enabled ?? true,
   })
