@@ -44,7 +44,7 @@ function RouteComponent() {
   )
 
   return (
-    <div className="flex w-full flex-col gap-3">
+    <div className="flex w-full flex-col gap-3 py-8">
       <div className="flex flex-wrap items-center gap-3 px-5 pt-2">
         <div className="w-full sm:w-fit">
           <BudgetSelector
