@@ -8,7 +8,7 @@ export const useAuthedFetch = () => {
 
   const withToken = useCallback(
     async <T>(fn: (token: string) => Promise<T>): Promise<T> => {
-      const token = await getToken({ template: 'api' })
+      const token = await getToken({ template: 'supabase' })
       if (!token) throw new Error('No token found')
       return fn(token)
     },
