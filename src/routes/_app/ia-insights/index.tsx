@@ -1,14 +1,12 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import {
   AdviceCards,
-  CategorySpendingChart,
   EmptyInsightsState,
   InsightsSummary,
   TimeRangeSelector,
   TopOutliners,
 } from './-components'
 import { useInsightFilters } from './-hooks/use-insight-filters'
-import { useBudgetAllocations } from './-hooks/use-budget-allocations-chart'
 import { BudgetSelector } from '@/components/shared/BudgetSelector'
 import { Button } from '@/components/ui/button'
 import { staticToolbarMeta } from '@/lib/toolbar'
@@ -36,13 +34,6 @@ function RouteComponent() {
 
   const { data: budgets } = useBudgetOverview()
   const totals = useInsightsTotals(selectedBudget, selectedTime)
-
-  const {
-    allocations,
-    chartData,
-    chartConfig,
-    isLoading: isChartLoading,
-  } = useBudgetAllocations(selectedBudget)
 
   const hasBudgets = (budgets?.length ?? 0) > 0
   const canRunInsights = hasBudgets && totals.has_transactions
@@ -113,14 +104,6 @@ function RouteComponent() {
                   </Link>
                 </Button>
               }
-            />
-          </div>
-          <div className="flex w-full px-5">
-            <CategorySpendingChart
-              chartData={chartData}
-              chartConfig={chartConfig}
-              allocations={allocations}
-              isLoading={isChartLoading}
             />
           </div>
         </>
