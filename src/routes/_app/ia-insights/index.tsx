@@ -3,7 +3,7 @@ import {
   AdviceCards,
   CategorySpendingChart,
   EmptyInsightsState,
-  InsightsSummary,
+  PeriodKpiGrid,
   TimeRangeSelector,
   TopOutliners,
 } from './-components'
@@ -82,15 +82,7 @@ function RouteComponent() {
       ) : (
         <>
           <div className="flex w-full px-5">
-            <InsightsSummary
-              insights={{
-                total_spending: totals.total_spending,
-                total_income: totals.total_income,
-                total_expenses: totals.total_expenses,
-                net: totals.net,
-              }}
-              isLoading={totals.isLoading}
-            />
+            <PeriodKpiGrid budgetId={selectedBudget} />
           </div>
           <div className="flex w-full px-5">
             <AdviceCards
