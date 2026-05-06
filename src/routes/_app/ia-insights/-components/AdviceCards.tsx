@@ -1,11 +1,18 @@
-import { AdviceCard } from './AdviceCard'
-import type { AdviceCardProps } from './AdviceCard'
+import { AdviceRow } from './AdviceRow'
+import type { AdviceRowProps } from './AdviceRow'
 import type {
   AIRecommendation,
   Anomaly,
   AnomalySeverity,
   InsightSummary,
 } from '@/types/insights.types'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { currencyFormatter } from '@/lib/format'
 
 type AdviceCardsProps = {
@@ -14,7 +21,7 @@ type AdviceCardsProps = {
   isLoading: boolean
 }
 
-type AdviceItem = Omit<AdviceCardProps, 'isLoading'>
+type AdviceItem = Omit<AdviceRowProps, 'isLoading'>
 
 const SEVERITY_ORDER: Record<AnomalySeverity, number> = {
   high: 0,
@@ -72,9 +79,22 @@ const buildItems = (
 ]
 
 export const AdviceCards = ({ summary, ai, isLoading }: AdviceCardsProps) => (
-  <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
-    {buildItems(summary, ai).map((item) => (
-      <AdviceCard key={item.variant} {...item} isLoading={isLoading} />
-    ))}
-  </div>
+  <Card className="w-full">
+    <CardHeader className="flex flex-col items-start">
+      <CardTitle className="text-content-foreground flex items-start gap-2">
+        <span className="text-base">Insights</span>
+        <span className="text-muted-foreground text-sm">by AI</span>
+      </CardTitle>
+      <CardDescription>
+        Patterns, outliers, and opportunities detected this period
+      </CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div className="divide-border flex flex-col divide-y">
+        {buildItems(summary, ai).map((item) => (
+          <AdviceRow key={item.variant} {...item} isLoading={isLoading} />
+        ))}
+      </div>
+    </CardContent>
+  </Card>
 )

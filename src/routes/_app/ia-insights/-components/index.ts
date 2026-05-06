@@ -1,4 +1,4 @@
-export * from './AdviceCard'
+export * from './AdviceRow'
 export * from './AdviceCards'
 export * from './AnomalyRow'
 export * from './EmptyInsightsState'
