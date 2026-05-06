@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
 import {
   AdviceCards,
   CategorySpendingChart,
@@ -10,6 +10,7 @@ import {
 import { useInsightFilters } from './-hooks/use-insight-filters'
 import { useBudgetAllocations } from './-hooks/use-budget-allocations-chart'
 import { BudgetSelector } from '@/components/shared/BudgetSelector'
+import { Button } from '@/components/ui/button'
 import { staticToolbarMeta } from '@/lib/toolbar'
 import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
 import { useInsightsTotals } from '@/hooks/insights/use-insights-totals'
@@ -19,7 +20,6 @@ export const Route = createFileRoute('/_app/ia-insights/')({
   beforeLoad: staticToolbarMeta({
     title: 'AI Insights',
     description: 'Insights and spending patterns',
-    balance: { label: 'Balance', value: '$0.00' },
   }),
   component: RouteComponent,
 })
@@ -100,17 +100,28 @@ function RouteComponent() {
             />
           </div>
           <div className="flex w-full gap-3 px-5">
-            <div className="flex w-full xl:w-1/2">
-              <CategorySpendingChart
-                chartData={chartData}
-                chartConfig={chartConfig}
-                allocations={allocations}
-                isLoading={isChartLoading}
-              />
-            </div>
-            <div className="flex w-full xl:w-1/2">
-              <TopOutliners anomalies={insightsData?.summary.anomalies ?? []} />
-            </div>
+            <TopOutliners
+              anomalies={insightsData?.summary.anomalies ?? []}
+              isLoading={isInsightsLoading}
+              headerAction={
+                <Button variant="outline" size="sm" asChild>
+                  <Link
+                    to="/budget/$budgetId/expenses"
+                    params={{ budgetId: selectedBudget }}
+                  >
+                    View all transactions
+                  </Link>
+                </Button>
+              }
+            />
+          </div>
+          <div className="flex w-full px-5">
+            <CategorySpendingChart
+              chartData={chartData}
+              chartConfig={chartConfig}
+              allocations={allocations}
+              isLoading={isChartLoading}
+            />
           </div>
         </>
       )}

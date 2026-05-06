@@ -16,9 +16,4 @@ export const GENERAL_NAV_ITEMS = [
     url: '/ia-insights',
     icon: Brain,
   },
-  {
-    title: 'Debt Calculator',
-    url: '/debt-calculator',
-    icon: Calculator,
-  },
 ]
