@@ -1,4 +1,4 @@
-import { Brain, Calculator, LayoutGrid, Target } from 'lucide-react'
+import { Brain, LayoutGrid, Target } from 'lucide-react'
 
 export const GENERAL_NAV_ITEMS = [
   {

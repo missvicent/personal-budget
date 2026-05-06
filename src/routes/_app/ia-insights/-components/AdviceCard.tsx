@@ -64,13 +64,6 @@ export const AdviceCard = ({
             </p>
           </div>
         )}
-
-        <Link
-          to="/transactions"
-          className="text-primary text-xs font-medium hover:underline"
-        >
-          View transactions →
-        </Link>
       </CardContent>
     </Card>
   )
