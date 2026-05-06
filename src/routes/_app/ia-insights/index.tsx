@@ -2,7 +2,7 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import {
   AdviceCards,
   EmptyInsightsState,
-  InsightsSummary,
+  PeriodKpiGrid,
   TimeRangeSelector,
   TopOutliners,
 } from './-components'
@@ -44,7 +44,7 @@ function RouteComponent() {
   )
 
   return (
-    <div className="flex w-full flex-col gap-3">
+    <div className="flex w-full flex-col gap-3 py-8">
       <div className="flex flex-wrap items-center gap-3 px-5 pt-2">
         <div className="w-full sm:w-fit">
           <BudgetSelector
@@ -73,15 +73,7 @@ function RouteComponent() {
       ) : (
         <>
           <div className="flex w-full px-5">
-            <InsightsSummary
-              insights={{
-                total_spending: totals.total_spending,
-                total_income: totals.total_income,
-                total_expenses: totals.total_expenses,
-                net: totals.net,
-              }}
-              isLoading={totals.isLoading}
-            />
+            <PeriodKpiGrid budgetId={selectedBudget} />
           </div>
           <div className="flex w-full px-5">
             <AdviceCards
