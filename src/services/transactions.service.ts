@@ -88,6 +88,7 @@ export const transactionsService = {
     supabase: SupabaseClient,
     budgetId: string,
   ): Promise<Array<TransactionWithCategory>> => {
+    if (!budgetId) return []
     const { data, error } = await supabase
       .rpc('get_transactions_with_categories', { p_budget_id: budgetId })
       .in('category_type', ['expense', 'general'])
