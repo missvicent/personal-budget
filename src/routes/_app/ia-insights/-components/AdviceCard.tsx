@@ -66,7 +66,7 @@ export const AdviceCard = ({
         )}
 
         <Link
-          to="/transactions"
+          to="/overview"
           className="text-primary text-xs font-medium hover:underline"
         >
           View transactions →
