@@ -9,7 +9,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
   const { getToken } = useAuth()
 
   const supabase = useMemo(() => {
-    return createSupabaseClient(async () => getToken({ template: 'supabase' }))
+    return createSupabaseClient(async () => getToken())
   }, [getToken])
 
   return (

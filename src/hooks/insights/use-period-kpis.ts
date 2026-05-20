@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import { format, isWithinInterval } from 'date-fns'
 import type { TransactionWithCategory } from '@/types/transaction.types'
-import type {Cycle} from '@/lib/period';
+import type { Cycle } from '@/lib/period'
 import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
 import { useGetTransactionsWithCategories } from '@/hooks/transactions/use-transaction-with-categories'
-import {  getCurrentCycle } from '@/lib/period'
+import { getCurrentCycle } from '@/lib/period'
 
 export type DailyPoint = { date: string; amount: number }
 
