@@ -2,6 +2,7 @@ import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
 import { AppToolbar } from './_app/-components/AppToolbar'
 import { AppSidebar } from './_app/-components/AppSidebar'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import { RouteErrorFallback } from '@/components/common/RouteErrorFallback'
 
 export function AppLayout() {
   return (
@@ -27,4 +28,5 @@ export const Route = createFileRoute('/_app')({
     }
   },
   component: AppLayout,
+  errorComponent: RouteErrorFallback,
 })
