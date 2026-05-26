@@ -3,7 +3,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 
 import { useSupabase } from '@/contexts/SupabaseContext'
-import { queryClient } from '@/lib/queryClient'
+import { queryClient } from '@/lib/query-client'
 
 const router = createRouter({
   routeTree,

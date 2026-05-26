@@ -1,64 +1,26 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
 import {
-  CategorySpendingChart,
-  InsightsSummary,
+  AdviceCards,
+  EmptyInsightsState,
+  PeriodKpiGrid,
   TimeRangeSelector,
   TopOutliners,
 } from './-components'
 import { useInsightFilters } from './-hooks/use-insight-filters'
-import { useBudgetAllocations } from './-hooks/use-budget-allocations-chart'
-import type { Anomaly } from '@/types/insights.types'
 import { BudgetSelector } from '@/components/shared/BudgetSelector'
+import { Button } from '@/components/ui/button'
 import { staticToolbarMeta } from '@/lib/toolbar'
+import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
+import { useInsightsTotals } from '@/hooks/insights/use-insights-totals'
+import { useIAInsights } from '@/hooks/insights/use-insights'
 
 export const Route = createFileRoute('/_app/ia-insights/')({
   beforeLoad: staticToolbarMeta({
     title: 'AI Insights',
     description: 'Insights and spending patterns',
-    balance: { label: 'Balance', value: '$0.00' },
   }),
   component: RouteComponent,
 })
-
-const insights = {
-  totalSpending: 1000,
-  totalIncome: 1500,
-  totalExpenses: 500,
-  totalNet: 1000,
-}
-
-const anomalies = [
-  {
-    id: '1',
-    amount: 100,
-    type: 'spike',
-    category_name: 'Food',
-    color: '#ff0000',
-    icon: 'F',
-    severity: 'low',
-    message: 'Food spending is too high',
-  },
-  {
-    id: '2',
-    amount: 100,
-    type: 'spike',
-    category_name: 'Food',
-    color: '#ff0000',
-    icon: 'F',
-    severity: 'medium',
-    message: 'Food spending is too high',
-  },
-  {
-    id: '3',
-    amount: 100,
-    type: 'spike',
-    category_name: 'Food',
-    color: '#ff0000',
-    severity: 'high',
-    message: 'Food spending is too high',
-    icon: 'F',
-  },
-] satisfies Array<Anomaly>
 
 function RouteComponent() {
   const {
@@ -70,11 +32,19 @@ function RouteComponent() {
     timeOptions,
   } = useInsightFilters()
 
-  const { allocations, chartData, chartConfig, isLoading } =
-    useBudgetAllocations(selectedBudget)
+  const { data: budgets } = useBudgetOverview()
+  const totals = useInsightsTotals(selectedBudget, selectedTime)
+
+  const hasBudgets = (budgets?.length ?? 0) > 0
+  const canRunInsights = hasBudgets && totals.has_transactions
+
+  const { data: insightsData, isLoading: isInsightsLoading } = useIAInsights(
+    { budget_id: selectedBudget, window: selectedTime },
+    { enabled: canRunInsights },
+  )
 
   return (
-    <div className="flex w-full flex-col gap-3">
+    <div className="flex w-full flex-col gap-3 py-8">
       <div className="flex flex-wrap items-center gap-3 px-5 pt-2">
         <div className="w-full sm:w-fit">
           <BudgetSelector
@@ -91,22 +61,45 @@ function RouteComponent() {
           />
         </div>
       </div>
-      <div className="flex w-full px-5">
-        <InsightsSummary insights={insights} isLoading={isLoading} />
-      </div>
-      <div className="flex w-full gap-3 px-5">
-        <div className="flex w-full xl:w-1/2">
-          <CategorySpendingChart
-            chartData={chartData}
-            chartConfig={chartConfig}
-            allocations={allocations}
-            isLoading={isLoading}
-          />
+
+      {!hasBudgets ? (
+        <div className="flex w-full px-5">
+          <EmptyInsightsState reason="no_budgets" />
         </div>
-        <div className="flex w-full xl:w-1/2">
-          <TopOutliners anomalies={anomalies} />
+      ) : !totals.isLoading && !totals.has_transactions ? (
+        <div className="flex w-full px-5">
+          <EmptyInsightsState reason="no_transactions" />
         </div>
-      </div>
+      ) : (
+        <>
+          <div className="flex w-full px-5">
+            <PeriodKpiGrid budgetId={selectedBudget} />
+          </div>
+          <div className="flex w-full px-5">
+            <AdviceCards
+              summary={insightsData?.summary}
+              ai={insightsData?.ai}
+              isLoading={isInsightsLoading}
+            />
+          </div>
+          <div className="flex w-full gap-3 px-5">
+            <TopOutliners
+              anomalies={insightsData?.summary.anomalies ?? []}
+              isLoading={isInsightsLoading}
+              headerAction={
+                <Button variant="outline" size="sm" asChild>
+                  <Link
+                    to="/budget/$budgetId/expenses"
+                    params={{ budgetId: selectedBudget }}
+                  >
+                    View all transactions
+                  </Link>
+                </Button>
+              }
+            />
+          </div>
+        </>
+      )}
     </div>
   )
 }

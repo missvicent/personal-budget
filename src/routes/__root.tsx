@@ -1,6 +1,7 @@
 import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { QueryClient } from '@tanstack/react-query'
+import { RouteErrorFallback } from '@/components/common/RouteErrorFallback'
 
 export type ToolbarMeta = {
   title: string
@@ -10,6 +11,7 @@ export type ToolbarMeta = {
     value: string
   }
 }
+
 interface RouterContext {
   auth: {
     isLoaded: boolean
@@ -28,4 +30,5 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       </main>
     </div>
   ),
+  errorComponent: RouteErrorFallback,
 })
