@@ -9,7 +9,7 @@ export const useDeleteAccount = () => {
   const queryClient = useQueryClient()
   const { signOut } = useClerk()
   const navigate = useNavigate()
-  return useApiMutation(
+  return useApiMutation<void, void, Error, unknown>(
     async (api) => {
       await deleteAccountService.delete(api)
       await signOut()
