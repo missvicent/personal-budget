@@ -1,0 +1,100 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { DangerZoneCard } from '../DangerZoneCard'
+
+const { mutateMock, hookState } = vi.hoisted(() => ({
+  mutateMock: vi.fn(),
+  hookState: { isPending: false },
+}))
+
+vi.mock('@/hooks/user/use-delete-account', () => ({
+  useDeleteAccount: () => ({
+    mutateAsync: mutateMock,
+    isPending: hookState.isPending,
+  }),
+}))
+vi.mock('@clerk/clerk-react', () => ({
+  useUser: () => ({
+    user: {
+      primaryEmailAddress: { emailAddress: 'test@test.com' },
+    },
+  }),
+}))
+
+describe('DangerZoneCard', () => {
+  beforeEach(() => {
+    mutateMock.mockReset()
+    hookState.isPending = false
+  })
+
+  it('renders collapsed by default with a Delete Account button', () => {
+    render(<DangerZoneCard />)
+    expect(
+      screen.getByRole('button', { name: /delete account/i }),
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+  })
+
+  it('expands when the Delete Account button is clicked', async () => {
+    const user = userEvent.setup()
+    const input = screen.getByPlaceholderText('')
+    render(<DangerZoneCard />)
+    await user.click(screen.getByRole('button', { name: /delete account/i }))
+    expect(screen.getByRole('textbox')).toBeInTheDocument()
+    expect(input).toHaveFocus()
+    expect(input).toHaveValue('')
+    expect(
+      screen.getByRole('button', { name: /permanently delete account/i }),
+    ).toBeDisabled()
+  })
+
+  it('enables the Delete Account button when the textbox is filled and the email matches', async () => {
+    const user = userEvent.setup()
+    render(<DangerZoneCard />)
+    await user.click(screen.getByRole('button', { name: /delete account/i }))
+    const input = screen.getByPlaceholderText('test@test.com')
+    await user.type(screen.getByRole('textbox'), 'wrong@test.com')
+    expect(
+      screen.getByRole('button', { name: /permanently delete account/i }),
+    ).toBeDisabled()
+
+    await user.clear(input)
+    await user.type(input, 'test@test.com')
+    expect(
+      screen.getByRole('button', { name: /permanently delete account/i }),
+    ).toBeEnabled()
+  })
+
+  it('calls the mutation when the Delete Account button is clicked', async () => {
+    const user = userEvent.setup()
+    render(<DangerZoneCard />)
+    await user.click(screen.getByRole('button', { name: /delete account/i }))
+    await user.type(
+      screen.getByPlaceholderText('test@test.com'),
+      'test@test.com',
+    )
+    await user.click(
+      screen.getByRole('button', { name: /permanently delete account/i }),
+    )
+    expect(mutateMock).toHaveBeenCalledWith('test@test.com')
+  })
+
+  it('cancel returns to the collapsed state', async () => {
+    const user = userEvent.setup()
+    render(<DangerZoneCard />)
+    await user.click(screen.getByRole('button', { name: /delete account/i }))
+    expect(screen.getByRole('textbox')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /cancel/i }))
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+  })
+
+  it('is not possible to cancel when the mutation is pending', async () => {
+    hookState.isPending = true
+    const user = userEvent.setup()
+    render(<DangerZoneCard />)
+    await user.click(screen.getByRole('button', { name: /delete account/i }))
+    expect(screen.getByRole('button', { name: /cancel/i })).toBeDisabled()
+  })
+})
