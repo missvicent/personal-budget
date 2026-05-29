@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { DangerZoneCard } from '../DangerZoneCard'
+import { DeleteAccount } from '../DeleteAccount'
 
 const { mutateMock, hookState } = vi.hoisted(() => ({
   mutateMock: vi.fn(),
@@ -22,14 +22,14 @@ vi.mock('@clerk/clerk-react', () => ({
   }),
 }))
 
-describe('DangerZoneCard', () => {
+describe('DeleteAccount', () => {
   beforeEach(() => {
     mutateMock.mockReset()
     hookState.isPending = false
   })
 
   it('renders collapsed by default with a Delete Account button', () => {
-    render(<DangerZoneCard />)
+    render(<DeleteAccount />)
     expect(
       screen.getByRole('button', { name: /delete account/i }),
     ).toBeInTheDocument()
@@ -38,7 +38,7 @@ describe('DangerZoneCard', () => {
 
   it('expands when the Delete Account button is clicked', async () => {
     const user = userEvent.setup()
-    render(<DangerZoneCard />)
+    render(<DeleteAccount />)
     await user.click(screen.getByRole('button', { name: /delete account/i }))
 
     const input = screen.getByPlaceholderText('test@test.com')
@@ -51,7 +51,7 @@ describe('DangerZoneCard', () => {
 
   it('enables the Delete Account button when the textbox is filled and the email matches', async () => {
     const user = userEvent.setup()
-    render(<DangerZoneCard />)
+    render(<DeleteAccount />)
     await user.click(screen.getByRole('button', { name: /delete account/i }))
     const input = screen.getByPlaceholderText('test@test.com')
     await user.type(input, 'wrong@test.com')
@@ -68,7 +68,7 @@ describe('DangerZoneCard', () => {
 
   it('calls the mutation when the Delete Account button is clicked', async () => {
     const user = userEvent.setup()
-    render(<DangerZoneCard />)
+    render(<DeleteAccount />)
     await user.click(screen.getByRole('button', { name: /delete account/i }))
     await user.type(
       screen.getByPlaceholderText('test@test.com'),
@@ -82,7 +82,7 @@ describe('DangerZoneCard', () => {
 
   it('cancel collapses the panel and clears the typed email', async () => {
     const user = userEvent.setup()
-    render(<DangerZoneCard />)
+    render(<DeleteAccount />)
     await user.click(screen.getByRole('button', { name: /delete account/i }))
     await user.type(
       screen.getByPlaceholderText('test@test.com'),
@@ -99,7 +99,7 @@ describe('DangerZoneCard', () => {
   it('does not collapse when Cancel is clicked while the mutation is pending', async () => {
     hookState.isPending = true
     const user = userEvent.setup()
-    render(<DangerZoneCard />)
+    render(<DeleteAccount />)
     await user.click(screen.getByRole('button', { name: /delete account/i }))
 
     const cancel = screen.getByRole('button', { name: /cancel/i })
@@ -112,7 +112,7 @@ describe('DangerZoneCard', () => {
   it('keeps the panel open and surfaces an error when the mutation rejects', async () => {
     mutateMock.mockRejectedValueOnce(new Error('boom'))
     const user = userEvent.setup()
-    render(<DangerZoneCard />)
+    render(<DeleteAccount />)
     await user.click(screen.getByRole('button', { name: /delete account/i }))
     await user.type(
       screen.getByPlaceholderText('test@test.com'),
