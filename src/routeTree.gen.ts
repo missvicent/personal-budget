@@ -14,7 +14,6 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/auth/sign-in'
-import { Route as AppProfileIndexRouteImport } from './routes/_app/profile/index'
 import { Route as AppOverviewIndexRouteImport } from './routes/_app/overview/index'
 import { Route as AppIaInsightsIndexRouteImport } from './routes/_app/ia-insights/index'
 import { Route as AppGoalTrackerIndexRouteImport } from './routes/_app/goal-tracker/index'
@@ -47,11 +46,6 @@ const AuthSignInRoute = AuthSignInRouteImport.update({
   id: '/auth/sign-in',
   path: '/auth/sign-in',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AppProfileIndexRoute = AppProfileIndexRouteImport.update({
-  id: '/profile/',
-  path: '/profile/',
-  getParentRoute: () => AppRoute,
 } as any)
 const AppOverviewIndexRoute = AppOverviewIndexRouteImport.update({
   id: '/overview/',
@@ -111,7 +105,6 @@ export interface FileRoutesByFullPath {
   '/goal-tracker/': typeof AppGoalTrackerIndexRoute
   '/ia-insights/': typeof AppIaInsightsIndexRoute
   '/overview/': typeof AppOverviewIndexRoute
-  '/profile/': typeof AppProfileIndexRoute
   '/budget/$budgetId/allocations': typeof AppBudgetBudgetIdAllocationsRoute
   '/budget/$budgetId/expenses': typeof AppBudgetBudgetIdExpensesRoute
   '/budget/$budgetId/': typeof AppBudgetBudgetIdIndexRoute
@@ -125,7 +118,6 @@ export interface FileRoutesByTo {
   '/goal-tracker': typeof AppGoalTrackerIndexRoute
   '/ia-insights': typeof AppIaInsightsIndexRoute
   '/overview': typeof AppOverviewIndexRoute
-  '/profile': typeof AppProfileIndexRoute
   '/budget/$budgetId/allocations': typeof AppBudgetBudgetIdAllocationsRoute
   '/budget/$budgetId/expenses': typeof AppBudgetBudgetIdExpensesRoute
   '/budget/$budgetId': typeof AppBudgetBudgetIdIndexRoute
@@ -143,7 +135,6 @@ export interface FileRoutesById {
   '/_app/goal-tracker/': typeof AppGoalTrackerIndexRoute
   '/_app/ia-insights/': typeof AppIaInsightsIndexRoute
   '/_app/overview/': typeof AppOverviewIndexRoute
-  '/_app/profile/': typeof AppProfileIndexRoute
   '/_app/budget/$budgetId/allocations': typeof AppBudgetBudgetIdAllocationsRoute
   '/_app/budget/$budgetId/expenses': typeof AppBudgetBudgetIdExpensesRoute
   '/_app/budget/$budgetId/': typeof AppBudgetBudgetIdIndexRoute
@@ -160,7 +151,6 @@ export interface FileRouteTypes {
     | '/goal-tracker/'
     | '/ia-insights/'
     | '/overview/'
-    | '/profile/'
     | '/budget/$budgetId/allocations'
     | '/budget/$budgetId/expenses'
     | '/budget/$budgetId/'
@@ -174,7 +164,6 @@ export interface FileRouteTypes {
     | '/goal-tracker'
     | '/ia-insights'
     | '/overview'
-    | '/profile'
     | '/budget/$budgetId/allocations'
     | '/budget/$budgetId/expenses'
     | '/budget/$budgetId'
@@ -191,7 +180,6 @@ export interface FileRouteTypes {
     | '/_app/goal-tracker/'
     | '/_app/ia-insights/'
     | '/_app/overview/'
-    | '/_app/profile/'
     | '/_app/budget/$budgetId/allocations'
     | '/_app/budget/$budgetId/expenses'
     | '/_app/budget/$budgetId/'
@@ -240,13 +228,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth/sign-in'
       preLoaderRoute: typeof AuthSignInRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_app/profile/': {
-      id: '/_app/profile/'
-      path: '/profile'
-      fullPath: '/profile/'
-      preLoaderRoute: typeof AppProfileIndexRouteImport
-      parentRoute: typeof AppRoute
     }
     '/_app/overview/': {
       id: '/_app/overview/'
@@ -336,7 +317,6 @@ interface AppRouteChildren {
   AppGoalTrackerIndexRoute: typeof AppGoalTrackerIndexRoute
   AppIaInsightsIndexRoute: typeof AppIaInsightsIndexRoute
   AppOverviewIndexRoute: typeof AppOverviewIndexRoute
-  AppProfileIndexRoute: typeof AppProfileIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -346,7 +326,6 @@ const AppRouteChildren: AppRouteChildren = {
   AppGoalTrackerIndexRoute: AppGoalTrackerIndexRoute,
   AppIaInsightsIndexRoute: AppIaInsightsIndexRoute,
   AppOverviewIndexRoute: AppOverviewIndexRoute,
-  AppProfileIndexRoute: AppProfileIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

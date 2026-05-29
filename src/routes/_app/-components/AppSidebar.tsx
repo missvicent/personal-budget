@@ -1,6 +1,7 @@
 import { AppSidebarHeader } from './AppSidebarHeader'
 import AppSidebarItem from './AppSidebarItem'
 import { BudgetSidebarGroup } from './BudgetSidebarGroup'
+import { AccountUserButton } from '@/components/common/AccountUserButton'
 import { GENERAL_NAV_ITEMS } from '@/config/navigation'
 import {
   Sidebar,
@@ -11,7 +12,6 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
 } from '@/components/ui/sidebar'
-import { UserButtonWithName } from '@/components/common/UserButtonWithName'
 import ThemeToggle from '@/components/common/ThemeToggle'
 
 export const AppSidebar = () => {
@@ -32,7 +32,9 @@ export const AppSidebar = () => {
         <BudgetSidebarGroup />
       </SidebarContent>
       <SidebarFooter className="flex-start flex gap-2 p-2">
-        <UserButtonWithName />
+        <div className="flex items-center justify-center gap-2">
+          <AccountUserButton />
+        </div>
         <ThemeToggle />
       </SidebarFooter>
     </Sidebar>

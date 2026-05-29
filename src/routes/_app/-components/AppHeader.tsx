@@ -1,5 +1,5 @@
-import { UserButton } from '@clerk/clerk-react'
 import { Link } from '@tanstack/react-router'
+import { AccountUserButton } from '@/components/common/AccountUserButton'
 
 export default function AppHeader() {
   const linkClasses =
@@ -42,20 +42,11 @@ export default function AppHeader() {
               Budget
             </Link>
           </li>
-          <li className="flex items-center">
-            <Link
-              to="/profile"
-              className={linkClasses}
-              activeProps={{ className: 'active' }}
-            >
-              Profile
-            </Link>
-          </li>
         </ul>
       </nav>
 
       <div className="z-10 flex shrink-0 items-center gap-4">
-        <UserButton />
+        <AccountUserButton />
       </div>
     </header>
   )
