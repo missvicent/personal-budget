@@ -35,6 +35,30 @@ export type Database = {
         }
         Relationships: []
       }
+      account_deletion_audit: {
+        Row: {
+          event: string
+          id: number
+          metadata: Json
+          occurred_at: string
+          user_id_hash: string
+        }
+        Insert: {
+          event: string
+          id?: number
+          metadata?: Json
+          occurred_at?: string
+          user_id_hash: string
+        }
+        Update: {
+          event?: string
+          id?: number
+          metadata?: Json
+          occurred_at?: string
+          user_id_hash?: string
+        }
+        Relationships: []
+      }
       accounts: {
         Row: {
           balance: number | null
@@ -416,6 +440,48 @@ export type Database = {
         }
         Relationships: []
       }
+      pending_emails: {
+        Row: {
+          attempts: number
+          created_at: string
+          id: number
+          last_attempted_at: string | null
+          last_error: string | null
+          max_attempts: number
+          next_run_at: string
+          payload: Json
+          sent_at: string | null
+          template: string
+          to_email: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          id?: number
+          last_attempted_at?: string | null
+          last_error?: string | null
+          max_attempts?: number
+          next_run_at?: string
+          payload?: Json
+          sent_at?: string | null
+          template: string
+          to_email: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          id?: number
+          last_attempted_at?: string | null
+          last_error?: string | null
+          max_attempts?: number
+          next_run_at?: string
+          payload?: Json
+          sent_at?: string | null
+          template?: string
+          to_email?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -764,6 +830,21 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_events: {
+        Row: {
+          received_at: string
+          svix_id: string
+        }
+        Insert: {
+          received_at?: string
+          svix_id: string
+        }
+        Update: {
+          received_at?: string
+          svix_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       v_upcoming_recurring: {
@@ -843,7 +924,55 @@ export type Database = {
         }
         Returns: string
       }
+      claim_pending_email: {
+        Args: { p_id: number }
+        Returns: {
+          attempts: number
+          created_at: string
+          id: number
+          last_attempted_at: string | null
+          last_error: string | null
+          max_attempts: number
+          next_run_at: string
+          payload: Json
+          sent_at: string | null
+          template: string
+          to_email: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "pending_emails"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      delete_user_data: {
+        Args: { p_clerk_user_id: string }
+        Returns: undefined
+      }
       drop_inactive_electric_replication_slots: { Args: never; Returns: number }
+      fetch_ready_pending_emails: {
+        Args: { p_limit: number }
+        Returns: {
+          attempts: number
+          created_at: string
+          id: number
+          last_attempted_at: string | null
+          last_error: string | null
+          max_attempts: number
+          next_run_at: string
+          payload: Json
+          sent_at: string | null
+          template: string
+          to_email: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "pending_emails"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       get_budgets_overview: {
         Args: never
         Returns: Array<{
@@ -931,6 +1060,10 @@ export type Database = {
           p_payment_date: string
           p_principal_paid: number
         }
+        Returns: undefined
+      }
+      record_pending_email_failure: {
+        Args: { p_error: string; p_id: number }
         Returns: undefined
       }
       terminate_idle_electric_connections: {
