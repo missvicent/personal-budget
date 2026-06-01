@@ -1,4 +1,5 @@
 export { BudgetForm } from './budget-form'
+export { NoAllocationsHint } from './no-allocations-hint'
 export { OverviewSkeleton } from './overview-skeleton'
 export { PeriodOption } from './period-option'
 export { PeriodSelector } from './period-selector'
