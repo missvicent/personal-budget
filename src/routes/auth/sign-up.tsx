@@ -4,7 +4,8 @@ import { createFileRoute, useSearch } from '@tanstack/react-router'
 export const Route = createFileRoute('/auth/sign-up')({
   validateSearch: (search: Record<string, unknown>) => {
     return {
-      redirect: (search.redirect as string) || '/',
+      redirect:
+        typeof search.redirect === 'string' ? search.redirect : undefined,
     }
   },
   component: RouteComponent,
@@ -19,7 +20,7 @@ function RouteComponent() {
         routing="path"
         path="/auth/sign-up"
         signInUrl="/auth/sign-in"
-        fallbackRedirectUrl={redirect}
+        {...(redirect ? { fallbackRedirectUrl: redirect } : {})}
       />
     </div>
   )

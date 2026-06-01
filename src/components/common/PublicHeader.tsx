@@ -1,10 +1,6 @@
-import {
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/clerk-react'
+import { SignInButton, SignedIn, SignedOut } from '@clerk/clerk-react'
 import { Link } from '@tanstack/react-router'
+import { AccountUserButton } from '@/components/common/AccountUserButton'
 
 export default function PublicHeader() {
   return (
@@ -33,7 +29,7 @@ export default function PublicHeader() {
           >
             Go to Dashboard
           </Link>
-          <UserButton />
+          <AccountUserButton />
         </SignedIn>
         <SignedOut>
           <SignInButton mode="modal">
