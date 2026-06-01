@@ -28,7 +28,11 @@ if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <ClerkProvider
+        publishableKey={PUBLISHABLE_KEY}
+        signInFallbackRedirectUrl="/overview"
+        signUpFallbackRedirectUrl="/overview"
+      >
         <SupabaseProvider>
           <TanstackQueryClientProvider>
             <UserSync>
