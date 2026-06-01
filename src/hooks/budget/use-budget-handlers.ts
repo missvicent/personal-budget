@@ -1,4 +1,5 @@
 import { toast } from 'sonner'
+import { useNavigate } from '@tanstack/react-router'
 
 import { useBudgetMutations } from './use-budget-mutations'
 import type { Budget } from '@/types/database.types'
@@ -13,6 +14,7 @@ export const useBudgetHandlers = (
   onSuccess: () => void,
 ) => {
   const mutations = useBudgetMutations()
+  const navigate = useNavigate()
 
   const handleSubmit = (
     data: BudgetFormData,
@@ -30,9 +32,15 @@ export const useBudgetHandlers = (
       )
     } else {
       mutations.create(toBudgetRequestBody(data), {
-        onSuccess: () => {
+        onSuccess: (created: Budget) => {
           toast.success('Budget created successfully')
           onSuccess()
+          if (created.id) {
+            navigate({
+              to: '/budget/$budgetId',
+              params: { budgetId: created.id },
+            })
+          }
         },
       })
     }
