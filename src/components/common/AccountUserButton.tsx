@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { UserButton } from '@clerk/clerk-react'
 import { dark } from '@clerk/themes'
 import { TrashIcon } from 'lucide-react'
-import { DangerZone } from '@/components/user/account/DangerZone'
+import { DangerZone } from '@/components/features/account/DangerZone'
 import { ThemeContext } from '@/contexts/ThemeContext'
 
 export const AccountUserButton = () => {

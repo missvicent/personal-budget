@@ -10,6 +10,7 @@ export default [
     ignores: [
       'src/components/ui/**',
       'src/routeTree.gen.ts',
+      'src/lib/supabase/types.ts',
       '*.config.js',
       '*.config.ts',
       '.agents/**',

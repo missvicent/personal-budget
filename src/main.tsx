@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom/client'
 import * as Sentry from '@sentry/react'
 import { SupabaseProvider } from './contexts/SupabaseContext.tsx'
 import { AppRouter } from './Router.tsx'
-import { UserSync } from './components/user/UserSync.tsx'
+import { UserSync } from './components/features/user/UserSync.tsx'
 
 import { ThemeProvider } from './contexts/ThemeContext.tsx'
 

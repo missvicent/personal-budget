@@ -12,4 +12,6 @@ export const deleteAccountSchema = (expectedEmail: string) =>
         },
       ),
   })
-export type DeleteAccountSchema = z.infer<typeof deleteAccountSchema>
+export type DeleteAccountSchema = z.infer<
+  ReturnType<typeof deleteAccountSchema>
+>
