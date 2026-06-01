@@ -49,5 +49,6 @@ export interface DashboardData {
   recentActivity: Array<RecentActivityItem>
   burnSeries: Array<BurnSeriesPoint>
   budgetAmount: number
+  hasAllocations: boolean
   isLoading: boolean
 }

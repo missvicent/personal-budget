@@ -47,6 +47,7 @@ export const useDashboardData = (
         recentActivity: [],
         burnSeries: [],
         budgetAmount: 0,
+        hasAllocations: false,
         isLoading,
       }
     }
@@ -64,6 +65,7 @@ export const useDashboardData = (
         now,
       ),
       budgetAmount: overview.budget_amount,
+      hasAllocations: (allocationsQuery.data ?? []).length > 0,
       isLoading,
     }
   }, [
