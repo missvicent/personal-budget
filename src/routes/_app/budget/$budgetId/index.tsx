@@ -9,6 +9,7 @@ import type { DashboardSummary } from '../-hooks/dashboard/types'
 import type { StatCardProps } from '@/components/shared/StatCard'
 import { StatCard } from '@/components/shared/StatCard'
 import { currencyFormatter } from '@/lib/format'
+import { BudgetOnboardingEmptyState } from '@/components/budget'
 
 export const Route = createFileRoute('/_app/budget/$budgetId/')({
   component: DashboardPage,
@@ -92,10 +93,12 @@ export function DashboardPage() {
     recentActivity,
     burnSeries,
     budgetAmount,
+    hasAllocations,
     isLoading,
   } = useDashboardData(budgetId)
 
   if (isLoading) return <DashboardSkeleton />
+  if (!hasAllocations) return <BudgetOnboardingEmptyState budgetId={budgetId} />
 
   return (
     <div className="min-h-screen p-8">

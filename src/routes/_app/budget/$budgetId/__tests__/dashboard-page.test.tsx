@@ -34,6 +34,7 @@ describe('DashboardPage', () => {
       recentActivity: [],
       burnSeries: [],
       budgetAmount: 0,
+      hasAllocations: true,
       isLoading: true,
     })
 
@@ -70,6 +71,7 @@ describe('DashboardPage', () => {
       recentActivity: [],
       burnSeries: [],
       budgetAmount: 3000,
+      hasAllocations: true,
       isLoading: false,
     })
 
@@ -102,6 +104,7 @@ describe('DashboardPage', () => {
       recentActivity: [],
       burnSeries: [],
       budgetAmount: 3000,
+      hasAllocations: true,
       isLoading: false,
     })
 
