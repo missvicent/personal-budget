@@ -6,6 +6,15 @@ import { DashboardPage } from '../index'
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (config: unknown) => config,
   useParams: () => ({ budgetId: 'b1' }),
+  Link: ({
+    children,
+    to,
+    params,
+  }: {
+    children: React.ReactNode
+    to: string
+    params: Record<string, string>
+  }) => <a href={to.replace('$budgetId', params.budgetId)}>{children}</a>,
 }))
 vi.mock('@/routes/_app/budget/-hooks/dashboard/use-dashboard-data', () => ({
   useDashboardData: vi.fn(),
@@ -114,5 +123,35 @@ describe('DashboardPage', () => {
     expect(screen.queryByText(/^remaining$/i)).not.toBeInTheDocument()
     expect(screen.getByText(/budget was \$3,000\.00/i)).toBeInTheDocument()
     expect(screen.getByText(/over pace/i)).toBeInTheDocument()
+  })
+
+  it('renders the onboarding empty state when the budget has no allocations', () => {
+    vi.mocked(useDashboardData).mockReturnValue({
+      summary: {
+        paceVariance: null,
+        remaining: 0,
+        overBudgetAmount: null,
+        dailyAverage: null,
+        periodLabel: '',
+        periodState: 'not-started',
+        paceState: 'no-data',
+      },
+      spotlight: null,
+      categories: [],
+      recentActivity: [],
+      burnSeries: [],
+      budgetAmount: 0,
+      hasAllocations: false,
+      isLoading: false,
+    })
+
+    render(<DashboardPage />)
+
+    expect(screen.getByText(/your budget is ready/i)).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: /add your first allocation/i }),
+    ).toBeInTheDocument()
+    expect(screen.queryByText(/pace variance/i)).not.toBeInTheDocument()
+    expect(screen.queryByTestId('burn-chart')).not.toBeInTheDocument()
   })
 })

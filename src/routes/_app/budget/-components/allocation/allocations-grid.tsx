@@ -70,9 +70,13 @@ export const AllocationsGrid = () => {
             />
           ))
         ) : (
-          <div className="col-span-4 flex h-full items-center justify-center">
-            <p className="text-muted-foreground text-sm">
-              No allocations found
+          <div className="col-span-4 flex flex-col items-center justify-center gap-1 py-12 text-center">
+            <p className="text-foreground text-base font-medium">
+              No allocations yet
+            </p>
+            <p className="text-muted-foreground max-w-sm text-sm">
+              Add your first allocation to start tracking expenses against this
+              budget.
             </p>
           </div>
         )}

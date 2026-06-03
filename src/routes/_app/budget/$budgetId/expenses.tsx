@@ -14,6 +14,12 @@ import { cn } from '@/lib/utils'
 import { SearchInput } from '@/components/common/SearchInput'
 import { SelectField } from '@/components/shared/SelectField'
 import { DialogTooltipTrigger } from '@/components/ui/dialog-tooltip-trigger'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { NoAllocationsHint } from '@/components/budget'
 
 import { useCategories } from '@/hooks/categories/use-categories'
 import { useAllocations } from '@/hooks/allocation/use-allocation'
@@ -31,7 +37,8 @@ function ExpensesPage() {
   const { data: categories } = useCategories()
   const { data: transactionsWithCategories } =
     useGetTransactionsWithCategories(budgetId)
-  const { data: allocations } = useAllocations(budgetId)
+  const { data: allocations, isLoading: allocationsLoading } =
+    useAllocations(budgetId)
   const { data: budgetOverviews } = useBudgetOverview()
   const budgetAmount =
     budgetOverviews?.find((b) => b.budget_id === budgetId)?.budget_amount ?? 0
@@ -50,6 +57,9 @@ function ExpensesPage() {
     categories ?? [],
     allocations ?? [],
   )
+
+  const hasAllocations = (allocations ?? []).length > 0
+  const showAllocationGate = !allocationsLoading && !hasAllocations
 
   const dialog = useExpenseDialog()
   const filters = useExpenseFilters(
@@ -89,42 +99,65 @@ function ExpensesPage() {
           />
         </div>
         <div className="order-1 flex justify-end lg:order-last">
-          <ResponsiveDialog
-            open={dialog.open}
-            onOpenChange={dialog.onOpenChange}
-          >
-            <DialogTooltipTrigger
-              dialogOpen={dialog.open}
-              tooltipContent="Log an Expense"
-            >
-              <Button
-                size="icon"
-                variant="default"
-                className="h-10 p-3 md:w-auto"
-              >
-                <PlusIcon />
-              </Button>
-            </DialogTooltipTrigger>
-            <ExpenseTransactionForm
-              key={dialog.selectedTransaction?.id}
+          {!showAllocationGate ? (
+            <ResponsiveDialog
               open={dialog.open}
-              groups={groups}
-              isPending={actions.isCreating || actions.isUpdating}
-              onSubmit={(data) =>
-                actions.onSubmit(data, dialog.selectedTransaction)
-              }
-              selectedTransaction={dialog.selectedTransaction}
-            />
-          </ResponsiveDialog>
+              onOpenChange={dialog.onOpenChange}
+            >
+              <DialogTooltipTrigger
+                dialogOpen={dialog.open}
+                tooltipContent="Log an Expense"
+              >
+                <Button
+                  size="icon"
+                  variant="default"
+                  className="h-10 p-3 md:w-auto"
+                >
+                  <PlusIcon />
+                </Button>
+              </DialogTooltipTrigger>
+              <ExpenseTransactionForm
+                key={dialog.selectedTransaction?.id}
+                open={dialog.open}
+                groups={groups}
+                isPending={actions.isCreating || actions.isUpdating}
+                onSubmit={(data) =>
+                  actions.onSubmit(data, dialog.selectedTransaction)
+                }
+                selectedTransaction={dialog.selectedTransaction}
+              />
+            </ResponsiveDialog>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <Button
+                    size="icon"
+                    variant="default"
+                    className="h-10 p-3 md:w-auto"
+                    disabled
+                    aria-label="Log an expense (disabled)"
+                  >
+                    <PlusIcon />
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>Add an allocation first</TooltipContent>
+            </Tooltip>
+          )}
         </div>
       </header>
-      <ExpenseList
-        expenses={filters.groupedExpenses}
-        onEdit={dialog.onEdit}
-        onDelete={actions.onDelete}
-        isDeleting={actions.isDeleting}
-        overspendingIds={overspendingIds}
-      />
+      {!showAllocationGate ? (
+        <ExpenseList
+          expenses={filters.groupedExpenses}
+          onEdit={dialog.onEdit}
+          onDelete={actions.onDelete}
+          isDeleting={actions.isDeleting}
+          overspendingIds={overspendingIds}
+        />
+      ) : (
+        <NoAllocationsHint budgetId={budgetId} />
+      )}
     </section>
   )
 }

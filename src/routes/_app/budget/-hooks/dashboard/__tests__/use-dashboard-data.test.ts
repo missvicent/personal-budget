@@ -109,6 +109,7 @@ describe('useDashboardData', () => {
     expect(result.current.spotlight).not.toBeNull()
     expect(result.current.spotlight?.name).toBe('Food')
     expect(result.current.spotlight?.mode).toBe('top-spender')
+    expect(result.current.hasAllocations).toBe(true)
   })
 
   it('returns a zeroed summary and null spotlight when the budget overview row is missing', () => {
@@ -137,5 +138,28 @@ describe('useDashboardData', () => {
     expect(result.current.spotlight).toBeNull()
     expect(result.current.budgetAmount).toBe(0)
     expect(result.current.burnSeries).toEqual([])
+    expect(result.current.hasAllocations).toBe(false)
+  })
+
+  it('reports hasAllocations=false when overview is present but allocations are empty', () => {
+    vi.mocked(useBudgetOverview).mockReturnValue(
+      mockQuery<ReturnType<typeof useBudgetOverview>>([overview]),
+    )
+    vi.mocked(useAllocations).mockReturnValue(
+      mockQuery<ReturnType<typeof useAllocations>>(
+        [] as Array<BudgetWithProgress>,
+      ),
+    )
+    vi.mocked(useGetTransactionsWithCategories).mockReturnValue(
+      mockQuery<ReturnType<typeof useGetTransactionsWithCategories>>(
+        [] as Array<TransactionWithCategory>,
+      ),
+    )
+
+    const { result } = renderHook(() =>
+      useDashboardData('b1', new Date('2026-04-15T12:00:00Z')),
+    )
+
+    expect(result.current.hasAllocations).toBe(false)
   })
 })

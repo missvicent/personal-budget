@@ -940,8 +940,8 @@ export type Database = {
           to_email: string
         }[]
         SetofOptions: {
-          from: "*"
-          to: "pending_emails"
+          from: '*'
+          to: 'pending_emails'
           isOneToOne: false
           isSetofReturn: true
         }
@@ -967,8 +967,8 @@ export type Database = {
           to_email: string
         }[]
         SetofOptions: {
-          from: "*"
-          to: "pending_emails"
+          from: '*'
+          to: 'pending_emails'
           isOneToOne: false
           isSetofReturn: true
         }
