@@ -79,6 +79,25 @@ body {
   --color-brand: #8b80e0;
   --color-brand-light: #b0a8e8;
   --color-brand-hover: #9a90e5;
+
+  /* Landing page tokens registered as Tailwind utilities */
+  --color-landing-bg: var(--landing-bg);
+  --color-landing-bg-2: var(--landing-bg-2);
+  --color-landing-surface: var(--landing-surface);
+  --color-landing-surface-2: var(--landing-surface-2);
+  --color-landing-line: var(--landing-line);
+  --color-landing-line-2: var(--landing-line-2);
+  --color-landing-text: var(--landing-text);
+  --color-landing-muted: var(--landing-muted);
+  --color-landing-faint: var(--landing-faint);
+  --color-landing-accent: var(--landing-accent);
+  --color-landing-accent-2: var(--landing-accent-2);
+  --color-landing-accent-press: var(--landing-accent-press);
+  --color-landing-accent-glow: var(--landing-accent-glow);
+  --color-landing-accent-tint: var(--landing-accent-tint);
+  --color-landing-mint: var(--landing-mint);
+  --font-landing-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-landing-body: 'Hanken Grotesk', system-ui, sans-serif;
 }
 
 :root {
@@ -97,7 +116,7 @@ body {
   --grey-900: oklch(0.2 0 0);
 
   /* Base purple palette — softer, less saturated */
-  --purple-bright: oklch(0.68 0.18 290);
+  --purple-bright: oklch(0.68 0.16 290);
   --purple-muted: oklch(0.75 0.12 290);
   --purple-dark: oklch(0.25 0.08 285);
   --purple-border: oklch(0.35 0.08 285);
@@ -122,7 +141,7 @@ body {
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.92 0 0);
   --input: oklch(0.94 0 0);
-  --ring: oklch(0.68 0.18 290);
+  --ring: oklch(0.68 0.16 290);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -137,7 +156,7 @@ body {
   --sidebar-accent: oklch(0.96 0 0);
   --sidebar-accent-foreground: oklch(0.55 0.14 290);
   --sidebar-border: var(--border);
-  --sidebar-ring: oklch(0.68 0.18 290);
+  --sidebar-ring: oklch(0.68 0.16 290);
 
   /* Sidebar active item */
   --sidebar-item-active-bg: oklch(0.96 0 0);
@@ -156,6 +175,25 @@ body {
   /* Budget period chip colors */
   --color-period-monthly: var(--primary);
   --color-period-yearly: var(--purple-muted);
+
+  /* Landing page tokens — calm dark ink + refined indigo */
+  --landing-bg: oklch(0.158 0.014 290);
+  --landing-bg-2: oklch(0.128 0.012 290);
+  --landing-surface: oklch(0.205 0.013 290);
+  --landing-surface-2: oklch(0.235 0.015 290);
+  --landing-line: oklch(1 0 0 / 0.08);
+  --landing-line-2: oklch(1 0 0 / 0.14);
+  --landing-text: oklch(0.972 0.005 290);
+  --landing-muted: oklch(0.745 0.013 290);
+  --landing-faint: oklch(0.6 0.012 290);
+  --landing-accent: oklch(0.65 0.18 290);
+  --landing-accent-2: oklch(0.79 0.13 290);
+  --landing-accent-press: oklch(0.58 0.18 290);
+  --landing-accent-glow: oklch(0.65 0.18 290 / 0.6);
+  --landing-accent-tint: oklch(0.65 0.18 290 / 0.18);
+  --landing-mint: oklch(0.82 0.066 168);
+  --font-landing-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-landing-body: 'Hanken Grotesk', system-ui, sans-serif;
 }
 
 .dark {
@@ -173,7 +211,7 @@ body {
 
   /* Base purple palette - dark mode (softer) */
   --purple-bright: oklch(0.7 0.14 290);
-  --purple-muted: oklch(0.6 0.1 285);
+  --purple-muted: oklch(0.6 0.1 290);
   --purple-dark: oklch(0.17 0 0);
   --purple-border: oklch(0.3 0 0);
 
@@ -185,7 +223,7 @@ body {
   --card-foreground: oklch(0.93 0 0);
   --popover: oklch(0.2 0 0);
   --popover-foreground: oklch(0.93 0 0);
-  --primary: oklch(0.63 0.22 290);
+  --primary: oklch(0.63 0.2 290);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.22 0 0);
   --secondary-foreground: oklch(0.93 0 0);
@@ -196,7 +234,7 @@ body {
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(0.3 0 0);
   --input: oklch(0.25 0 0);
-  --ring: oklch(0.63 0.22 290);
+  --ring: oklch(0.63 0.2 290);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -206,17 +244,17 @@ body {
   /* Sidebar — matches content with subtle offset */
   --sidebar: oklch(0.17 0 0);
   --sidebar-foreground: var(--content-foreground);
-  --sidebar-primary: oklch(0.63 0.22 290);
+  --sidebar-primary: oklch(0.63 0.2 290);
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.22 0 0);
-  --sidebar-accent-foreground: oklch(0.63 0.22 290);
+  --sidebar-accent-foreground: oklch(0.63 0.2 290);
   --sidebar-border: var(--border);
-  --sidebar-ring: oklch(0.63 0.22 290);
+  --sidebar-ring: oklch(0.63 0.2 290);
 
   /* Sidebar active item */
   --sidebar-item-active-bg: oklch(0.22 0 0);
-  --sidebar-item-active-text: oklch(0.63 0.22 290);
-  --sidebar-item-active-border: oklch(0.63 0.22 290);
+  --sidebar-item-active-text: oklch(0.63 0.2 290);
+  --sidebar-item-active-border: oklch(0.63 0.2 290);
 
   /* Content */
   --content-background: oklch(0.15 0 0);
@@ -251,4 +289,62 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* =================================
+   Landing page shell — applied on _public layout
+   ================================= */
+.landing-shell {
+  background: var(--landing-bg);
+  color: var(--landing-text);
+  font-family: var(--font-landing-body);
+  position: relative;
+  isolation: isolate;
+}
+
+.landing-shell::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      60rem 40rem at 78% -8%,
+      oklch(0.65 0.14 290 / 0.2),
+      transparent 60%
+    ),
+    radial-gradient(
+      50rem 36rem at 8% 14%,
+      oklch(0.7 0.07 250 / 0.1),
+      transparent 60%
+    ),
+    radial-gradient(
+      70rem 50rem at 50% 120%,
+      oklch(0.66 0.05 290 / 0.07),
+      transparent 60%
+    );
+}
+
+.landing-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+.landing-display {
+  font-family: var(--font-landing-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.landing-grad {
+  background: linear-gradient(
+    96deg,
+    var(--landing-accent-2),
+    var(--landing-accent)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }

@@ -16,21 +16,25 @@ const slideVariants = {
 }
 
 export default function HowItWorks() {
-  const steps = STEPS
-
   return (
     <section
       id="how-it-works"
-      className="flex flex-col items-center justify-center py-24 transition-all duration-300"
+      className="relative mx-auto w-full max-w-7xl px-7 py-28"
     >
       <SectionHeader
         badge="How It Works"
         title="Three simple steps to"
         highlight="financial clarity"
       />
-
-      <div className="flex w-full flex-col gap-6 p-5">
-        {steps.map((step, index) => (
+      <div className="relative grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-7">
+        <div
+          className="absolute top-8 right-[14%] left-[14%] hidden h-px md:block"
+          style={{
+            background:
+              'linear-gradient(90deg, transparent, var(--landing-line-2), transparent)',
+          }}
+        />
+        {STEPS.map((step, index) => (
           <motion.div
             key={step.id}
             variants={slideVariants}
@@ -43,6 +47,7 @@ export default function HowItWorks() {
               number={step.id.toString()}
               title={step.title}
               description={step.description}
+              accent={step.id === 1}
             />
           </motion.div>
         ))}

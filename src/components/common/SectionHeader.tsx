@@ -12,17 +12,17 @@ export default function SectionHeader({
   description,
 }: SectionHeaderProps) {
   return (
-    <div className="mb-4 text-center">
-      <p className="mb-4 text-sm font-semibold tracking-wider text-violet-400 uppercase">
+    <div className="mx-auto mb-10 max-w-2xl text-center">
+      <p className="text-landing-accent-2 mb-3 text-xs font-semibold tracking-[0.22em] uppercase">
         {badge}
       </p>
-      <h2 className="mb-6 text-3xl font-bold text-white lg:text-5xl">
-        {title}
-        <br />
-        <span className="text-violet-400">{highlight}</span>
+      <h2 className="landing-display text-2xl md:text-3xl lg:text-4xl">
+        {title} <span className="landing-grad">{highlight}</span>
       </h2>
       {description && (
-        <p className="mx-auto max-w-xl text-slate-400">{description}</p>
+        <p className="text-landing-muted mx-auto mt-3 max-w-xl text-base">
+          {description}
+        </p>
       )}
     </div>
   )

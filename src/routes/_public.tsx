@@ -4,7 +4,7 @@ import Footer from '@/components/common/Footer'
 
 function PublicLayout() {
   return (
-    <div className="flex min-h-screen flex-col overflow-x-hidden bg-gradient-to-br from-slate-950 via-slate-950 to-slate-900">
+    <div className="landing-shell flex min-h-screen flex-col overflow-x-hidden">
       <PublicHeader />
       <main className="flex-1">
         <Outlet />

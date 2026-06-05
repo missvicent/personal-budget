@@ -26,14 +26,14 @@ const iconMap: Record<string, ComponentType<LucideProps>> = {
 export default function FeaturesSection() {
   const features = FEATURES
   return (
-    <section className="flex flex-col items-center justify-center py-24">
+    <section className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-7 py-28">
       <SectionHeader
         badge="Features"
         title="Everything you need to"
         highlight="manage your finances"
         description="Simple tools designed to give you clarity and control over your spending."
       />
-      <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2">
+      <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2">
         {features.map((feature, index) => {
           const Icon: ComponentType<LucideProps> = iconMap[feature.icon]
           return (

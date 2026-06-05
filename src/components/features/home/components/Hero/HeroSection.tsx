@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
-import { SignInButton } from '@clerk/clerk-react'
-import { Button } from '@/components/ui/button'
+import { SignUpButton } from '@clerk/clerk-react'
 
 const fadeUpVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -11,35 +10,19 @@ const fadeUpVariants = {
   }),
 }
 
-interface HeroContent {
-  badge: string
-  title: string
-  subtitle: string
-  description: string
-}
-
-// Content configuration
-const heroContent: HeroContent = {
+const heroContent = {
   badge: 'Smart Budgeting Platform',
-  title: 'Master Your Money',
-  subtitle: 'Transform Your Life',
+  titleLine1: 'Master Your Money',
+  titleLine2: 'Transform Your Life',
   description:
     'Powerful financial insights that help you save more, spend wisely, and achieve your goals faster.',
 }
 
-// Reusable button styles
-const buttonStyles = {
-  primary:
-    'py-7 px-8 text-lg bg-violet-600 text-white hover:bg-violet-500 rounded-full',
-  outline:
-    'py-7 px-8 text-lg bg-transparent border border-slate-600 text-slate-200 hover:bg-slate-800 hover:border-slate-500 rounded-full transition-colors',
-} as const
-
 export default function HeroSection() {
   return (
-    <section className="min-h-content flex flex-col items-center justify-center p-8 md:p-6">
+    <section className="min-h-content flex flex-col items-center justify-center px-6 pt-20 pb-10 text-center md:px-8">
       <motion.span
-        className="text-2xl font-bold text-violet-400 uppercase md:text-3xl"
+        className="text-landing-accent-2 mb-6 inline-block text-sm font-semibold tracking-[0.22em] uppercase"
         variants={fadeUpVariants}
         initial="hidden"
         animate="visible"
@@ -49,27 +32,20 @@ export default function HeroSection() {
       </motion.span>
 
       <motion.h1
-        className="text-7xl font-bold text-white lg:text-8xl"
+        className="landing-display text-5xl md:text-7xl lg:text-8xl"
         variants={fadeUpVariants}
         initial="hidden"
         animate="visible"
         custom={0.1}
       >
-        {heroContent.title}
+        {heroContent.titleLine1}
+        <span className="landing-grad mt-0.5 block">
+          {heroContent.titleLine2}
+        </span>
       </motion.h1>
 
-      <motion.h2
-        className="bg-gradient-to-r from-violet-400 via-violet-300 to-slate-300 bg-clip-text pb-4 text-6xl font-bold text-transparent md:text-7xl"
-        variants={fadeUpVariants}
-        initial="hidden"
-        animate="visible"
-        custom={0.2}
-      >
-        {heroContent.subtitle}
-      </motion.h2>
-
       <motion.p
-        className="mt-4 max-w-2xl text-center text-2xl font-semibold text-slate-400 opacity-90"
+        className="text-landing-muted mt-6 max-w-2xl text-center text-lg md:text-xl"
         variants={fadeUpVariants}
         initial="hidden"
         animate="visible"
@@ -79,21 +55,27 @@ export default function HeroSection() {
       </motion.p>
 
       <motion.div
-        className="mt-6 flex w-full justify-center gap-4"
+        className="mt-9 flex flex-wrap justify-center gap-3.5"
         variants={fadeUpVariants}
         initial="hidden"
         animate="visible"
         custom={0.4}
       >
         <SignInButton mode="modal">
-          <Button className={buttonStyles.primary} size="sm">
+          <button
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full px-6 py-3 text-base font-semibold whitespace-nowrap text-white shadow-[0_1px_0_oklch(1_0_0/0.18)_inset,0_12px_30px_-12px_var(--landing-accent-glow)] transition-all duration-200 hover:-translate-y-px hover:shadow-[0_1px_0_oklch(1_0_0/0.22)_inset,0_18px_40px_-14px_var(--landing-accent-glow)] active:translate-y-px"
+            style={{
+              background:
+                'linear-gradient(180deg, var(--landing-accent), var(--landing-accent-press))',
+            }}
+          >
             Start Now
-          </Button>
+          </button>
         </SignInButton>
         <a href="#how-it-works">
-          <Button className={buttonStyles.outline} size="sm">
+          <button className="border-landing-line-2 text-landing-text inline-flex cursor-pointer items-center gap-2 rounded-full border bg-[oklch(1_0_0/0.03)] px-6 py-3 text-base font-semibold whitespace-nowrap backdrop-blur-sm transition-colors hover:bg-[oklch(1_0_0/0.07)]">
             Learn More
-          </Button>
+          </button>
         </a>
       </motion.div>
     </section>

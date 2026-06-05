@@ -1,7 +1,6 @@
 import type { ComponentType } from 'react'
 import type { LucideProps } from 'lucide-react'
 import type { Feature } from '../../types'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface FeatureCardProps {
   feature: Feature
@@ -9,23 +8,38 @@ interface FeatureCardProps {
 }
 
 export default function FeatureCard({ feature, Icon }: FeatureCardProps) {
-  const { id, title, description } = feature
+  const { title, description } = feature
   return (
-    <Card
-      key={id}
-      className="min-h-48 w-full rounded-2xl border border-slate-700/40 bg-slate-900/80"
+    <article
+      className="group border-landing-line relative overflow-hidden rounded-3xl border p-6 transition-all duration-300 hover:-translate-y-1"
+      style={{
+        background:
+          'linear-gradient(180deg, oklch(1 0 0 / 0.028), oklch(1 0 0 / 0.012))',
+      }}
     >
-      <CardHeader>
-        <div className="mb-2 flex h-20 w-20 items-center justify-center rounded-2xl border-b border-violet-700/50 bg-violet-600">
-          <Icon className="h-12 w-12 text-white" strokeWidth={1.5} />
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{
+          background:
+            'radial-gradient(120% 100% at 100% 0%, var(--landing-accent-tint), transparent 55%)',
+        }}
+      />
+      <div className="relative">
+        <div
+          className="border-landing-line-2 text-landing-accent-2 mb-5 grid h-12 w-12 place-items-center rounded-2xl border"
+          style={{
+            background:
+              'linear-gradient(160deg, var(--landing-accent-tint), oklch(1 0 0 / 0.02))',
+            boxShadow: '0 10px 24px -16px var(--landing-accent-glow)',
+          }}
+        >
+          <Icon className="h-5 w-5" strokeWidth={1.7} />
         </div>
-        <CardTitle>
-          <span className="text-2xl font-bold text-white">{title}</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-base text-white">{description}</p>
-      </CardContent>
-    </Card>
+        <h3 className="landing-display text-landing-text mb-2 text-xl">
+          {title}
+        </h3>
+        <p className="text-landing-muted max-w-prose text-sm">{description}</p>
+      </div>
+    </article>
   )
 }
