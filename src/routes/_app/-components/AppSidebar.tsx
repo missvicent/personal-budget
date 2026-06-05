@@ -3,6 +3,7 @@ import AppSidebarItem from './AppSidebarItem'
 import { BudgetSidebarGroup } from './BudgetSidebarGroup'
 import { AccountUserButton } from '@/components/common/AccountUserButton'
 import { GENERAL_NAV_ITEMS } from '@/config/navigation'
+import { useBudgetOverview } from '@/hooks/budget/use-budget-overview'
 import {
   Sidebar,
   SidebarContent,
@@ -15,6 +16,12 @@ import {
 import ThemeToggle from '@/components/common/ThemeToggle'
 
 export const AppSidebar = () => {
+  const { data: budgets } = useBudgetOverview()
+  const hasBudgets = (budgets?.length ?? 0) > 0
+  const generalNavItems = GENERAL_NAV_ITEMS.filter((item) =>
+    !hasBudgets ? true : item.title !== 'Overview',
+  )
+
   return (
     <Sidebar collapsible="icon">
       <AppSidebarHeader />
@@ -23,7 +30,7 @@ export const AppSidebar = () => {
           <SidebarGroupLabel>General</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {GENERAL_NAV_ITEMS.map((item) => (
+              {generalNavItems.map((item) => (
                 <AppSidebarItem key={item.title} item={item} />
               ))}
             </SidebarMenu>

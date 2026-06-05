@@ -32,12 +32,11 @@ export const useInsightFilters = () => {
     [budgetOverviews],
   )
 
-  const firstBudget = budgetOverviews?.[0]
-  const selectedBudget = pickedBudgetId || firstBudget?.budget_id || ''
+  const selectedBudget = pickedBudgetId
 
-  const selectedPeriod =
-    budgetOverviews?.find((b) => b.budget_id === selectedBudget)?.period ??
-    firstBudget?.period
+  const selectedPeriod = budgetOverviews?.find(
+    (b) => b.budget_id === selectedBudget,
+  )?.period
 
   const timeOptions = selectedPeriod
     ? TIME_OPTIONS_BY_PERIOD[selectedPeriod]

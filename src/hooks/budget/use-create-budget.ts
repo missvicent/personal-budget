@@ -9,11 +9,10 @@ export const useCreateBudget = () => {
   return useAuthMutation(
     (budget: CreateBudget, supabase) => budgetService.create(budget, supabase),
     {
-      onSuccess: () => {
+      onSuccess: () =>
         queryClient.invalidateQueries({
           queryKey: useBudgetQueryKeys().overview(),
-        })
-      },
+        }),
     },
   )
 }

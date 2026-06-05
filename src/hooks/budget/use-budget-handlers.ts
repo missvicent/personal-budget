@@ -34,13 +34,13 @@ export const useBudgetHandlers = (
       mutations.create(toBudgetRequestBody(data), {
         onSuccess: (created: Budget) => {
           toast.success('Budget created successfully')
-          onSuccess()
           if (created.id) {
             navigate({
               to: '/budget/$budgetId',
               params: { budgetId: created.id },
             })
           }
+          onSuccess()
         },
       })
     }
