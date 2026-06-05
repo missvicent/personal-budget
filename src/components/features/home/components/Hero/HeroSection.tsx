@@ -61,7 +61,7 @@ export default function HeroSection() {
         animate="visible"
         custom={0.4}
       >
-        <SignInButton mode="modal">
+        <SignUpButton mode="modal">
           <button
             className="inline-flex cursor-pointer items-center gap-2 rounded-full px-6 py-3 text-base font-semibold whitespace-nowrap text-white shadow-[0_1px_0_oklch(1_0_0/0.18)_inset,0_12px_30px_-12px_var(--landing-accent-glow)] transition-all duration-200 hover:-translate-y-px hover:shadow-[0_1px_0_oklch(1_0_0/0.22)_inset,0_18px_40px_-14px_var(--landing-accent-glow)] active:translate-y-px"
             style={{
@@ -71,7 +71,7 @@ export default function HeroSection() {
           >
             Start Now
           </button>
-        </SignInButton>
+        </SignUpButton>
         <a href="#how-it-works">
           <button className="border-landing-line-2 text-landing-text inline-flex cursor-pointer items-center gap-2 rounded-full border bg-[oklch(1_0_0/0.03)] px-6 py-3 text-base font-semibold whitespace-nowrap backdrop-blur-sm transition-colors hover:bg-[oklch(1_0_0/0.07)]">
             Learn More
